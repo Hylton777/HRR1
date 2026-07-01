@@ -1,7 +1,7 @@
 "use client";
 
 import { formatRaceSchedule } from "@/lib/schedule-label";
-import { crewsMatch } from "@/lib/hrr-api";
+import { crewsMatch } from "@/lib/crew-match";
 
 interface MatchCardProps {
   berks: { name: string; shortName?: string; number?: number } | null;
