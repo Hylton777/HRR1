@@ -10,7 +10,6 @@ import {
 import type { BracketState } from "@/lib/types";
 import {
   getRoundPresetLabels,
-  getTodayTomorrowLabel,
   groupMatchesByDay,
   type BracketViewPreset,
 } from "@/lib/regatta-days";
@@ -167,7 +166,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
     x: 8,
     y: 8,
   });
-  const [preset, setPreset] = useState<BracketViewPreset>("today-tomorrow");
+  const [preset, setPreset] = useState<BracketViewPreset>("two-day");
   const [layout, setLayout] = useState<LayoutMode>("bracket");
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
   const panStartRef = useRef<{ x: number; y: number; tx: number; ty: number } | null>(
@@ -351,15 +350,15 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
           type="button"
           onClick={() => {
             setLayout("bracket");
-            setPreset("today-tomorrow");
+            setPreset("two-day");
           }}
           className={`px-2.5 py-1 rounded text-xs border ${
-            layout === "bracket" && preset === "today-tomorrow"
+            layout === "bracket" && preset === "two-day"
               ? "border-[var(--hrr-blue)] text-[var(--hrr-blue)] bg-[var(--hrr-blue)]/5"
               : "border-[var(--card-border)] text-[var(--muted)]"
           }`}
         >
-          {getTodayTomorrowLabel(event.raceDays)}
+          2 day
         </button>
         <button
           type="button"

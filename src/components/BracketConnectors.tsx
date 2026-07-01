@@ -8,6 +8,7 @@ import { useEvent } from "./EventContext";
 interface BracketConnectorsProps {
   rootRef: RefObject<HTMLElement | null>;
   rounds: BracketMatch[][];
+  allMatches: BracketMatch[];
   compact?: boolean;
   dimUnfocused?: boolean;
   viewPreset?: BracketViewPreset;
@@ -97,6 +98,7 @@ function buildConnectorPaths(
 export default function BracketConnectors({
   rootRef,
   rounds,
+  allMatches,
   compact = false,
   dimUnfocused = false,
   viewPreset = "full",
@@ -119,10 +121,14 @@ export default function BracketConnectors({
 
       const isDimmed = (match: BracketMatch, roundIndex: number) => {
         if (!dimUnfocused) return false;
-        if (isMatchInView(match, viewPreset, event.raceDays)) return false;
+        if (isMatchInView(match, viewPreset, event.raceDays, allMatches))
+          return false;
         return !match.feeders?.some((id) => {
           const feeder = rounds[roundIndex - 1]?.find((m) => m.id === id);
-          return feeder && isMatchInView(feeder, viewPreset, event.raceDays);
+          return (
+            feeder &&
+            isMatchInView(feeder, viewPreset, event.raceDays, allMatches)
+          );
         });
       };
 
@@ -148,7 +154,7 @@ export default function BracketConnectors({
       resizeObserver.disconnect();
       window.removeEventListener("resize", onWindowResize);
     };
-  }, [rootRef, rounds, compact, dimUnfocused, viewPreset, event.raceDays]);
+  }, [rootRef, rounds, allMatches, compact, dimUnfocused, viewPreset, event.raceDays]);
 
   if (!layout || layout.paths.length === 0) return null;
 

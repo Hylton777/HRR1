@@ -63,31 +63,31 @@ const PE_RACE_DAYS: RegattaDay[] = [
 
 const POW_RACE_DAYS: RegattaDay[] = [
   {
-    id: "tue",
-    label: "Tuesday 30 June",
-    shortLabel: "Tue",
-    isoDate: "2026-06-30",
+    id: "thu",
+    label: "Thursday 2 July",
+    shortLabel: "Thu",
+    isoDate: "2026-07-02",
     primaryRoundIndex: 0,
-  },
-  {
-    id: "wed",
-    label: "Wednesday 1 July",
-    shortLabel: "Wed",
-    isoDate: "2026-07-01",
-    primaryRoundIndex: 1,
   },
   {
     id: "fri",
     label: "Friday 3 July",
     shortLabel: "Fri",
     isoDate: "2026-07-03",
-    primaryRoundIndex: 2,
+    primaryRoundIndex: 1,
   },
   {
     id: "sat",
     label: "Saturday 4 July",
     shortLabel: "Sat",
     isoDate: "2026-07-04",
+    primaryRoundIndex: 2,
+  },
+  {
+    id: "sun",
+    label: "Sunday 5 July",
+    shortLabel: "Sun",
+    isoDate: "2026-07-05",
     primaryRoundIndex: 3,
   },
 ];
@@ -153,7 +153,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
       "Reading University 'A'",
     ],
     noRacingNote:
-      "Thursday is a rest day — Friday times publish around 9pm BST the evening before.",
+      "POW races Thu–Sun — times publish around 9pm BST the evening before.",
   },
 };
 

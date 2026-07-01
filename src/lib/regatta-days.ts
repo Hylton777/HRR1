@@ -13,7 +13,7 @@ export interface RegattaDay {
 export type BracketViewPreset =
   | "full"
   | "today"
-  | "today-tomorrow"
+  | "two-day"
   | `day:${string}`
   | `round:${number}`;
 
@@ -119,9 +119,71 @@ export function matchOnRegattaDay(
   return match.roundIndex === day.primaryRoundIndex;
 }
 
+function raceDayIndex(day: RegattaDay, raceDays: RegattaDay[]): number {
+  return raceDays.findIndex((d) => d.isoDate === day.isoDate);
+}
+
+function isRegattaComplete(matches: BracketMatch[]): boolean {
+  if (matches.length === 0) return false;
+  const maxRound = Math.max(...matches.map((m) => m.roundIndex));
+  const finalRound = matches.filter((m) => m.roundIndex === maxRound);
+  return (
+    finalRound.length > 0 &&
+    finalRound.every((m) => m.status === "complete")
+  );
+}
+
+function completedRaceDayIndices(
+  matches: BracketMatch[],
+  raceDays: RegattaDay[],
+): number[] {
+  const indices = new Set<number>();
+
+  for (const match of matches) {
+    if (match.status !== "complete") continue;
+    const day = getMatchRegattaDay(match, raceDays);
+    if (!day) continue;
+    const idx = raceDayIndex(day, raceDays);
+    if (idx >= 0) indices.add(idx);
+  }
+
+  return [...indices].sort((a, b) => a - b);
+}
+
+/**
+ * Two-day mobile view: the most recent day with completed racing plus the
+ * next scheduled day. Before any results, show the first two days; after
+ * the final, show the last two days.
+ */
+export function getTwoDayWindow(
+  raceDays: RegattaDay[],
+  matches: BracketMatch[],
+): RegattaDay[] {
+  if (raceDays.length === 0) return [];
+  if (raceDays.length === 1) return [raceDays[0]];
+
+  if (isRegattaComplete(matches)) {
+    return raceDays.slice(-2);
+  }
+
+  const completed = completedRaceDayIndices(matches, raceDays);
+  if (completed.length === 0) {
+    return raceDays.slice(0, 2);
+  }
+
+  const mostRecentIdx = completed[completed.length - 1];
+  const nextIdx = mostRecentIdx + 1;
+  if (nextIdx >= raceDays.length) {
+    return raceDays.slice(-2);
+  }
+
+  return [raceDays[mostRecentIdx], raceDays[nextIdx]];
+}
+
 export function resolveViewPreset(
   preset: BracketViewPreset,
   raceDays: RegattaDay[],
+  matches: BracketMatch[] = [],
 ): { days: RegattaDay[]; roundIndices: number[] } {
   if (preset === "full") {
     return { days: [], roundIndices: [] };
@@ -134,10 +196,12 @@ export function resolveViewPreset(
     return { days: day ? [day] : [], roundIndices: day ? [day.primaryRoundIndex] : [] };
   }
 
-  if (preset === "today-tomorrow") {
-    const days = raceDays.slice(currentIdx, currentIdx + 2);
-    const roundIndices = days.map((d) => d.primaryRoundIndex);
-    return { days, roundIndices };
+  if (preset === "two-day") {
+    const days = getTwoDayWindow(raceDays, matches);
+    return {
+      days,
+      roundIndices: days.map((d) => d.primaryRoundIndex),
+    };
   }
 
   if (preset.startsWith("day:")) {
@@ -163,10 +227,11 @@ export function isMatchInView(
   match: BracketMatch,
   preset: BracketViewPreset,
   raceDays: RegattaDay[],
+  matches: BracketMatch[] = [],
 ): boolean {
   if (preset === "full") return true;
 
-  const { days, roundIndices } = resolveViewPreset(preset, raceDays);
+  const { days, roundIndices } = resolveViewPreset(preset, raceDays, matches);
 
   if (roundIndices.length > 0) {
     return roundIndices.includes(match.roundIndex);
@@ -195,15 +260,6 @@ export function groupMatchesByDay(
     day,
     matches: groups.get(day.isoDate) ?? [],
   }));
-}
-
-/** Label for the today+tomorrow preset button, e.g. "Wed + Fri" */
-export function getTodayTomorrowLabel(raceDays: RegattaDay[]): string {
-  const idx = getCurrentRaceDayIndex(raceDays);
-  const days = raceDays.slice(idx, idx + 2);
-  if (days.length === 0) return "Today + tomorrow";
-  if (days.length === 1) return days[0].shortLabel;
-  return `${days[0].shortLabel} + ${days[1].shortLabel}`;
 }
 
 /** Short round labels for mobile round filter buttons */

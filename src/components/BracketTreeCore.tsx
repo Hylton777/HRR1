@@ -69,6 +69,7 @@ export default function BracketTreeCore({
   const gap = compact ? COMPACT_MATCH_GAP : DESKTOP_MATCH_GAP;
   const columnWidth = compact ? COMPACT_MATCH_WIDTH : 220;
   const offsets = computeMatchOffsets(bracket.rounds, matchHeight, gap);
+  const allMatches = bracket.rounds.flat();
 
   return (
     <div ref={rootRef} className="relative min-w-max" data-bracket-root>
@@ -78,6 +79,7 @@ export default function BracketTreeCore({
         compact={compact}
         dimUnfocused={dimUnfocused}
         viewPreset={viewPreset}
+        allMatches={allMatches}
       />
       <div
         className={`relative z-10 flex ${compact ? "gap-3" : "gap-6"} min-w-max`}
@@ -118,7 +120,12 @@ export default function BracketTreeCore({
                 style={{ height: columnHeight, width: columnWidth }}
               >
                 {round.map((match) => {
-                  const focused = isMatchInView(match, viewPreset, event.raceDays);
+                  const focused = isMatchInView(
+                    match,
+                    viewPreset,
+                    event.raceDays,
+                    allMatches,
+                  );
                   const top = offsets.get(match.id) ?? 0;
 
                   return (
@@ -159,7 +166,12 @@ export default function BracketTreeCore({
                 style={{ gap: 0, minHeight: columnHeight }}
               >
                 {round.map((match, matchIndex) => {
-                  const focused = isMatchInView(match, viewPreset, event.raceDays);
+                  const focused = isMatchInView(
+                    match,
+                    viewPreset,
+                    event.raceDays,
+                    allMatches,
+                  );
 
                   return (
                     <div
