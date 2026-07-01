@@ -4,6 +4,7 @@ import {
   parseTimetableCrew,
   resultMatchesPair,
 } from "./hrr-api";
+import { enrichCrew, withSeededFlag } from "./crew-seeds";
 import { EXPECTED_ROUND_SIZES } from "./bracket-layout";
 import type {
   BracketMatch,
@@ -37,9 +38,10 @@ function buildCrewRegistry(draw: DrawData): Map<string, Crew> {
 
   const register = (crew: Crew | null) => {
     if (!crew?.name) return;
-    registry.set(crew.name.toLowerCase(), crew);
-    if (crew.shortName) {
-      registry.set(crew.shortName.toLowerCase(), crew);
+    const enriched = withSeededFlag(crew);
+    registry.set(enriched.name.toLowerCase(), enriched);
+    if (enriched.shortName) {
+      registry.set(enriched.shortName.toLowerCase(), enriched);
     }
   };
 
@@ -63,7 +65,7 @@ function resolveCrew(raw: string, registry: Map<string, Crew>): Crew {
     }
   }
 
-  return { name: parsed, shortName: parsed };
+  return { name: parsed, shortName: parsed, seeded: false };
 }
 
 function createEmptyMatch(
@@ -101,12 +103,13 @@ function createEmptyMatch(
 function applyResultToMatch(
   match: BracketMatch,
   result: HrrResult,
+  registry: Map<string, Crew>,
 ): BracketMatch {
   return {
     ...match,
     status: "complete",
-    winner: result.winner,
-    loser: result.loser,
+    winner: enrichCrew(result.winner, registry) ?? result.winner,
+    loser: enrichCrew(result.loser, registry) ?? result.loser,
     verdict: result.verdict,
     raceNumber: result.number,
     raceTime: result.raceTime,
@@ -218,6 +221,7 @@ function findMatchForTimetableRace(
 function tryApplyResult(
   rounds: BracketMatch[][],
   result: HrrResult,
+  registry: Map<string, Crew>,
 ): boolean {
   for (let ri = 0; ri < rounds.length; ri++) {
     for (let mi = 0; mi < rounds[ri].length; mi++) {
@@ -227,14 +231,14 @@ function tryApplyResult(
       if (
         matchHasBothCrews(match, result.winner.name, result.loser.name)
       ) {
-        rounds[ri][mi] = applyResultToMatch(match, result);
+        rounds[ri][mi] = applyResultToMatch(match, result, registry);
         return true;
       }
 
       const berks = getCrewName(match.berks);
       const bucks = getCrewName(match.bucks);
       if (berks && bucks && resultMatchesPair(result, berks, bucks)) {
-        rounds[ri][mi] = applyResultToMatch(match, result);
+        rounds[ri][mi] = applyResultToMatch(match, result, registry);
         return true;
       }
     }
@@ -367,18 +371,31 @@ function countUnmatchedResults(
   return results.filter((r) => !matched.has(r.id));
 }
 
+function applySeedsToDraw(draw: DrawData): void {
+  for (const round of draw.rounds) {
+    for (const match of round) {
+      if (match.berks) match.berks = withSeededFlag(match.berks);
+      if (match.bucks) match.bucks = withSeededFlag(match.bucks);
+    }
+  }
+}
+
 export function buildBracket(
   results: HrrResult[],
   timetable: TimetableData = { raceDay: null, races: [] },
 ): BracketState {
   const draw = cloneDraw();
+  applySeedsToDraw(draw);
   validateDrawStructure(draw);
   const registry = buildCrewRegistry(draw);
 
   const rounds: BracketMatch[][] = draw.rounds.map((round, roundIndex) =>
-    round.map((match, matchIndex) =>
-      createEmptyMatch(match, roundIndex, matchIndex),
-    ),
+    round.map((match, matchIndex) => {
+      const bracketMatch = createEmptyMatch(match, roundIndex, matchIndex);
+      bracketMatch.berks = enrichCrew(bracketMatch.berks, registry);
+      bracketMatch.bucks = enrichCrew(bracketMatch.bucks, registry);
+      return bracketMatch;
+    }),
   );
 
   const sortedResults = [...results].sort(
@@ -387,7 +404,7 @@ export function buildBracket(
   );
 
   for (const result of sortedResults) {
-    if (!tryApplyResult(rounds, result)) {
+    if (!tryApplyResult(rounds, result, registry)) {
       console.warn(
         `[bracket] Unmatched result: race ${result.number} ${result.winner.name} beat ${result.loser.name}`,
       );
@@ -406,7 +423,9 @@ export function buildBracket(
 
   const final = rounds[rounds.length - 1][0];
   const champion =
-    final.status === "complete" && final.winner ? final.winner : null;
+    final.status === "complete" && final.winner
+      ? enrichCrew(final.winner, registry)
+      : null;
 
   return {
     event: draw.event,

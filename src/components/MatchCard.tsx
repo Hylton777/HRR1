@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { formatRaceSchedule } from "@/lib/schedule-label";
 import { crewsMatch } from "@/lib/crew-match";
+import { isSeededCrew } from "@/lib/crew-seeds";
 import { raceResultFromMatch, type RaceResultDetail } from "@/lib/race-result";
 import type { Crew, RaceSplits } from "@/lib/types";
 import {
@@ -99,7 +100,10 @@ function CrewRow({
           {stationLabel}
         </span>
       )}
-      <span className="min-w-0 truncate" title={crew?.name}>
+      <span
+        className={`min-w-0 truncate ${isSeededCrew(crew) ? "font-bold" : ""}`}
+        title={crew?.name}
+      >
         {displayName(crew)}
       </span>
     </div>
@@ -178,14 +182,20 @@ function CompactBracketBox({
         <div
           className={`flex-1 flex items-center px-1.5 min-h-0 border-b border-[var(--card-border)] text-[9px] leading-tight ${rowClass(berksWon, status === "complete" && !berksWon && !!berks, !!berks)}`}
         >
-          <span className="truncate w-full" title={berks?.name}>
+          <span
+            className={`truncate w-full ${isSeededCrew(berks) ? "font-bold" : ""}`}
+            title={berks?.name}
+          >
             {displayName(berks)}
           </span>
         </div>
         <div
           className={`flex-1 flex items-center px-1.5 min-h-0 text-[9px] leading-tight ${rowClass(bucksWon, status === "complete" && !bucksWon && !!bucks, !!bucks)}`}
         >
-          <span className="truncate w-full" title={bucks?.name}>
+          <span
+            className={`truncate w-full ${isSeededCrew(bucks) ? "font-bold" : ""}`}
+            title={bucks?.name}
+          >
             {displayName(bucks)}
           </span>
         </div>

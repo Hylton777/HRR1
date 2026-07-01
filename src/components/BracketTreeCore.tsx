@@ -15,6 +15,7 @@ import {
 import { isMatchInView, type BracketViewPreset } from "@/lib/regatta-days";
 import BracketConnectors from "./BracketConnectors";
 import MatchCard from "./MatchCard";
+import { isSeededCrew } from "@/lib/crew-seeds";
 
 const ROUND_NAMES = [
   "1st Round",
@@ -53,7 +54,7 @@ function ChampionCard({
       >
         2026 Winner
       </div>
-      <div className={`font-bold ${compact ? "text-xs" : "text-lg"}`}>
+      <div className={`${compact ? "text-xs" : "text-lg"} ${isSeededCrew(champion) ? "font-extrabold" : "font-bold"}`}>
         {champion.shortName || champion.name}
       </div>
     </div>

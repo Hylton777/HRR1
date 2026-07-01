@@ -1,13 +1,18 @@
 "use client";
 
 import { formatUpcomingRaceMeta } from "@/lib/schedule-label";
-import type { UpcomingRace } from "@/lib/types";
+import { isSeededCrew } from "@/lib/crew-seeds";
+import type { Crew, UpcomingRace } from "@/lib/types";
 
 function displayName(
-  crew: { name: string; shortName?: string } | null,
+  crew: Crew | null,
 ): string {
   if (!crew) return "TBD";
   return crew.shortName || crew.name;
+}
+
+function crewClass(crew: Crew | null, colorClass: string): string {
+  return `${colorClass} ${isSeededCrew(crew) ? "font-bold" : "font-medium"}`;
 }
 
 interface NextRacesPanelProps {
@@ -53,9 +58,13 @@ export default function NextRacesPanel({
               next.raceDay,
             )}
           </span>
-          <span className="text-[var(--berks)]">{displayName(next.berks)}</span>
+          <span className={crewClass(next.berks, "text-[var(--berks)]")}>
+            {displayName(next.berks)}
+          </span>
           <span className="text-[var(--muted)] font-normal"> vs </span>
-          <span className="text-[var(--bucks)]">{displayName(next.bucks)}</span>
+          <span className={crewClass(next.bucks, "text-[var(--bucks)]")}>
+            {displayName(next.bucks)}
+          </span>
         </div>
         {races.length > 1 && (
           <div className="flex gap-2 overflow-x-auto pb-0.5 -mx-1 px-1">
@@ -129,11 +138,11 @@ export default function NextRacesPanel({
               </span>
             </div>
             <div className="font-medium leading-snug">
-              <span className="text-[var(--berks)]">
+              <span className={crewClass(race.berks, "text-[var(--berks)]")}>
                 {displayName(race.berks)}
               </span>{" "}
               <span className="text-[var(--muted)] font-normal">vs</span>{" "}
-              <span className="text-[var(--bucks)]">
+              <span className={crewClass(race.bucks, "text-[var(--bucks)]")}>
                 {displayName(race.bucks)}
               </span>
             </div>

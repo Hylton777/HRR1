@@ -2,6 +2,8 @@ export interface Crew {
   name: string;
   shortName?: string;
   number?: number;
+  /** Seeded/selected crew on the official Henley draw chart */
+  seeded?: boolean;
 }
 
 export interface SplitTiming {

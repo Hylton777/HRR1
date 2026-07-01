@@ -6,6 +6,7 @@ import {
   raceResultFromHrr,
   type RaceResultDetail,
 } from "@/lib/race-result";
+import { isSeededCrew } from "@/lib/crew-seeds";
 import type { HrrResult } from "@/lib/types";
 import RaceResultModal from "./RaceResultModal";
 
@@ -26,11 +27,14 @@ export default function RaceResultCard({ result }: RaceResultCardProps) {
         <div className="text-xs text-[var(--muted)] mb-1">
           Race {result.number} · {result.raceDay} {result.raceTime}
         </div>
-        <div className="font-medium text-[var(--winner)]">
+        <div className={`font-medium text-[var(--winner)] ${isSeededCrew(result.winner) ? "font-bold" : ""}`}>
           {crewDisplayName(result.winner)}
         </div>
         <div className="text-[var(--muted)] text-xs">
-          beat {crewDisplayName(result.loser)}
+          beat{" "}
+          <span className={isSeededCrew(result.loser) ? "font-bold" : ""}>
+            {crewDisplayName(result.loser)}
+          </span>
         </div>
         {result.verdict && (
           <div className="text-xs text-[var(--hrr-navy)] font-medium mt-1.5">

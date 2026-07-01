@@ -8,6 +8,7 @@ import {
   formatStation,
   type RaceResultDetail,
 } from "@/lib/race-result";
+import { isSeededCrew } from "@/lib/crew-seeds";
 
 interface RaceResultModalProps {
   detail: RaceResultDetail;
@@ -104,11 +105,11 @@ export default function RaceResultModal({
           />
 
           <div className="col-span-12 text-center pt-1">
-            <p className="text-xl font-display font-semibold text-[var(--hrr-blue)] leading-tight">
+            <p className={`text-xl font-display leading-tight text-[var(--hrr-blue)] ${isSeededCrew(detail.winner) ? "font-bold" : "font-semibold"}`}>
               {crewDisplayName(detail.winner)}
             </p>
             <p className="text-[13px] italic text-[var(--muted)] mt-1">beat</p>
-            <p className="text-[13px] text-[var(--hrr-blue)]/80 mt-0.5">
+            <p className={`text-[13px] mt-0.5 text-[var(--hrr-blue)]/80 ${isSeededCrew(detail.loser) ? "font-bold" : ""}`}>
               {crewDisplayName(detail.loser)}
             </p>
             {detail.withdrawn && (
