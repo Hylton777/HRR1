@@ -163,29 +163,29 @@
       {
         "id": "qf-0",
         "drawRace": 1,
-        "feeders": ["r2-0", "r2-5"],
-        "berks": { "name": "Bedford School", "shortName": "Bedford Sch.", "number": 256 },
-        "bucks": { "name": "Shiplake College", "shortName": "Shiplake Coll.", "number": 283 }
+        "feeders": ["r2-0", "r2-1"],
+        "berks": { "name": "Shiplake College", "shortName": "Shiplake Coll.", "number": 283 },
+        "bucks": { "name": "St. Edward's School", "shortName": "St. Edward's Sch.", "number": 286 }
       },
       {
         "id": "qf-1",
         "drawRace": 2,
-        "feeders": ["r2-1", "r2-4"],
-        "berks": { "name": "Radley College", "shortName": "Radley Coll.", "number": 281 },
-        "bucks": { "name": "St. Edward's School", "shortName": "St. Edward's Sch.", "number": 286 }
+        "feeders": ["r2-2", "r2-3"],
+        "berks": { "name": "King's College School, Wimbledon", "shortName": "King's Coll. Sch.", "number": 273 },
+        "bucks": { "name": "Hampton School", "shortName": "Hampton Sch.", "number": 270 }
       },
       {
         "id": "qf-2",
         "drawRace": 3,
-        "feeders": ["r2-3", "r2-6"],
-        "berks": { "name": "Hampton School", "shortName": "Hampton Sch.", "number": 270 },
-        "bucks": { "name": "St. Paul's School", "shortName": "St. Paul's Sch.", "number": 288 }
+        "feeders": ["r2-4", "r2-5"],
+        "berks": { "name": "Radley College", "shortName": "Radley Coll.", "number": 281 },
+        "bucks": { "name": "Bedford School", "shortName": "Bedford Sch.", "number": 256 }
       },
       {
         "id": "qf-3",
         "drawRace": 4,
-        "feeders": ["r2-2", "r2-7"],
-        "berks": { "name": "King's College School, Wimbledon", "shortName": "King's Coll. Sch.", "number": 273 },
+        "feeders": ["r2-6", "r2-7"],
+        "berks": { "name": "St. Paul's School", "shortName": "St. Paul's Sch.", "number": 288 },
         "bucks": { "name": "Sydney University Boat Club, Australia", "shortName": "Sydney Univ. B.C.", "number": 290 }
       }
     ],
