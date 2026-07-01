@@ -17,14 +17,10 @@ interface MatchCardProps {
 }
 
 function displayName(
-  crew: { name: string; shortName?: string; number?: number } | null,
-  compact: boolean,
+  crew: { name: string; shortName?: string } | null,
 ): string {
   if (!crew) return "TBD";
-  const label = crew.shortName || crew.name;
-  if (compact && crew.number) return `${crew.number}`;
-  if (crew.number) return `${crew.number} ${label}`;
-  return label;
+  return crew.shortName || crew.name;
 }
 
 function CrewRow({
@@ -70,7 +66,7 @@ function CrewRow({
         </span>
       )}
       <span className="min-w-0 truncate" title={crew?.name}>
-        {displayName(crew, compact)}
+        {displayName(crew)}
       </span>
     </div>
   );
@@ -96,7 +92,7 @@ export default function MatchCard({
   return (
     <div
       className={`bg-[var(--card)] border rounded-lg overflow-hidden ${
-        compact ? "w-[108px]" : "w-full md:w-[220px]"
+        compact ? "w-[120px]" : "w-full md:w-[220px]"
       } ${
         status === "complete"
           ? "border-green-800/50"

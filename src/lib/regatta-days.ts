@@ -6,12 +6,12 @@ export interface RegattaDay {
   shortLabel: string;
   /** ISO date YYYY-MM-DD in Europe/London */
   isoDate: string;
-  /** Typical PE round index (0–4) when raceDay is not yet published */
+  /** Primary PE round index (0–4) for this racing day */
   primaryRoundIndex: number;
 }
 
-/** PE racing days at HRR 2026 (Tue–Sun, regatta 30 Jun – 5 Jul) */
-export const PE_REGATTA_DAYS: RegattaDay[] = [
+/** PE races only on these days — Thursday is a rest day for PE */
+export const PE_RACE_DAYS: RegattaDay[] = [
   {
     id: "tue",
     label: "Tuesday 30 June",
@@ -24,13 +24,6 @@ export const PE_REGATTA_DAYS: RegattaDay[] = [
     label: "Wednesday 1 July",
     shortLabel: "Wed",
     isoDate: "2026-07-01",
-    primaryRoundIndex: 1,
-  },
-  {
-    id: "thu",
-    label: "Thursday 2 July",
-    shortLabel: "Thu",
-    isoDate: "2026-07-02",
     primaryRoundIndex: 1,
   },
   {
@@ -73,11 +66,23 @@ export function getLondonTodayIso(): string {
 }
 
 export function getRegattaDayByIso(iso: string): RegattaDay | undefined {
-  return PE_REGATTA_DAYS.find((d) => d.isoDate === iso);
+  return PE_RACE_DAYS.find((d) => d.isoDate === iso);
 }
 
 export function getRegattaDayById(id: string): RegattaDay | undefined {
-  return PE_REGATTA_DAYS.find((d) => d.id === id);
+  return PE_RACE_DAYS.find((d) => d.id === id);
+}
+
+/** Index of the current PE racing day (on rest days, returns the previous race day). */
+export function getCurrentPeRaceDayIndex(): number {
+  const iso = getLondonTodayIso();
+  const exact = PE_RACE_DAYS.findIndex((d) => d.isoDate === iso);
+  if (exact >= 0) return exact;
+
+  const nextIdx = PE_RACE_DAYS.findIndex((d) => d.isoDate > iso);
+  if (nextIdx > 0) return nextIdx - 1;
+  if (nextIdx === 0) return 0;
+  return PE_RACE_DAYS.length - 1;
 }
 
 function parseRaceDayIso(raceDay: string | null): string | null {
@@ -110,7 +115,7 @@ function parseRaceDayIso(raceDay: string | null): string | null {
     }
   }
 
-  for (const day of PE_REGATTA_DAYS) {
+  for (const day of PE_RACE_DAYS) {
     if (raceDay.toLowerCase().includes(day.label.split(" ")[0].toLowerCase())) {
       return day.isoDate;
     }
@@ -126,7 +131,7 @@ export function getMatchRegattaDay(match: BracketMatch): RegattaDay | null {
   }
 
   return (
-    PE_REGATTA_DAYS.find((d) => d.primaryRoundIndex === match.roundIndex) ??
+    PE_RACE_DAYS.find((d) => d.primaryRoundIndex === match.roundIndex) ??
     null
   );
 }
@@ -143,52 +148,53 @@ export function matchOnRegattaDay(
 
 export function resolveViewPreset(
   preset: BracketViewPreset,
-): { days: RegattaDay[]; roundIndex: number | null } {
+): { days: RegattaDay[]; roundIndices: number[] } {
   if (preset === "full") {
-    return { days: [], roundIndex: null };
+    return { days: [], roundIndices: [] };
   }
 
+  const currentIdx = getCurrentPeRaceDayIndex();
+
   if (preset === "today") {
-    const today = getRegattaDayByIso(getLondonTodayIso());
-    return { days: today ? [today] : [], roundIndex: null };
+    const day = PE_RACE_DAYS[currentIdx];
+    return { days: day ? [day] : [], roundIndices: day ? [day.primaryRoundIndex] : [] };
   }
 
   if (preset === "today-tomorrow") {
-    const todayIso = getLondonTodayIso();
-    const todayIdx = PE_REGATTA_DAYS.findIndex((d) => d.isoDate === todayIso);
-    if (todayIdx === -1) return { days: [], roundIndex: null };
-    return {
-      days: PE_REGATTA_DAYS.slice(todayIdx, todayIdx + 2),
-      roundIndex: null,
-    };
+    const days = PE_RACE_DAYS.slice(currentIdx, currentIdx + 2);
+    const roundIndices = days.map((d) => d.primaryRoundIndex);
+    return { days, roundIndices };
   }
 
   if (preset.startsWith("day:")) {
     const day = getRegattaDayById(preset.slice(4));
-    return { days: day ? [day] : [], roundIndex: null };
+    return {
+      days: day ? [day] : [],
+      roundIndices: day ? [day.primaryRoundIndex] : [],
+    };
   }
 
   if (preset.startsWith("round:")) {
     const roundIndex = parseInt(preset.slice(6), 10);
     return {
       days: [],
-      roundIndex: Number.isNaN(roundIndex) ? null : roundIndex,
+      roundIndices: Number.isNaN(roundIndex) ? [] : [roundIndex],
     };
   }
 
-  return { days: [], roundIndex: null };
+  return { days: [], roundIndices: [] };
 }
 
 export function isMatchInView(
   match: BracketMatch,
   preset: BracketViewPreset,
 ): boolean {
-  const { days, roundIndex } = resolveViewPreset(preset);
-
   if (preset === "full") return true;
 
-  if (roundIndex !== null) {
-    return match.roundIndex === roundIndex;
+  const { days, roundIndices } = resolveViewPreset(preset);
+
+  if (roundIndices.length > 0) {
+    return roundIndices.includes(match.roundIndex);
   }
 
   if (days.length === 0) return true;
@@ -209,8 +215,17 @@ export function groupMatchesByDay(
     groups.set(day.isoDate, list);
   }
 
-  return PE_REGATTA_DAYS.filter((d) => groups.has(d.isoDate)).map((day) => ({
+  return PE_RACE_DAYS.filter((d) => groups.has(d.isoDate)).map((day) => ({
     day,
     matches: groups.get(day.isoDate) ?? [],
   }));
+}
+
+/** Label for the today+tomorrow preset button, e.g. "Wed + Fri" */
+export function getTodayTomorrowLabel(): string {
+  const idx = getCurrentPeRaceDayIndex();
+  const days = PE_RACE_DAYS.slice(idx, idx + 2);
+  if (days.length === 0) return "Today + tomorrow";
+  if (days.length === 1) return days[0].shortLabel;
+  return `${days[0].shortLabel} + ${days[1].shortLabel}`;
 }

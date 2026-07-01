@@ -9,10 +9,9 @@ import type { BracketApiResponse } from "@/lib/types";
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 function displayName(
-  crew: { name: string; shortName?: string; number?: number } | null,
+  crew: { name: string; shortName?: string } | null,
 ): string {
   if (!crew) return "TBD";
-  if (crew.number) return `${crew.number} ${crew.shortName || crew.name}`;
   return crew.shortName || crew.name;
 }
 

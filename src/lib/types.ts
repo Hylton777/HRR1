@@ -42,6 +42,8 @@ export interface DrawMatch {
   id: string;
   berks: Crew | null;
   bucks: Crew | null;
+  /** Parent match ids in the official draw (Henley steward pairings) */
+  feeders?: string[];
 }
 
 export interface DrawData {
@@ -57,6 +59,7 @@ export interface BracketMatch {
   roundIndex: number;
   matchIndex: number;
   roundLabel: string;
+  feeders?: string[];
   berks: Crew | null;
   bucks: Crew | null;
   status: MatchStatus;

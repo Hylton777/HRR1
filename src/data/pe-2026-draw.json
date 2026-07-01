@@ -127,10 +127,30 @@
       }
     ],
     [
-      { "id": "qf-0", "berks": null, "bucks": null },
-      { "id": "qf-1", "berks": null, "bucks": null },
-      { "id": "qf-2", "berks": null, "bucks": null },
-      { "id": "qf-3", "berks": null, "bucks": null }
+      {
+        "id": "qf-0",
+        "feeders": ["r2-0", "r2-4"],
+        "berks": { "name": "Bedford School", "shortName": "Bedford Sch.", "number": 256 },
+        "bucks": { "name": "Shiplake College", "shortName": "Shiplake Coll.", "number": 283 }
+      },
+      {
+        "id": "qf-1",
+        "feeders": ["r2-1", "r2-5"],
+        "berks": { "name": "Radley College", "shortName": "Radley Coll.", "number": 281 },
+        "bucks": { "name": "St. Edward's School", "shortName": "St. Edward's Sch.", "number": 286 }
+      },
+      {
+        "id": "qf-2",
+        "feeders": ["r2-2", "r2-6"],
+        "berks": { "name": "Hampton School", "shortName": "Hampton Sch.", "number": 270 },
+        "bucks": { "name": "St. Paul's School", "shortName": "St. Paul's Sch.", "number": 288 }
+      },
+      {
+        "id": "qf-3",
+        "feeders": ["r2-3", "r2-7"],
+        "berks": { "name": "King's College School, Wimbledon", "shortName": "King's Coll. Sch.", "number": 273 },
+        "bucks": { "name": "Sydney University Boat Club, Australia", "shortName": "Sydney Univ. B.C.", "number": 290 }
+      }
     ],
     [
       { "id": "sf-0", "berks": null, "bucks": null },

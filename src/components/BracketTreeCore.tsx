@@ -1,6 +1,11 @@
 "use client";
 
 import type { BracketState } from "@/lib/types";
+import {
+  computeMatchOffsets,
+  getColumnHeight,
+  getMatchMarginTops,
+} from "@/lib/bracket-layout";
 import { isMatchInView, type BracketViewPreset } from "@/lib/regatta-days";
 import MatchCard from "./MatchCard";
 
@@ -57,6 +62,7 @@ export default function BracketTreeCore({
 }: BracketTreeCoreProps) {
   const matchHeight = compact ? 52 : 88;
   const gap = compact ? 4 : 8;
+  const offsets = computeMatchOffsets(bracket.rounds, matchHeight, gap);
 
   return (
     <div
@@ -64,7 +70,8 @@ export default function BracketTreeCore({
       data-bracket-root
     >
       {bracket.rounds.map((round, roundIndex) => {
-        const slotMultiplier = Math.pow(2, roundIndex);
+        const margins = getMatchMarginTops(round, offsets, matchHeight);
+        const columnHeight = getColumnHeight(round, offsets, matchHeight, gap);
 
         return (
           <div
@@ -92,7 +99,8 @@ export default function BracketTreeCore({
             <div
               className="flex flex-col"
               style={{
-                gap,
+                gap: 0,
+                minHeight: columnHeight,
                 paddingTop: roundIndex > 0 ? matchHeight / 2 : 0,
               }}
             >
@@ -110,10 +118,7 @@ export default function BracketTreeCore({
                       dimUnfocused && !focused ? "opacity-25" : "opacity-100"
                     }`}
                     style={{
-                      marginTop:
-                        roundIndex > 0 && matchIndex > 0
-                          ? (matchHeight + gap) * (slotMultiplier - 1)
-                          : 0,
+                      marginTop: matchIndex === 0 ? 0 : margins[matchIndex],
                     }}
                   >
                     <MatchCard

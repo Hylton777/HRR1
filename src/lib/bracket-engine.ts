@@ -66,7 +66,7 @@ function resolveCrew(raw: string, registry: Map<string, Crew>): Crew {
 }
 
 function createEmptyMatch(
-  match: { id: string; berks: Crew | null; bucks: Crew | null },
+  match: { id: string; berks: Crew | null; bucks: Crew | null; feeders?: string[] },
   roundIndex: number,
   matchIndex: number,
 ): BracketMatch {
@@ -75,6 +75,7 @@ function createEmptyMatch(
     roundIndex,
     matchIndex,
     roundLabel: ROUND_LABELS[roundIndex] ?? `Round ${roundIndex + 1}`,
+    feeders: match.feeders,
     berks: match.berks,
     bucks: match.bucks,
     status: "pending",

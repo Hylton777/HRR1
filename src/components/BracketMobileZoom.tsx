@@ -9,7 +9,8 @@ import {
 } from "react";
 import type { BracketState } from "@/lib/types";
 import {
-  PE_REGATTA_DAYS,
+  PE_RACE_DAYS,
+  getTodayTomorrowLabel,
   groupMatchesByDay,
   type BracketViewPreset,
 } from "@/lib/regatta-days";
@@ -347,6 +348,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
           }`}
         >
           Today + tomorrow
+          <span className="text-[var(--loser)] ml-1">({getTodayTomorrowLabel()})</span>
         </button>
         <button
           type="button"
@@ -390,7 +392,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
           className="ml-auto text-[10px] bg-[var(--card)] border border-[var(--card-border)] rounded px-1.5 py-0.5 text-[var(--loser)]"
         >
           <option value="">Day…</option>
-          {PE_REGATTA_DAYS.map((day) => (
+          {PE_RACE_DAYS.map((day) => (
             <option key={day.id} value={`day:${day.id}`}>
               {day.shortLabel}
             </option>
