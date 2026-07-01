@@ -4,6 +4,7 @@ import {
   parseTimetableCrew,
   resultMatchesPair,
 } from "./hrr-api";
+import { EXPECTED_ROUND_SIZES } from "./bracket-layout";
 import type {
   BracketMatch,
   BracketState,
@@ -316,11 +317,49 @@ export function collectUpcomingRaces(rounds: BracketMatch[][]): UpcomingRace[] {
   });
 }
 
+function validateDrawStructure(draw: DrawData): void {
+  for (let i = 0; i < EXPECTED_ROUND_SIZES.length; i++) {
+    const expected = EXPECTED_ROUND_SIZES[i];
+    const actual = draw.rounds[i]?.length ?? 0;
+    if (actual !== expected) {
+      console.warn(
+        `[bracket] Draw round ${i + 1}: expected ${expected} matches, found ${actual}`,
+      );
+    }
+  }
+}
+
+function countUnmatchedResults(
+  rounds: BracketMatch[][],
+  results: HrrResult[],
+): HrrResult[] {
+  const matched = new Set<number>();
+
+  for (const result of results) {
+    for (const round of rounds) {
+      for (const match of round) {
+        if (match.status !== "complete") continue;
+        if (
+          match.winner &&
+          crewsMatch(match.winner.name, result.winner.name) &&
+          match.loser &&
+          crewsMatch(match.loser.name, result.loser.name)
+        ) {
+          matched.add(result.id);
+        }
+      }
+    }
+  }
+
+  return results.filter((r) => !matched.has(r.id));
+}
+
 export function buildBracket(
   results: HrrResult[],
   timetable: TimetableData = { raceDay: null, races: [] },
 ): BracketState {
   const draw = cloneDraw();
+  validateDrawStructure(draw);
   const registry = buildCrewRegistry(draw);
 
   const rounds: BracketMatch[][] = draw.rounds.map((round, roundIndex) =>
@@ -335,7 +374,18 @@ export function buildBracket(
   );
 
   for (const result of sortedResults) {
-    tryApplyResult(rounds, result);
+    if (!tryApplyResult(rounds, result)) {
+      console.warn(
+        `[bracket] Unmatched result: race ${result.number} ${result.winner.name} beat ${result.loser.name}`,
+      );
+    }
+  }
+
+  const unmatched = countUnmatchedResults(rounds, sortedResults);
+  if (unmatched.length > 0) {
+    console.warn(
+      `[bracket] ${unmatched.length} result(s) not applied to draw slots`,
+    );
   }
 
   mergeTimetable(rounds, timetable, registry);

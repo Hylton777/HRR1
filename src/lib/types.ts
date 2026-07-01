@@ -89,6 +89,8 @@ export interface BracketApiResponse {
   timetableDay: string | null;
   timetablePeRaces: number;
   upcomingRaces: UpcomingRace[];
+  roundCounts?: number[];
+  bracketWarnings?: string[];
 }
 
 export interface TimetableRace {

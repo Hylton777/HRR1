@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { buildBracket, collectUpcomingRaces } from "@/lib/bracket-engine";
 import { fetchPeResults, fetchPeTimetable } from "@/lib/hrr-api";
+import { validateRoundCounts } from "@/lib/bracket-layout";
 import type { BracketApiResponse } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +14,8 @@ export async function GET() {
     ]);
 
     const bracket = buildBracket(results, timetable);
+    const roundCounts = bracket.rounds.map((r) => r.length);
+    const bracketWarnings = validateRoundCounts(bracket.rounds);
 
     const response: BracketApiResponse = {
       bracket,
@@ -27,6 +30,8 @@ export async function GET() {
       timetableDay: timetable.raceDay,
       timetablePeRaces: timetable.races.length,
       upcomingRaces: collectUpcomingRaces(bracket.rounds),
+      roundCounts,
+      bracketWarnings,
     };
 
     return NextResponse.json(response, {
