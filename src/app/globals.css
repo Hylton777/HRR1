@@ -25,6 +25,10 @@ body {
   scrollbar-color: var(--card-border) transparent;
 }
 
+.bracket-viewport {
+  -webkit-overflow-scrolling: touch;
+}
+
 .bracket-scroll::-webkit-scrollbar {
   height: 8px;
 }

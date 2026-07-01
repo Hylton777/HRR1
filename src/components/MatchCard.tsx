@@ -18,10 +18,13 @@ interface MatchCardProps {
 
 function displayName(
   crew: { name: string; shortName?: string; number?: number } | null,
+  compact: boolean,
 ): string {
   if (!crew) return "TBD";
-  if (crew.number) return `${crew.number} ${crew.shortName || crew.name}`;
-  return crew.shortName || crew.name;
+  const label = crew.shortName || crew.name;
+  if (compact && crew.number) return `${crew.number}`;
+  if (crew.number) return `${crew.number} ${label}`;
+  return label;
 }
 
 function CrewRow({
@@ -30,12 +33,14 @@ function CrewRow({
   isWinner,
   isLoser,
   showStation,
+  compact,
 }: {
   crew: { name: string; shortName?: string; number?: number } | null;
   side: "berks" | "bucks";
   isWinner: boolean;
   isLoser: boolean;
   showStation: boolean;
+  compact: boolean;
 }) {
   const stationLabel = side === "berks" ? "B" : "K";
   const stationColor =
@@ -43,7 +48,9 @@ function CrewRow({
 
   return (
     <div
-      className={`flex items-center gap-2 px-2 py-2 sm:py-1.5 rounded text-sm transition-colors ${
+      className={`flex items-center gap-1 rounded transition-colors ${
+        compact ? "px-1 py-0.5 text-[10px]" : "px-2 py-2 sm:py-1.5 text-sm"
+      } ${
         isWinner
           ? "bg-green-950/50 text-[var(--winner)] font-medium"
           : isLoser
@@ -55,13 +62,15 @@ function CrewRow({
     >
       {showStation && (
         <span
-          className={`text-xs font-bold w-5 shrink-0 text-center ${stationColor}`}
+          className={`font-bold shrink-0 text-center ${stationColor} ${
+            compact ? "text-[8px] w-3" : "text-xs w-5"
+          }`}
         >
           {stationLabel}
         </span>
       )}
-      <span className="min-w-0 break-words" title={crew?.name}>
-        {displayName(crew)}
+      <span className="min-w-0 truncate" title={crew?.name}>
+        {displayName(crew, compact)}
       </span>
     </div>
   );
@@ -86,48 +95,69 @@ export default function MatchCard({
 
   return (
     <div
-      className={`bg-[var(--card)] border rounded-lg overflow-hidden w-full md:w-[220px] ${
+      className={`bg-[var(--card)] border rounded-lg overflow-hidden ${
+        compact ? "w-[108px]" : "w-full md:w-[220px]"
+      } ${
         status === "complete"
           ? "border-green-800/50"
           : status === "scheduled"
             ? "border-[var(--accent)]/40"
             : "border-[var(--card-border)]"
-      } ${compact ? "text-xs" : ""}`}
+      }`}
     >
-      {(roundLabel || status === "scheduled") && (
-        <div className="px-3 py-1.5 bg-[var(--card-border)]/30 text-xs text-[var(--loser)] flex justify-between gap-2">
-          {roundLabel ? <span className="truncate">{roundLabel}</span> : <span />}
+      {(roundLabel || (status === "scheduled" && !compact)) && (
+        <div
+          className={`bg-[var(--card-border)]/30 text-[var(--loser)] flex justify-between gap-1 ${
+            compact ? "px-1 py-0.5 text-[8px]" : "px-3 py-1.5 text-xs"
+          }`}
+        >
+          {roundLabel ? (
+            <span className="truncate">{roundLabel}</span>
+          ) : (
+            <span />
+          )}
           {status === "scheduled" && (
             <span
               className={`shrink-0 ${
                 raceTime ? "text-[var(--accent)]" : "text-[var(--bucks)]"
               }`}
             >
-              {formatRaceSchedule(raceTime, raceNumber)}
+              {compact && raceTime
+                ? raceTime
+                : formatRaceSchedule(raceTime, raceNumber)}
             </span>
           )}
         </div>
       )}
-      <div className="p-2 space-y-0.5">
+      {compact && status === "scheduled" && raceTime && !roundLabel && (
+        <div className="px-1 py-0.5 text-[8px] text-[var(--accent)] text-center border-b border-[var(--card-border)]/40">
+          {raceTime}
+        </div>
+      )}
+      <div className={compact ? "p-0.5 space-y-0" : "p-2 space-y-0.5"}>
         <CrewRow
           crew={berks}
           side="berks"
           isWinner={berksWon}
           isLoser={status === "complete" && !berksWon && !!berks}
           showStation={showStations}
+          compact={compact}
         />
-        <div className="text-center text-[10px] text-[var(--loser)] py-0.5">
-          vs
-        </div>
+        {!compact && (
+          <div className="text-center text-[10px] text-[var(--loser)] py-0.5">
+            vs
+          </div>
+        )}
         <CrewRow
           crew={bucks}
           side="bucks"
           isWinner={bucksWon}
           isLoser={status === "complete" && !bucksWon && !!bucks}
           showStation={showStations}
+          compact={compact}
         />
       </div>
-      {status === "complete" && verdict && (
+      {status === "complete" && verdict && !compact && (
         <div className="px-3 py-1.5 text-xs text-center border-t border-[var(--card-border)] text-[var(--loser)]">
           {verdict}
         </div>

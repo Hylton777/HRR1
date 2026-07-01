@@ -64,9 +64,6 @@ export default function Dashboard() {
           <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
             Knockout Bracket
           </h2>
-          <p className="text-xs text-[var(--loser)] mb-3 md:hidden">
-            Berks (B) and Bucks (K) stations match the official draw.
-          </p>
           <Bracket bracket={data.bracket} />
         </section>
 
