@@ -1,5 +1,6 @@
 "use client";
 
+import { formatRaceSchedule } from "@/lib/schedule-label";
 import { crewsMatch } from "@/lib/hrr-api";
 
 interface MatchCardProps {
@@ -9,6 +10,8 @@ interface MatchCardProps {
   status: "pending" | "scheduled" | "complete";
   verdict: string | null;
   roundLabel: string;
+  raceTime?: string | null;
+  raceNumber?: string | null;
   showStations?: boolean;
   compact?: boolean;
 }
@@ -63,6 +66,8 @@ export default function MatchCard({
   status,
   verdict,
   roundLabel,
+  raceTime = null,
+  raceNumber = null,
   showStations = false,
   compact = false,
 }: MatchCardProps) {
@@ -84,7 +89,13 @@ export default function MatchCard({
       <div className="px-2 py-1 bg-[var(--card-border)]/30 text-xs text-[var(--loser)] flex justify-between">
         <span>{roundLabel}</span>
         {status === "scheduled" && (
-          <span className="text-[var(--bucks)]">Upcoming</span>
+          <span
+            className={
+              raceTime ? "text-[var(--accent)]" : "text-[var(--bucks)]"
+            }
+          >
+            {formatRaceSchedule(raceTime, raceNumber)}
+          </span>
         )}
       </div>
       <div className="p-1.5 space-y-0.5">

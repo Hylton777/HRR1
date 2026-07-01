@@ -83,6 +83,9 @@ export interface BracketApiResponse {
   lastUpdated: string;
   resultCount: number;
   hrrGenerated: string | null;
+  timetableDay: string | null;
+  timetablePeRaces: number;
+  upcomingRaces: UpcomingRace[];
 }
 
 export interface TimetableRace {
@@ -90,4 +93,19 @@ export interface TimetableRace {
   time: string;
   berks: string;
   bucks: string;
+}
+
+export interface TimetableData {
+  raceDay: string | null;
+  races: TimetableRace[];
+}
+
+export interface UpcomingRace {
+  id: string;
+  roundLabel: string;
+  berks: Crew | null;
+  bucks: Crew | null;
+  raceNumber: string | null;
+  raceTime: string | null;
+  raceDay: string | null;
 }

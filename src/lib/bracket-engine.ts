@@ -10,7 +10,9 @@ import type {
   Crew,
   DrawData,
   HrrResult,
+  TimetableData,
   TimetableRace,
+  UpcomingRace,
 } from "./types";
 
 const ROUND_LABELS = [
@@ -142,11 +144,33 @@ function tryApplyResult(
   return false;
 }
 
+function applyTimetableRace(
+  match: BracketMatch,
+  race: TimetableRace,
+  raceDay: string | null,
+): boolean {
+  const berksRaw = parseTimetableCrew(race.berks);
+  const bucksRaw = parseTimetableCrew(race.bucks);
+
+  if (!matchHasBothCrews(match, berksRaw, bucksRaw)) {
+    return false;
+  }
+
+  match.raceTime = race.time;
+  match.raceNumber = race.raceNumber;
+  if (raceDay) {
+    match.raceDay = raceDay;
+  }
+  return true;
+}
+
 function mergeTimetable(
   rounds: BracketMatch[][],
-  timetable: TimetableRace[],
+  timetable: TimetableData,
 ): void {
-  for (const race of timetable) {
+  const { races, raceDay } = timetable;
+
+  for (const race of races) {
     const berksRaw = parseTimetableCrew(race.berks);
     const bucksRaw = parseTimetableCrew(race.bucks);
 
@@ -157,11 +181,15 @@ function mergeTimetable(
         const berks = getCrewName(match.berks);
         const bucks = getCrewName(match.bucks);
 
-        if (berks && bucks) continue;
+        if (berks && bucks) {
+          applyTimetableRace(match, race, raceDay);
+          continue;
+        }
 
         if (!berks && !bucks) {
           match.berks = { name: berksRaw, shortName: berksRaw };
           match.bucks = { name: bucksRaw, shortName: bucksRaw };
+          applyTimetableRace(match, race, raceDay);
         } else if (berks && !bucks) {
           const opponent = crewsMatch(berks, berksRaw) ? bucksRaw : berksRaw;
           if (!crewsMatch(berks, opponent)) {
@@ -189,9 +217,33 @@ function updateStatuses(rounds: BracketMatch[][]): void {
   }
 }
 
+export function collectUpcomingRaces(rounds: BracketMatch[][]): UpcomingRace[] {
+  const upcoming = rounds
+    .flat()
+    .filter((match) => match.status === "scheduled")
+    .map((match) => ({
+      id: match.id,
+      roundLabel: match.roundLabel,
+      berks: match.berks,
+      bucks: match.bucks,
+      raceNumber: match.raceNumber,
+      raceTime: match.raceTime,
+      raceDay: match.raceDay,
+    }));
+
+  return upcoming.sort((a, b) => {
+    if (a.raceTime && b.raceTime) {
+      return a.raceTime.localeCompare(b.raceTime);
+    }
+    if (a.raceTime) return -1;
+    if (b.raceTime) return 1;
+    return 0;
+  });
+}
+
 export function buildBracket(
   results: HrrResult[],
-  timetable: TimetableRace[] = [],
+  timetable: TimetableData = { raceDay: null, races: [] },
 ): BracketState {
   const draw = cloneDraw();
 

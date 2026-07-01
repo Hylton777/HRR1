@@ -1,5 +1,10 @@
 import * as cheerio from "cheerio";
-import type { HrrResult, HrrResultsResponse, TimetableRace } from "./types";
+import type {
+  HrrResult,
+  HrrResultsResponse,
+  TimetableData,
+  TimetableRace,
+} from "./types";
 
 const HRR_API_BASE = "https://www.hrr.co.uk/wp-json/hrr/v1";
 const PE_TROPHY_SLUG = "the-princess-elizabeth-challenge-cup";
@@ -87,14 +92,25 @@ export async function fetchPeResults(year = "2026"): Promise<{
   return { results, generated };
 }
 
-export async function fetchPeTimetable(): Promise<TimetableRace[]> {
+const PE_TROPHY_CODES = new Set(["PE", "P Elizabeth"]);
+
+function parseTimetableRaceDay(html: string): string | null {
+  const match = html.match(
+    /(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+\d{1,2}\s+\w+\s+\d{4}/i,
+  );
+  return match?.[0]?.trim() ?? null;
+}
+
+export async function fetchPeTimetable(): Promise<TimetableData> {
+  const empty: TimetableData = { raceDay: null, races: [] };
+
   try {
     const response = await fetch(TIMETABLE_URL, {
-      next: { revalidate: 300 },
+      cache: "no-store",
       headers: { Accept: "text/html" },
     });
 
-    if (!response.ok) return [];
+    if (!response.ok) return empty;
 
     const html = await response.text();
     const $ = cheerio.load(html);
@@ -102,19 +118,25 @@ export async function fetchPeTimetable(): Promise<TimetableRace[]> {
 
     $("tr.timetable-row-r").each((_, row) => {
       const trophy = $(row).find(".timetable-field-trophy").text().trim();
-      if (trophy !== "PE" && trophy !== "P Elizabeth") return;
+      if (!PE_TROPHY_CODES.has(trophy)) return;
+
+      const time = $(row).find(".timetable-field-time").text().trim();
+      if (!time) return;
 
       races.push({
         raceNumber: $(row).find(".timetable-field-race").text().trim(),
-        time: $(row).find(".timetable-field-time").text().trim(),
+        time,
         berks: $(row).find(".timetable-field-berks").text().trim(),
         bucks: $(row).find(".timetable-field-bucks").text().trim(),
       });
     });
 
-    return races;
+    return {
+      raceDay: parseTimetableRaceDay(html),
+      races,
+    };
   } catch {
-    return [];
+    return empty;
   }
 }
 

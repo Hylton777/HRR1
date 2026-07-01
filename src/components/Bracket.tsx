@@ -50,6 +50,8 @@ export default function Bracket({ bracket }: BracketProps) {
                       status={match.status}
                       verdict={match.verdict}
                       roundLabel={match.roundLabel}
+                      raceTime={match.raceTime}
+                      raceNumber={match.raceNumber}
                       showStations={roundIndex === 0}
                     />
                   </div>

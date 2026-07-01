@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { buildBracket } from "@/lib/bracket-engine";
+import { buildBracket, collectUpcomingRaces } from "@/lib/bracket-engine";
 import { fetchPeResults, fetchPeTimetable } from "@/lib/hrr-api";
 import type { BracketApiResponse } from "@/lib/types";
 
@@ -24,6 +24,9 @@ export async function GET() {
       lastUpdated: new Date().toISOString(),
       resultCount: results.length,
       hrrGenerated: generated,
+      timetableDay: timetable.raceDay,
+      timetablePeRaces: timetable.races.length,
+      upcomingRaces: collectUpcomingRaces(bracket.rounds),
     };
 
     return NextResponse.json(response, {
