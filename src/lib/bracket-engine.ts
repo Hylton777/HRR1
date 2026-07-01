@@ -1,11 +1,10 @@
-import drawData from "@/data/pe-2026-draw.json";
+import type { EventConfig } from "@/config/events";
 import {
   crewsMatch,
   parseTimetableCrew,
   resultMatchesPair,
 } from "./hrr-api";
 import { enrichCrew, withSeededFlag } from "./crew-seeds";
-import { EXPECTED_ROUND_SIZES } from "./bracket-layout";
 import type {
   BracketMatch,
   BracketState,
@@ -17,28 +16,23 @@ import type {
   UpcomingRace,
 } from "./types";
 
-const ROUND_LABELS = [
-  "1st Round",
-  "2nd Round",
-  "Quarter-Final",
-  "Semi-Final",
-  "Final",
-];
-
-function cloneDraw(): DrawData {
-  return JSON.parse(JSON.stringify(drawData)) as DrawData;
+function cloneDraw(draw: DrawData): DrawData {
+  return JSON.parse(JSON.stringify(draw)) as DrawData;
 }
 
 function getCrewName(crew: Crew | null | undefined): string | null {
   return crew?.name ?? null;
 }
 
-function buildCrewRegistry(draw: DrawData): Map<string, Crew> {
+function buildCrewRegistry(
+  draw: DrawData,
+  event: EventConfig,
+): Map<string, Crew> {
   const registry = new Map<string, Crew>();
 
   const register = (crew: Crew | null) => {
     if (!crew?.name) return;
-    const enriched = withSeededFlag(crew);
+    const enriched = withSeededFlag(crew, event);
     registry.set(enriched.name.toLowerCase(), enriched);
     if (enriched.shortName) {
       registry.set(enriched.shortName.toLowerCase(), enriched);
@@ -78,13 +72,14 @@ function createEmptyMatch(
   },
   roundIndex: number,
   matchIndex: number,
+  roundLabels: string[],
 ): BracketMatch {
   return {
     id: match.id,
     roundIndex,
     matchIndex,
     drawRace: match.drawRace,
-    roundLabel: ROUND_LABELS[roundIndex] ?? `Round ${roundIndex + 1}`,
+    roundLabel: roundLabels[roundIndex] ?? `Round ${roundIndex + 1}`,
     feeders: match.feeders,
     berks: match.berks,
     bucks: match.bucks,
@@ -103,13 +98,14 @@ function createEmptyMatch(
 function applyResultToMatch(
   match: BracketMatch,
   result: HrrResult,
+  event: EventConfig,
   registry: Map<string, Crew>,
 ): BracketMatch {
   return {
     ...match,
     status: "complete",
-    winner: enrichCrew(result.winner, registry) ?? result.winner,
-    loser: enrichCrew(result.loser, registry) ?? result.loser,
+    winner: enrichCrew(result.winner, event, registry) ?? result.winner,
+    loser: enrichCrew(result.loser, event, registry) ?? result.loser,
     verdict: result.verdict,
     raceNumber: result.number,
     raceTime: result.raceTime,
@@ -221,6 +217,7 @@ function findMatchForTimetableRace(
 function tryApplyResult(
   rounds: BracketMatch[][],
   result: HrrResult,
+  event: EventConfig,
   registry: Map<string, Crew>,
 ): boolean {
   for (let ri = 0; ri < rounds.length; ri++) {
@@ -231,14 +228,14 @@ function tryApplyResult(
       if (
         matchHasBothCrews(match, result.winner.name, result.loser.name)
       ) {
-        rounds[ri][mi] = applyResultToMatch(match, result, registry);
+        rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
         return true;
       }
 
       const berks = getCrewName(match.berks);
       const bucks = getCrewName(match.bucks);
       if (berks && bucks && resultMatchesPair(result, berks, bucks)) {
-        rounds[ri][mi] = applyResultToMatch(match, result, registry);
+        rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
         return true;
       }
     }
@@ -334,9 +331,12 @@ export function collectUpcomingRaces(rounds: BracketMatch[][]): UpcomingRace[] {
   });
 }
 
-function validateDrawStructure(draw: DrawData): void {
-  for (let i = 0; i < EXPECTED_ROUND_SIZES.length; i++) {
-    const expected = EXPECTED_ROUND_SIZES[i];
+function validateDrawStructure(
+  draw: DrawData,
+  roundSizes: readonly number[],
+): void {
+  for (let i = 0; i < roundSizes.length; i++) {
+    const expected = roundSizes[i];
     const actual = draw.rounds[i]?.length ?? 0;
     if (actual !== expected) {
       console.warn(
@@ -371,29 +371,35 @@ function countUnmatchedResults(
   return results.filter((r) => !matched.has(r.id));
 }
 
-function applySeedsToDraw(draw: DrawData): void {
+function applySeedsToDraw(draw: DrawData, event: EventConfig): void {
   for (const round of draw.rounds) {
     for (const match of round) {
-      if (match.berks) match.berks = withSeededFlag(match.berks);
-      if (match.bucks) match.bucks = withSeededFlag(match.bucks);
+      if (match.berks) match.berks = withSeededFlag(match.berks, event);
+      if (match.bucks) match.bucks = withSeededFlag(match.bucks, event);
     }
   }
 }
 
 export function buildBracket(
+  event: EventConfig,
   results: HrrResult[],
   timetable: TimetableData = { raceDay: null, races: [] },
 ): BracketState {
-  const draw = cloneDraw();
-  applySeedsToDraw(draw);
-  validateDrawStructure(draw);
-  const registry = buildCrewRegistry(draw);
+  const draw = cloneDraw(event.draw);
+  applySeedsToDraw(draw, event);
+  validateDrawStructure(draw, event.roundSizes);
+  const registry = buildCrewRegistry(draw, event);
 
   const rounds: BracketMatch[][] = draw.rounds.map((round, roundIndex) =>
     round.map((match, matchIndex) => {
-      const bracketMatch = createEmptyMatch(match, roundIndex, matchIndex);
-      bracketMatch.berks = enrichCrew(bracketMatch.berks, registry);
-      bracketMatch.bucks = enrichCrew(bracketMatch.bucks, registry);
+      const bracketMatch = createEmptyMatch(
+        match,
+        roundIndex,
+        matchIndex,
+        event.roundLabels,
+      );
+      bracketMatch.berks = enrichCrew(bracketMatch.berks, event, registry);
+      bracketMatch.bucks = enrichCrew(bracketMatch.bucks, event, registry);
       return bracketMatch;
     }),
   );
@@ -404,7 +410,7 @@ export function buildBracket(
   );
 
   for (const result of sortedResults) {
-    if (!tryApplyResult(rounds, result, registry)) {
+    if (!tryApplyResult(rounds, result, event, registry)) {
       console.warn(
         `[bracket] Unmatched result: race ${result.number} ${result.winner.name} beat ${result.loser.name}`,
       );
@@ -424,7 +430,7 @@ export function buildBracket(
   const final = rounds[rounds.length - 1][0];
   const champion =
     final.status === "complete" && final.winner
-      ? enrichCrew(final.winner, registry)
+      ? enrichCrew(final.winner, event, registry)
       : null;
 
   return {

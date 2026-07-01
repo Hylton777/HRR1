@@ -9,13 +9,14 @@ import {
 } from "react";
 import type { BracketState } from "@/lib/types";
 import {
-  PE_RACE_DAYS,
+  getRoundPresetLabels,
   getTodayTomorrowLabel,
   groupMatchesByDay,
   type BracketViewPreset,
 } from "@/lib/regatta-days";
 import BracketTreeCore from "./BracketTreeCore";
 import MatchCard from "./MatchCard";
+import { useEvent } from "./EventContext";
 
 interface BracketMobileZoomProps {
   bracket: BracketState;
@@ -103,8 +104,9 @@ function computeFitTransform(
 }
 
 function DayStackView({ bracket }: { bracket: BracketState }) {
+  const event = useEvent();
   const allMatches = bracket.rounds.flat();
-  const dayGroups = groupMatchesByDay(allMatches);
+  const dayGroups = groupMatchesByDay(allMatches, event.raceDays);
 
   if (dayGroups.length === 0) {
     return (
@@ -157,6 +159,7 @@ function DayStackView({ bracket }: { bracket: BracketState }) {
 }
 
 export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
+  const event = useEvent();
   const viewportRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState<Transform>({
@@ -311,13 +314,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
     });
   };
 
-  const roundPresets: { label: string; preset: BracketViewPreset }[] = [
-    { label: "R1", preset: "round:0" },
-    { label: "R2", preset: "round:1" },
-    { label: "QF", preset: "round:2" },
-    { label: "SF", preset: "round:3" },
-    { label: "F", preset: "round:4" },
-  ];
+  const roundPresets = getRoundPresetLabels(event.roundLabels);
 
   return (
     <div className="space-y-3">
@@ -362,7 +359,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
               : "border-[var(--card-border)] text-[var(--muted)]"
           }`}
         >
-          {getTodayTomorrowLabel()}
+          {getTodayTomorrowLabel(event.raceDays)}
         </button>
         <button
           type="button"
@@ -406,7 +403,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
           className="ml-auto text-[10px] bg-[var(--card)] border border-[var(--card-border)] rounded-sm px-1.5 py-0.5 text-[var(--muted)]"
         >
           <option value="">Day…</option>
-          {PE_RACE_DAYS.map((day) => (
+          {event.raceDays.map((day) => (
             <option key={day.id} value={`day:${day.id}`}>
               {day.shortLabel}
             </option>

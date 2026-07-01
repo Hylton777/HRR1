@@ -1,0 +1,112 @@
+{
+  "event": "The Prince of Wales Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 official draw chart",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": { "name": "Tideway Scullers' School and London Rowing Club", "shortName": "Tideway Scullers' & London R.C.", "number": 460 },
+        "bucks": { "name": "Oxford Brookes University", "shortName": "Oxford Brookes Univ.", "number": 448 }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
+        "berks": { "name": "Crabtree Boat Club", "shortName": "Crabtree B.C.", "number": 438 },
+        "bucks": { "name": "Algemene Amsterdamsche Studenten Roeivereniging Skøll 'A', Netherlands", "shortName": "A.A.S.R. Skøll, NED.", "number": 434 }
+      },
+      {
+        "id": "r1-2",
+        "drawRace": 3,
+        "berks": { "name": "Reading University 'D'", "shortName": "Reading Univ. 'D'", "number": 453 },
+        "bucks": { "name": "University of Glasgow and Clydesdale Amateur Rowing Club", "shortName": "Glasgow U. & Clydesdale A.R.C.", "number": 439 }
+      },
+      {
+        "id": "r1-3",
+        "drawRace": 4,
+        "berks": { "name": "Reading University 'B'", "shortName": "Reading Univ. 'B'", "number": 451 },
+        "bucks": { "name": "Leander Club", "shortName": "Leander Club", "number": 443 }
+      },
+      {
+        "id": "r1-4",
+        "drawRace": 5,
+        "berks": { "name": "Reading University 'A'", "shortName": "Reading Univ. 'A'", "number": 450 },
+        "bucks": { "name": "Algemene Groninger Studenten Roeivereniging Gyas, Netherlands", "shortName": "A.G.S.R. Gyas, NED.", "number": 436 }
+      },
+      {
+        "id": "r1-5",
+        "drawRace": 6,
+        "berks": { "name": "Stuttgarter Rudergesellschaft von 1899, Germany", "shortName": "Stuttgarter R.G., GER.", "number": 457 },
+        "bucks": { "name": "The Windsorian Rowing Club and The Windsor Boys' School", "shortName": "Windsorian R.C. & Windsor Boys' Sch.", "number": 459 }
+      },
+      {
+        "id": "r1-6",
+        "drawRace": 7,
+        "berks": { "name": "Nautilus Rowing Club and Edinburgh University", "shortName": "Nautilus R.C. & Edinburgh Univ.", "number": 446 },
+        "bucks": { "name": "The Windsorian Rowing Club and Marlow Rowing Club", "shortName": "Windsorian R.C. & Marlow R.C.", "number": 458 }
+      },
+      {
+        "id": "r1-7",
+        "drawRace": 8,
+        "berks": { "name": "Leander Club and Leeds Rowing Club", "shortName": "Leander Club & Leeds R.C.", "number": 444 },
+        "bucks": { "name": "Reading University 'C'", "shortName": "Reading Univ. 'C'", "number": 452 }
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": ["r1-0", "r1-1"],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": ["r1-2", "r1-3"],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "feeders": ["r1-4", "r1-5"],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": ["r1-6", "r1-7"],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": ["qf-0", "qf-1"],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": ["qf-2", "qf-3"],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": ["sf-0", "sf-1"],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

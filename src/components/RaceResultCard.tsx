@@ -9,12 +9,14 @@ import {
 import { isSeededCrew } from "@/lib/crew-seeds";
 import type { HrrResult } from "@/lib/types";
 import RaceResultModal from "./RaceResultModal";
+import { useEvent } from "./EventContext";
 
 interface RaceResultCardProps {
   result: HrrResult;
 }
 
 export default function RaceResultCard({ result }: RaceResultCardProps) {
+  const event = useEvent();
   const [detail, setDetail] = useState<RaceResultDetail | null>(null);
 
   return (
@@ -27,12 +29,12 @@ export default function RaceResultCard({ result }: RaceResultCardProps) {
         <div className="text-xs text-[var(--muted)] mb-1">
           Race {result.number} · {result.raceDay} {result.raceTime}
         </div>
-        <div className={`font-medium text-[var(--winner)] ${isSeededCrew(result.winner) ? "font-bold" : ""}`}>
+        <div className={`font-medium text-[var(--winner)] ${isSeededCrew(result.winner, event) ? "font-bold" : ""}`}>
           {crewDisplayName(result.winner)}
         </div>
         <div className="text-[var(--muted)] text-xs">
           beat{" "}
-          <span className={isSeededCrew(result.loser) ? "font-bold" : ""}>
+          <span className={isSeededCrew(result.loser, event) ? "font-bold" : ""}>
             {crewDisplayName(result.loser)}
           </span>
         </div>

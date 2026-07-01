@@ -97,7 +97,8 @@ export interface BracketApiResponse {
   resultCount: number;
   hrrGenerated: string | null;
   timetableDay: string | null;
-  timetablePeRaces: number;
+  timetableRaceCount: number;
+  eventId: string;
   upcomingRaces: UpcomingRace[];
   roundCounts?: number[];
   bracketWarnings?: string[];

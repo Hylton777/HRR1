@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import type { EventConfig } from "@/config/events";
 import { crewsMatch } from "./crew-match";
 import type {
   HrrResult,
@@ -8,24 +9,25 @@ import type {
 } from "./types";
 
 const HRR_API_BASE = "https://www.hrr.co.uk/wp-json/hrr/v1";
-const PE_TROPHY_SLUG = "the-princess-elizabeth-challenge-cup";
 const TIMETABLE_URL = "https://www.hrr.co.uk/compete/race-timetable/";
 
 export { crewsMatch, normalizeCrewName } from "./crew-match";
 
-export async function fetchPeResults(year = "2026"): Promise<{
+export async function fetchEventResults(
+  event: Pick<EventConfig, "trophySlug" | "year">,
+): Promise<{
   results: HrrResult[];
   generated: string | null;
 }> {
+  const year = String(event.year);
   const accumulated = new Map<number, HrrResult>();
   let resultPage = 1;
   let lastPage = 1;
   let generated: string | null = null;
 
-  // HRR uses "result-page" (not "page") for pagination — see hrr.co.uk app.js
   while (resultPage <= lastPage) {
     const params = new URLSearchParams({
-      trophy: PE_TROPHY_SLUG,
+      trophy: event.trophySlug,
       "race-year": year,
       "result-page": String(resultPage),
     });
@@ -63,8 +65,6 @@ export async function fetchPeResults(year = "2026"): Promise<{
   return { results, generated };
 }
 
-const PE_TROPHY_CODES = new Set(["PE", "P Elizabeth"]);
-
 function parseTimetableRaceDay(html: string): string | null {
   const match = html.match(
     /(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+\d{1,2}\s+\w+\s+\d{4}/i,
@@ -72,8 +72,11 @@ function parseTimetableRaceDay(html: string): string | null {
   return match?.[0]?.trim() ?? null;
 }
 
-export async function fetchPeTimetable(): Promise<TimetableData> {
+export async function fetchEventTimetable(
+  event: Pick<EventConfig, "timetableCodes">,
+): Promise<TimetableData> {
   const empty: TimetableData = { raceDay: null, races: [] };
+  const codes = new Set(event.timetableCodes);
 
   try {
     const response = await fetch(TIMETABLE_URL, {
@@ -89,7 +92,7 @@ export async function fetchPeTimetable(): Promise<TimetableData> {
 
     $("tr.timetable-row-r").each((_, row) => {
       const trophy = $(row).find(".timetable-field-trophy").text().trim();
-      if (!PE_TROPHY_CODES.has(trophy)) return;
+      if (!codes.has(trophy)) return;
 
       const time = $(row).find(".timetable-field-time").text().trim();
       if (!time) return;
@@ -109,6 +112,21 @@ export async function fetchPeTimetable(): Promise<TimetableData> {
   } catch {
     return empty;
   }
+}
+
+/** @deprecated Use fetchEventResults */
+export async function fetchPeResults(year = "2026") {
+  return fetchEventResults({
+    trophySlug: "the-princess-elizabeth-challenge-cup",
+    year: Number(year),
+  });
+}
+
+/** @deprecated Use fetchEventTimetable */
+export async function fetchPeTimetable() {
+  return fetchEventTimetable({
+    timetableCodes: ["PE", "P Elizabeth"],
+  });
 }
 
 export function parseTimetableCrew(raw: string): string {

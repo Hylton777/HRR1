@@ -11,6 +11,7 @@ import {
   COMPACT_MATCH_WIDTH,
 } from "@/lib/bracket-layout";
 import RaceResultModal from "./RaceResultModal";
+import { useEvent } from "./EventContext";
 
 interface MatchCardProps {
   berks: Crew | null;
@@ -67,6 +68,7 @@ function CrewRow({
   isLoser,
   showStation,
   compact,
+  event,
 }: {
   crew: Crew | null;
   side: "berks" | "bucks";
@@ -74,6 +76,7 @@ function CrewRow({
   isLoser: boolean;
   showStation: boolean;
   compact: boolean;
+  event: ReturnType<typeof useEvent>;
 }) {
   const stationLabel = side === "berks" ? "B" : "K";
   const stationColor =
@@ -101,7 +104,7 @@ function CrewRow({
         </span>
       )}
       <span
-        className={`min-w-0 truncate ${isSeededCrew(crew) ? "font-bold" : ""}`}
+        className={`min-w-0 truncate ${isSeededCrew(crew, event) ? "font-bold" : ""}`}
         title={crew?.name}
       >
         {displayName(crew)}
@@ -119,6 +122,7 @@ function CompactBracketBox({
   raceTime,
   verdict,
   onOpenDetail,
+  event,
 }: {
   berks: MatchCardProps["berks"];
   bucks: MatchCardProps["bucks"];
@@ -128,6 +132,7 @@ function CompactBracketBox({
   raceTime: string | null;
   verdict: string | null;
   onOpenDetail?: () => void;
+  event: ReturnType<typeof useEvent>;
 }) {
   const rowClass = (isWinner: boolean, isLoser: boolean, hasCrew: boolean) => {
     if (isWinner) return "bg-emerald-50/80 text-[var(--winner)] font-medium";
@@ -183,7 +188,7 @@ function CompactBracketBox({
           className={`flex-1 flex items-center px-1.5 min-h-0 border-b border-[var(--card-border)] text-[9px] leading-tight ${rowClass(berksWon, status === "complete" && !berksWon && !!berks, !!berks)}`}
         >
           <span
-            className={`truncate w-full ${isSeededCrew(berks) ? "font-bold" : ""}`}
+            className={`truncate w-full ${isSeededCrew(berks, event) ? "font-bold" : ""}`}
             title={berks?.name}
           >
             {displayName(berks)}
@@ -193,7 +198,7 @@ function CompactBracketBox({
           className={`flex-1 flex items-center px-1.5 min-h-0 text-[9px] leading-tight ${rowClass(bucksWon, status === "complete" && !bucksWon && !!bucks, !!bucks)}`}
         >
           <span
-            className={`truncate w-full ${isSeededCrew(bucks) ? "font-bold" : ""}`}
+            className={`truncate w-full ${isSeededCrew(bucks, event) ? "font-bold" : ""}`}
             title={bucks?.name}
           >
             {displayName(bucks)}
@@ -210,6 +215,7 @@ function CompactBracketBox({
 }
 
 export default function MatchCard(props: MatchCardProps) {
+  const event = useEvent();
   const {
     berks,
     bucks,
@@ -247,6 +253,7 @@ export default function MatchCard(props: MatchCardProps) {
           raceTime={raceTime}
           verdict={verdict}
           onOpenDetail={status === "complete" ? openDetail : undefined}
+          event={event}
         />
         {detail && (
           <RaceResultModal detail={detail} onClose={() => setDetail(null)} />
@@ -307,6 +314,7 @@ export default function MatchCard(props: MatchCardProps) {
             isLoser={status === "complete" && !berksWon && !!berks}
             showStation={showStations}
             compact={false}
+            event={event}
           />
           <div className="text-center text-[10px] text-[var(--muted)] py-0.5">
             vs
@@ -318,6 +326,7 @@ export default function MatchCard(props: MatchCardProps) {
             isLoser={status === "complete" && !bucksWon && !!bucks}
             showStation={showStations}
             compact={false}
+            event={event}
           />
         </div>
         {status === "complete" && verdict && (

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { EVENTS } from "@/config/events";
+import { getEventConfig, isEventId } from "@/config/events";
 import { buildBracket, collectUpcomingRaces } from "@/lib/bracket-engine";
 import { fetchEventResults, fetchEventTimetable } from "@/lib/hrr-api";
 import { validateRoundCounts } from "@/lib/bracket-layout";
@@ -7,9 +7,17 @@ import type { BracketApiResponse } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
-/** Legacy PE-only endpoint — prefer /api/bracket/pe */
-export async function GET() {
-  const event = EVENTS.pe;
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ event: string }> },
+) {
+  const { event: eventId } = await params;
+
+  if (!isEventId(eventId)) {
+    return NextResponse.json({ error: "Unknown event" }, { status: 404 });
+  }
+
+  const event = getEventConfig(eventId)!;
 
   try {
     const [{ results, generated }, timetable] = await Promise.all([
@@ -48,7 +56,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("Bracket API error:", error);
+    console.error(`Bracket API error (${eventId}):`, error);
     return NextResponse.json(
       { error: "Failed to fetch bracket data" },
       { status: 500 },

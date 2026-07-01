@@ -3,6 +3,7 @@
 import { formatUpcomingRaceMeta } from "@/lib/schedule-label";
 import { isSeededCrew } from "@/lib/crew-seeds";
 import type { Crew, UpcomingRace } from "@/lib/types";
+import { useEvent } from "./EventContext";
 
 function displayName(
   crew: Crew | null,
@@ -11,8 +12,12 @@ function displayName(
   return crew.shortName || crew.name;
 }
 
-function crewClass(crew: Crew | null, colorClass: string): string {
-  return `${colorClass} ${isSeededCrew(crew) ? "font-bold" : "font-medium"}`;
+function crewClass(
+  crew: Crew | null,
+  colorClass: string,
+  event: ReturnType<typeof useEvent>,
+): string {
+  return `${colorClass} ${isSeededCrew(crew, event) ? "font-bold" : "font-medium"}`;
 }
 
 interface NextRacesPanelProps {
@@ -27,11 +32,13 @@ export default function NextRacesPanel({
   timetableDay,
   compact = false,
 }: NextRacesPanelProps) {
+  const event = useEvent();
+
   if (races.length === 0) {
     if (compact) return null;
     return (
       <p className="text-[var(--muted)] text-sm">
-        No upcoming PE races in the draw yet.
+        No upcoming {event.shortLabel} races in the draw yet.
       </p>
     );
   }
@@ -58,11 +65,11 @@ export default function NextRacesPanel({
               next.raceDay,
             )}
           </span>
-          <span className={crewClass(next.berks, "text-[var(--berks)]")}>
+          <span className={crewClass(next.berks, "text-[var(--berks)]", event)}>
             {displayName(next.berks)}
           </span>
           <span className="text-[var(--muted)] font-normal"> vs </span>
-          <span className={crewClass(next.bucks, "text-[var(--bucks)]")}>
+          <span className={crewClass(next.bucks, "text-[var(--bucks)]", event)}>
             {displayName(next.bucks)}
           </span>
         </div>
@@ -93,8 +100,7 @@ export default function NextRacesPanel({
           >
             official HRR draw
           </a>
-          {timetableDay ? ` (${timetableDay})` : ""}. PE has no racing on
-          Thursday — Friday times publish around 9pm BST the evening before.
+          {timetableDay ? ` (${timetableDay})` : ""}. {event.noRacingNote}
         </p>
       </div>
     );
@@ -138,11 +144,11 @@ export default function NextRacesPanel({
               </span>
             </div>
             <div className="font-medium leading-snug">
-              <span className={crewClass(race.berks, "text-[var(--berks)]")}>
+              <span className={crewClass(race.berks, "text-[var(--berks)]", event)}>
                 {displayName(race.berks)}
               </span>{" "}
               <span className="text-[var(--muted)] font-normal">vs</span>{" "}
-              <span className={crewClass(race.bucks, "text-[var(--bucks)]")}>
+              <span className={crewClass(race.bucks, "text-[var(--bucks)]", event)}>
                 {displayName(race.bucks)}
               </span>
             </div>

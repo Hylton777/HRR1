@@ -1,0 +1,169 @@
+import peDraw from "@/data/pe-2026-draw.json";
+import powDraw from "@/data/pow-2026-draw.json";
+import type { DrawData } from "@/lib/types";
+import type { RegattaDay } from "@/lib/regatta-days";
+
+export type EventId = "pe" | "pow";
+
+export interface EventConfig {
+  id: EventId;
+  trophySlug: string;
+  timetableCodes: string[];
+  year: number;
+  displayName: string;
+  shortLabel: string;
+  headerSubtitle: string;
+  crewCount: number;
+  draw: DrawData;
+  raceDays: RegattaDay[];
+  roundSizes: readonly number[];
+  roundLabels: string[];
+  seededCrewNumbers: readonly number[];
+  seededCrewNames: readonly string[];
+  noRacingNote?: string;
+}
+
+const PE_RACE_DAYS: RegattaDay[] = [
+  {
+    id: "tue",
+    label: "Tuesday 30 June",
+    shortLabel: "Tue",
+    isoDate: "2026-06-30",
+    primaryRoundIndex: 0,
+  },
+  {
+    id: "wed",
+    label: "Wednesday 1 July",
+    shortLabel: "Wed",
+    isoDate: "2026-07-01",
+    primaryRoundIndex: 1,
+  },
+  {
+    id: "fri",
+    label: "Friday 3 July",
+    shortLabel: "Fri",
+    isoDate: "2026-07-03",
+    primaryRoundIndex: 2,
+  },
+  {
+    id: "sat",
+    label: "Saturday 4 July",
+    shortLabel: "Sat",
+    isoDate: "2026-07-04",
+    primaryRoundIndex: 3,
+  },
+  {
+    id: "sun",
+    label: "Sunday 5 July",
+    shortLabel: "Sun",
+    isoDate: "2026-07-05",
+    primaryRoundIndex: 4,
+  },
+];
+
+const POW_RACE_DAYS: RegattaDay[] = [
+  {
+    id: "tue",
+    label: "Tuesday 30 June",
+    shortLabel: "Tue",
+    isoDate: "2026-06-30",
+    primaryRoundIndex: 0,
+  },
+  {
+    id: "wed",
+    label: "Wednesday 1 July",
+    shortLabel: "Wed",
+    isoDate: "2026-07-01",
+    primaryRoundIndex: 1,
+  },
+  {
+    id: "fri",
+    label: "Friday 3 July",
+    shortLabel: "Fri",
+    isoDate: "2026-07-03",
+    primaryRoundIndex: 2,
+  },
+  {
+    id: "sat",
+    label: "Saturday 4 July",
+    shortLabel: "Sat",
+    isoDate: "2026-07-04",
+    primaryRoundIndex: 3,
+  },
+];
+
+export const EVENTS: Record<EventId, EventConfig> = {
+  pe: {
+    id: "pe",
+    trophySlug: "the-princess-elizabeth-challenge-cup",
+    timetableCodes: ["PE", "P Elizabeth"],
+    year: 2026,
+    displayName: "Princess Elizabeth Challenge Cup",
+    shortLabel: "PE",
+    headerSubtitle: "Live knockout bracket · 32 crews · Junior men's eights",
+    crewCount: 32,
+    draw: peDraw as DrawData,
+    raceDays: PE_RACE_DAYS,
+    roundSizes: [16, 8, 4, 2, 1],
+    roundLabels: [
+      "1st Round",
+      "2nd Round",
+      "Quarter-Final",
+      "Semi-Final",
+      "Final",
+    ],
+    seededCrewNumbers: [
+      256, 263, 270, 273, 281, 282, 283, 284, 286, 288, 290, 300,
+    ],
+    seededCrewNames: [
+      "Bedford School",
+      "Deerfield Academy, U.S.A.",
+      "Hampton School",
+      "King's College School, Wimbledon",
+      "Radley College",
+      "Reading Blue Coat School",
+      "Shiplake College",
+      "Shrewsbury School",
+      "St. Edward's School",
+      "St. Paul's School",
+      "Sydney University Boat Club, Australia",
+      "Westminster School",
+    ],
+    noRacingNote:
+      "PE has no racing on Thursday — Friday times publish around 9pm BST the evening before.",
+  },
+  pow: {
+    id: "pow",
+    trophySlug: "the-prince-of-wales-challenge-cup",
+    timetableCodes: ["Pr Wales"],
+    year: 2026,
+    displayName: "Prince of Wales Challenge Cup",
+    shortLabel: "POW",
+    headerSubtitle: "Live knockout bracket · 16 crews · Club fours",
+    crewCount: 16,
+    draw: powDraw as DrawData,
+    raceDays: POW_RACE_DAYS,
+    roundSizes: [8, 4, 2, 1],
+    roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
+    seededCrewNumbers: [434, 443, 446, 450],
+    seededCrewNames: [
+      "Algemene Amsterdamsche Studenten Roeivereniging Skøll 'A', Netherlands",
+      "Leander Club",
+      "Nautilus Rowing Club and Edinburgh University",
+      "Reading University 'A'",
+    ],
+    noRacingNote:
+      "Thursday is a rest day — Friday times publish around 9pm BST the evening before.",
+  },
+};
+
+export const EVENT_LIST: EventConfig[] = [EVENTS.pe, EVENTS.pow];
+
+export function getEventConfig(id: string): EventConfig | null {
+  if (id in EVENTS) return EVENTS[id as EventId];
+  return null;
+}
+
+export function isEventId(id: string): id is EventId {
+  return id in EVENTS;
+}

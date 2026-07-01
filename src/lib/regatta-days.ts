@@ -6,48 +6,9 @@ export interface RegattaDay {
   shortLabel: string;
   /** ISO date YYYY-MM-DD in Europe/London */
   isoDate: string;
-  /** Primary PE round index (0–4) for this racing day */
+  /** Primary round index for this racing day */
   primaryRoundIndex: number;
 }
-
-/** PE races only on these days — Thursday is a rest day for PE */
-export const PE_RACE_DAYS: RegattaDay[] = [
-  {
-    id: "tue",
-    label: "Tuesday 30 June",
-    shortLabel: "Tue",
-    isoDate: "2026-06-30",
-    primaryRoundIndex: 0,
-  },
-  {
-    id: "wed",
-    label: "Wednesday 1 July",
-    shortLabel: "Wed",
-    isoDate: "2026-07-01",
-    primaryRoundIndex: 1,
-  },
-  {
-    id: "fri",
-    label: "Friday 3 July",
-    shortLabel: "Fri",
-    isoDate: "2026-07-03",
-    primaryRoundIndex: 2,
-  },
-  {
-    id: "sat",
-    label: "Saturday 4 July",
-    shortLabel: "Sat",
-    isoDate: "2026-07-04",
-    primaryRoundIndex: 3,
-  },
-  {
-    id: "sun",
-    label: "Sunday 5 July",
-    shortLabel: "Sun",
-    isoDate: "2026-07-05",
-    primaryRoundIndex: 4,
-  },
-];
 
 export type BracketViewPreset =
   | "full"
@@ -65,27 +26,36 @@ export function getLondonTodayIso(): string {
   }).format(new Date());
 }
 
-export function getRegattaDayByIso(iso: string): RegattaDay | undefined {
-  return PE_RACE_DAYS.find((d) => d.isoDate === iso);
+export function getRegattaDayByIso(
+  iso: string,
+  raceDays: RegattaDay[],
+): RegattaDay | undefined {
+  return raceDays.find((d) => d.isoDate === iso);
 }
 
-export function getRegattaDayById(id: string): RegattaDay | undefined {
-  return PE_RACE_DAYS.find((d) => d.id === id);
+export function getRegattaDayById(
+  id: string,
+  raceDays: RegattaDay[],
+): RegattaDay | undefined {
+  return raceDays.find((d) => d.id === id);
 }
 
-/** Index of the current PE racing day (on rest days, returns the previous race day). */
-export function getCurrentPeRaceDayIndex(): number {
+/** Index of the current racing day (on rest days, returns the previous race day). */
+export function getCurrentRaceDayIndex(raceDays: RegattaDay[]): number {
   const iso = getLondonTodayIso();
-  const exact = PE_RACE_DAYS.findIndex((d) => d.isoDate === iso);
+  const exact = raceDays.findIndex((d) => d.isoDate === iso);
   if (exact >= 0) return exact;
 
-  const nextIdx = PE_RACE_DAYS.findIndex((d) => d.isoDate > iso);
+  const nextIdx = raceDays.findIndex((d) => d.isoDate > iso);
   if (nextIdx > 0) return nextIdx - 1;
   if (nextIdx === 0) return 0;
-  return PE_RACE_DAYS.length - 1;
+  return raceDays.length - 1;
 }
 
-function parseRaceDayIso(raceDay: string | null): string | null {
+function parseRaceDayIso(
+  raceDay: string | null,
+  raceDays: RegattaDay[],
+): string | null {
   if (!raceDay) return null;
 
   const isoMatch = raceDay.match(/(\d{4})-(\d{2})-(\d{2})/);
@@ -115,7 +85,7 @@ function parseRaceDayIso(raceDay: string | null): string | null {
     }
   }
 
-  for (const day of PE_RACE_DAYS) {
+  for (const day of raceDays) {
     if (raceDay.toLowerCase().includes(day.label.split(" ")[0].toLowerCase())) {
       return day.isoDate;
     }
@@ -124,23 +94,26 @@ function parseRaceDayIso(raceDay: string | null): string | null {
   return null;
 }
 
-export function getMatchRegattaDay(match: BracketMatch): RegattaDay | null {
-  const fromRaceDay = parseRaceDayIso(match.raceDay);
+export function getMatchRegattaDay(
+  match: BracketMatch,
+  raceDays: RegattaDay[],
+): RegattaDay | null {
+  const fromRaceDay = parseRaceDayIso(match.raceDay, raceDays);
   if (fromRaceDay) {
-    return getRegattaDayByIso(fromRaceDay) ?? null;
+    return getRegattaDayByIso(fromRaceDay, raceDays) ?? null;
   }
 
   return (
-    PE_RACE_DAYS.find((d) => d.primaryRoundIndex === match.roundIndex) ??
-    null
+    raceDays.find((d) => d.primaryRoundIndex === match.roundIndex) ?? null
   );
 }
 
 export function matchOnRegattaDay(
   match: BracketMatch,
   day: RegattaDay,
+  raceDays: RegattaDay[],
 ): boolean {
-  const matchDay = getMatchRegattaDay(match);
+  const matchDay = getMatchRegattaDay(match, raceDays);
   if (matchDay) return matchDay.isoDate === day.isoDate;
 
   return match.roundIndex === day.primaryRoundIndex;
@@ -148,26 +121,27 @@ export function matchOnRegattaDay(
 
 export function resolveViewPreset(
   preset: BracketViewPreset,
+  raceDays: RegattaDay[],
 ): { days: RegattaDay[]; roundIndices: number[] } {
   if (preset === "full") {
     return { days: [], roundIndices: [] };
   }
 
-  const currentIdx = getCurrentPeRaceDayIndex();
+  const currentIdx = getCurrentRaceDayIndex(raceDays);
 
   if (preset === "today") {
-    const day = PE_RACE_DAYS[currentIdx];
+    const day = raceDays[currentIdx];
     return { days: day ? [day] : [], roundIndices: day ? [day.primaryRoundIndex] : [] };
   }
 
   if (preset === "today-tomorrow") {
-    const days = PE_RACE_DAYS.slice(currentIdx, currentIdx + 2);
+    const days = raceDays.slice(currentIdx, currentIdx + 2);
     const roundIndices = days.map((d) => d.primaryRoundIndex);
     return { days, roundIndices };
   }
 
   if (preset.startsWith("day:")) {
-    const day = getRegattaDayById(preset.slice(4));
+    const day = getRegattaDayById(preset.slice(4), raceDays);
     return {
       days: day ? [day] : [],
       roundIndices: day ? [day.primaryRoundIndex] : [],
@@ -188,10 +162,11 @@ export function resolveViewPreset(
 export function isMatchInView(
   match: BracketMatch,
   preset: BracketViewPreset,
+  raceDays: RegattaDay[],
 ): boolean {
   if (preset === "full") return true;
 
-  const { days, roundIndices } = resolveViewPreset(preset);
+  const { days, roundIndices } = resolveViewPreset(preset, raceDays);
 
   if (roundIndices.length > 0) {
     return roundIndices.includes(match.roundIndex);
@@ -199,33 +174,52 @@ export function isMatchInView(
 
   if (days.length === 0) return true;
 
-  return days.some((day) => matchOnRegattaDay(match, day));
+  return days.some((day) => matchOnRegattaDay(match, day, raceDays));
 }
 
 export function groupMatchesByDay(
   matches: BracketMatch[],
+  raceDays: RegattaDay[],
 ): { day: RegattaDay; matches: BracketMatch[] }[] {
   const groups = new Map<string, BracketMatch[]>();
 
   for (const match of matches) {
-    const day = getMatchRegattaDay(match);
+    const day = getMatchRegattaDay(match, raceDays);
     if (!day) continue;
     const list = groups.get(day.isoDate) ?? [];
     list.push(match);
     groups.set(day.isoDate, list);
   }
 
-  return PE_RACE_DAYS.filter((d) => groups.has(d.isoDate)).map((day) => ({
+  return raceDays.filter((d) => groups.has(d.isoDate)).map((day) => ({
     day,
     matches: groups.get(day.isoDate) ?? [],
   }));
 }
 
 /** Label for the today+tomorrow preset button, e.g. "Wed + Fri" */
-export function getTodayTomorrowLabel(): string {
-  const idx = getCurrentPeRaceDayIndex();
-  const days = PE_RACE_DAYS.slice(idx, idx + 2);
+export function getTodayTomorrowLabel(raceDays: RegattaDay[]): string {
+  const idx = getCurrentRaceDayIndex(raceDays);
+  const days = raceDays.slice(idx, idx + 2);
   if (days.length === 0) return "Today + tomorrow";
   if (days.length === 1) return days[0].shortLabel;
   return `${days[0].shortLabel} + ${days[1].shortLabel}`;
+}
+
+/** Short round labels for mobile round filter buttons */
+export function getRoundPresetLabels(
+  roundLabels: string[],
+): { label: string; preset: BracketViewPreset }[] {
+  const abbrev: Record<string, string> = {
+    "1st Round": "R1",
+    "2nd Round": "R2",
+    "Quarter-Final": "QF",
+    "Semi-Final": "SF",
+    Final: "F",
+  };
+
+  return roundLabels.map((roundLabel, index) => ({
+    label: abbrev[roundLabel] ?? `R${index + 1}`,
+    preset: `round:${index}` as BracketViewPreset,
+  }));
 }

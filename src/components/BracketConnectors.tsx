@@ -3,6 +3,7 @@
 import { useLayoutEffect, useState, type RefObject } from "react";
 import type { BracketMatch } from "@/lib/types";
 import { isMatchInView, type BracketViewPreset } from "@/lib/regatta-days";
+import { useEvent } from "./EventContext";
 
 interface BracketConnectorsProps {
   rootRef: RefObject<HTMLElement | null>;
@@ -100,6 +101,7 @@ export default function BracketConnectors({
   dimUnfocused = false,
   viewPreset = "full",
 }: BracketConnectorsProps) {
+  const event = useEvent();
   const [layout, setLayout] = useState<ConnectorLayout | null>(null);
 
   useLayoutEffect(() => {
@@ -117,10 +119,10 @@ export default function BracketConnectors({
 
       const isDimmed = (match: BracketMatch, roundIndex: number) => {
         if (!dimUnfocused) return false;
-        if (isMatchInView(match, viewPreset)) return false;
+        if (isMatchInView(match, viewPreset, event.raceDays)) return false;
         return !match.feeders?.some((id) => {
           const feeder = rounds[roundIndex - 1]?.find((m) => m.id === id);
-          return feeder && isMatchInView(feeder, viewPreset);
+          return feeder && isMatchInView(feeder, viewPreset, event.raceDays);
         });
       };
 
@@ -146,7 +148,7 @@ export default function BracketConnectors({
       resizeObserver.disconnect();
       window.removeEventListener("resize", onWindowResize);
     };
-  }, [rootRef, rounds, compact, dimUnfocused, viewPreset]);
+  }, [rootRef, rounds, compact, dimUnfocused, viewPreset, event.raceDays]);
 
   if (!layout || layout.paths.length === 0) return null;
 

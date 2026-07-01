@@ -15,15 +15,8 @@ import {
 import { isMatchInView, type BracketViewPreset } from "@/lib/regatta-days";
 import BracketConnectors from "./BracketConnectors";
 import MatchCard from "./MatchCard";
+import { useEvent } from "./EventContext";
 import { isSeededCrew } from "@/lib/crew-seeds";
-
-const ROUND_NAMES = [
-  "1st Round",
-  "2nd Round",
-  "Quarter-Final",
-  "Semi-Final",
-  "Final",
-];
 
 export interface BracketTreeCoreProps {
   bracket: BracketState;
@@ -36,9 +29,11 @@ export interface BracketTreeCoreProps {
 function ChampionCard({
   champion,
   compact,
+  event,
 }: {
   champion: NonNullable<BracketState["champion"]>;
   compact?: boolean;
+  event: ReturnType<typeof useEvent>;
 }) {
   return (
     <div
@@ -54,7 +49,7 @@ function ChampionCard({
       >
         2026 Winner
       </div>
-      <div className={`${compact ? "text-xs" : "text-lg"} ${isSeededCrew(champion) ? "font-extrabold" : "font-bold"}`}>
+      <div className={`${compact ? "text-xs" : "text-lg"} ${isSeededCrew(champion, event) ? "font-extrabold" : "font-bold"}`}>
         {champion.shortName || champion.name}
       </div>
     </div>
@@ -68,6 +63,7 @@ export default function BracketTreeCore({
   dimUnfocused = false,
   columnClassName = "",
 }: BracketTreeCoreProps) {
+  const event = useEvent();
   const rootRef = useRef<HTMLDivElement>(null);
   const matchHeight = compact ? COMPACT_MATCH_HEIGHT : DESKTOP_MATCH_HEIGHT;
   const gap = compact ? COMPACT_MATCH_GAP : DESKTOP_MATCH_GAP;
@@ -107,7 +103,7 @@ export default function BracketTreeCore({
                   : "text-sm mb-4 py-1"
               }`}
             >
-              {ROUND_NAMES[roundIndex] ?? `Round ${roundIndex + 1}`}
+              {event.roundLabels[roundIndex] ?? `Round ${roundIndex + 1}`}
               <span
                 className={`block font-sans font-normal text-[var(--muted)] ${
                   compact ? "text-[9px]" : "text-xs"
@@ -122,7 +118,7 @@ export default function BracketTreeCore({
                 style={{ height: columnHeight, width: columnWidth }}
               >
                 {round.map((match) => {
-                  const focused = isMatchInView(match, viewPreset);
+                  const focused = isMatchInView(match, viewPreset, event.raceDays);
                   const top = offsets.get(match.id) ?? 0;
 
                   return (
@@ -145,7 +141,7 @@ export default function BracketTreeCore({
                         loser={match.loser}
                         status={match.status}
                         verdict={match.verdict}
-                        roundLabel={ROUND_NAMES[roundIndex] ?? match.roundLabel}
+                        roundLabel={event.roundLabels[roundIndex] ?? match.roundLabel}
                         raceTime={match.raceTime}
                         raceNumber={match.raceNumber}
                         raceDay={match.raceDay}
@@ -163,7 +159,7 @@ export default function BracketTreeCore({
                 style={{ gap: 0, minHeight: columnHeight }}
               >
                 {round.map((match, matchIndex) => {
-                  const focused = isMatchInView(match, viewPreset);
+                  const focused = isMatchInView(match, viewPreset, event.raceDays);
 
                   return (
                     <div
@@ -217,7 +213,7 @@ export default function BracketTreeCore({
           >
             Champion
           </h3>
-          <ChampionCard champion={bracket.champion} compact={compact} />
+          <ChampionCard champion={bracket.champion} compact={compact} event={event} />
         </div>
       )}
       </div>

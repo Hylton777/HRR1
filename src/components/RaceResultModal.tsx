@@ -9,6 +9,7 @@ import {
   type RaceResultDetail,
 } from "@/lib/race-result";
 import { isSeededCrew } from "@/lib/crew-seeds";
+import { useEvent } from "./EventContext";
 
 interface RaceResultModalProps {
   detail: RaceResultDetail;
@@ -38,6 +39,7 @@ export default function RaceResultModal({
   detail,
   onClose,
 }: RaceResultModalProps) {
+  const event = useEvent();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const station = formatStation(detail.station);
 
@@ -73,7 +75,7 @@ export default function RaceResultModal({
       >
         <div className="bg-[var(--hrr-blue)] px-3 py-2 flex items-center justify-between gap-3">
           <h2 className="text-sm font-medium text-white">
-            Princess Elizabeth Challenge Cup
+            {event.displayName}
           </h2>
           <button
             type="button"
@@ -105,11 +107,11 @@ export default function RaceResultModal({
           />
 
           <div className="col-span-12 text-center pt-1">
-            <p className={`text-xl font-display leading-tight text-[var(--hrr-blue)] ${isSeededCrew(detail.winner) ? "font-bold" : "font-semibold"}`}>
+            <p className={`text-xl font-display leading-tight text-[var(--hrr-blue)] ${isSeededCrew(detail.winner, event) ? "font-bold" : "font-semibold"}`}>
               {crewDisplayName(detail.winner)}
             </p>
             <p className="text-[13px] italic text-[var(--muted)] mt-1">beat</p>
-            <p className={`text-[13px] mt-0.5 text-[var(--hrr-blue)]/80 ${isSeededCrew(detail.loser) ? "font-bold" : ""}`}>
+            <p className={`text-[13px] mt-0.5 text-[var(--hrr-blue)]/80 ${isSeededCrew(detail.loser, event) ? "font-bold" : ""}`}>
               {crewDisplayName(detail.loser)}
             </p>
             {detail.withdrawn && (

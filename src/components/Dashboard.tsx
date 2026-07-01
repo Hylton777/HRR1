@@ -3,9 +3,11 @@
 import useSWR from "swr";
 import Bracket from "@/components/Bracket";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
+import { EventProvider } from "@/components/EventContext";
 import LiveIndicator from "@/components/LiveIndicator";
 import NextRacesPanel from "@/components/NextRacesPanel";
 import RecentResultsPanel from "@/components/RecentResultsPanel";
+import { EVENTS, type EventId } from "@/config/events";
 import type { BracketApiResponse } from "@/lib/types";
 
 async function fetcher(url: string): Promise<BracketApiResponse> {
@@ -20,9 +22,15 @@ async function fetcher(url: string): Promise<BracketApiResponse> {
   return data;
 }
 
-export default function Dashboard() {
+interface DashboardProps {
+  eventId: EventId;
+}
+
+export default function Dashboard({ eventId }: DashboardProps) {
+  const event = EVENTS[eventId];
+
   const { data, error, isLoading, isValidating, mutate } =
-    useSWR<BracketApiResponse>("/api/bracket", fetcher, {
+    useSWR<BracketApiResponse>(`/api/bracket/${eventId}`, fetcher, {
       refreshInterval: 30000,
       revalidateOnFocus: true,
     });
@@ -31,7 +39,7 @@ export default function Dashboard() {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="text-[var(--muted)] animate-pulse">
-          Loading bracket from Henley Royal Regatta…
+          Loading {event.shortLabel} bracket from Henley Royal Regatta…
         </div>
       </div>
     );
@@ -41,7 +49,7 @@ export default function Dashboard() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
         <p className="text-[var(--accent)]">
-          Failed to load bracket data.
+          Failed to load {event.shortLabel} bracket data.
         </p>
         <button
           onClick={() => mutate()}
@@ -56,50 +64,52 @@ export default function Dashboard() {
   const nextRaces = (data.upcomingRaces ?? []).slice(0, 6);
 
   return (
-    <ClientErrorBoundary>
-      <div className="space-y-6 sm:space-y-8">
-        <LiveIndicator
-          lastUpdated={data.lastUpdated}
-          resultCount={data.resultCount ?? 0}
-          isValidating={isValidating}
-          onRefresh={() => mutate()}
-        />
+    <EventProvider event={event}>
+      <ClientErrorBoundary>
+        <div className="space-y-6 sm:space-y-8">
+          <LiveIndicator
+            lastUpdated={data.lastUpdated}
+            resultCount={data.resultCount ?? 0}
+            isValidating={isValidating}
+            onRefresh={() => mutate()}
+          />
 
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-6 sm:gap-8">
-          <section className="min-w-0">
-            <h2 className="font-display text-base sm:text-lg font-semibold mb-1 text-[var(--hrr-navy)]">
-              Knockout Bracket
-            </h2>
-            <p className="text-xs text-[var(--muted)] mb-3 sm:mb-4">
-              Bold crew names were seeded on the official Henley draw chart.
-            </p>
-            <div className="xl:hidden mb-4">
-              <NextRacesPanel
-                races={nextRaces}
-                timetableDay={data.timetableDay}
-                compact
-              />
-            </div>
-            <Bracket bracket={data.bracket} />
-            <div className="xl:hidden mt-6">
-              <RecentResultsPanel results={data.results ?? []} />
-            </div>
-          </section>
-
-          <aside className="hidden xl:block xl:sticky xl:top-4 xl:self-start space-y-6 sm:space-y-8 min-w-0">
-            <div>
-              <h2 className="font-display text-lg font-semibold mb-1 text-[var(--hrr-navy)]">
-                Next Races
+          <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-6 sm:gap-8">
+            <section className="min-w-0">
+              <h2 className="font-display text-base sm:text-lg font-semibold mb-1 text-[var(--hrr-navy)]">
+                Knockout Bracket
               </h2>
-              <NextRacesPanel
-                races={nextRaces}
-                timetableDay={data.timetableDay}
-              />
-            </div>
-            <RecentResultsPanel results={data.results ?? []} />
-          </aside>
+              <p className="text-xs text-[var(--muted)] mb-3 sm:mb-4">
+                Bold crew names were seeded on the official Henley draw chart.
+              </p>
+              <div className="xl:hidden mb-4">
+                <NextRacesPanel
+                  races={nextRaces}
+                  timetableDay={data.timetableDay}
+                  compact
+                />
+              </div>
+              <Bracket bracket={data.bracket} />
+              <div className="xl:hidden mt-6">
+                <RecentResultsPanel results={data.results ?? []} />
+              </div>
+            </section>
+
+            <aside className="hidden xl:block xl:sticky xl:top-4 xl:self-start space-y-6 sm:space-y-8 min-w-0">
+              <div>
+                <h2 className="font-display text-lg font-semibold mb-1 text-[var(--hrr-navy)]">
+                  Next Races
+                </h2>
+                <NextRacesPanel
+                  races={nextRaces}
+                  timetableDay={data.timetableDay}
+                />
+              </div>
+              <RecentResultsPanel results={data.results ?? []} />
+            </aside>
+          </div>
         </div>
-      </div>
-    </ClientErrorBoundary>
+      </ClientErrorBoundary>
+    </EventProvider>
   );
 }

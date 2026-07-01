@@ -142,12 +142,15 @@ export function getMatchMarginTops(
   return round.map((m) => margins[orderMap.get(m.id) ?? 0] ?? 0);
 }
 
-/** Verify each round has the expected number of matches for a 32-crew draw */
-export function validateRoundCounts(rounds: BracketMatch[][]): string[] {
+/** Verify each round has the expected number of matches for the event draw */
+export function validateRoundCounts(
+  rounds: BracketMatch[][],
+  roundSizes: readonly number[] = EXPECTED_ROUND_SIZES,
+): string[] {
   const warnings: string[] = [];
 
-  for (let i = 0; i < EXPECTED_ROUND_SIZES.length; i++) {
-    const expected = EXPECTED_ROUND_SIZES[i];
+  for (let i = 0; i < roundSizes.length; i++) {
+    const expected = roundSizes[i];
     const actual = rounds[i]?.length ?? 0;
     if (actual !== expected) {
       warnings.push(
@@ -156,9 +159,9 @@ export function validateRoundCounts(rounds: BracketMatch[][]): string[] {
     }
   }
 
-  if (rounds.length > EXPECTED_ROUND_SIZES.length) {
+  if (rounds.length > roundSizes.length) {
     warnings.push(
-      `Unexpected extra rounds: ${rounds.length} > ${EXPECTED_ROUND_SIZES.length}`,
+      `Unexpected extra rounds: ${rounds.length} > ${roundSizes.length}`,
     );
   }
 
