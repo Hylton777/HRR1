@@ -30,16 +30,18 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Deploy to Vercel
 
-1. Push this repository to GitHub
-2. Import the project at [vercel.com/new](https://vercel.com/new)
-3. Framework preset: **Next.js** (auto-detected)
+1. Import [Hylton777/HRR1](https://github.com/Hylton777/HRR1) at [vercel.com/new](https://vercel.com/new)
+2. Set **Production Branch** to `main`
+3. In **Project Settings → General**, confirm:
+   - **Framework Preset**: Next.js
+   - **Root Directory**: (leave blank)
+   - **Output Directory**: (leave blank — do not set `.next` or `public`)
+   - **Build Command**: `npm run build` (default)
 4. Deploy — no environment variables required
 
-Or with the Vercel CLI:
+If you see a plain-text `DEPLOYMENT_NOT_FOUND` 404, the production domain is not linked to a successful deployment. Open **Deployments**, find the latest successful build, click **Promote to Production**, then redeploy.
 
-```bash
-npx vercel --prod
-```
+Verify the deployment is working: visit `/api/health` — it should return `{"ok":true}`.
 
 ## License
 
