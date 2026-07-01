@@ -12,7 +12,13 @@ import {
   getMatchMarginTops,
 } from "@/lib/bracket-layout";
 import { isMatchInView, type BracketViewPreset } from "@/lib/regatta-days";
+import BracketConnectors from "./BracketConnectors";
 import MatchCard from "./MatchCard";
+
+const COMPACT_HEADER_HEIGHT = 28;
+const DESKTOP_HEADER_HEIGHT = 52;
+const COMPACT_COLUMN_GAP = 12;
+const DESKTOP_COLUMN_GAP = 24;
 
 const ROUND_NAMES = [
   "1st Round",
@@ -68,13 +74,26 @@ export default function BracketTreeCore({
   const matchHeight = compact ? COMPACT_MATCH_HEIGHT : DESKTOP_MATCH_HEIGHT;
   const gap = compact ? COMPACT_MATCH_GAP : DESKTOP_MATCH_GAP;
   const columnWidth = compact ? COMPACT_MATCH_WIDTH : 220;
+  const columnGap = compact ? COMPACT_COLUMN_GAP : DESKTOP_COLUMN_GAP;
+  const headerHeight = compact ? COMPACT_HEADER_HEIGHT : DESKTOP_HEADER_HEIGHT;
   const offsets = computeMatchOffsets(bracket.rounds, matchHeight, gap);
 
   return (
-    <div
-      className={`flex ${compact ? "gap-3" : "gap-6"} min-w-max`}
-      data-bracket-root
-    >
+    <div className="relative min-w-max" data-bracket-root>
+      <BracketConnectors
+        rounds={bracket.rounds}
+        offsets={offsets}
+        matchHeight={matchHeight}
+        columnWidth={columnWidth}
+        columnGap={columnGap}
+        headerHeight={headerHeight}
+        compact={compact}
+        dimUnfocused={dimUnfocused}
+        isMatchFocused={(match) => isMatchInView(match, viewPreset)}
+      />
+      <div
+        className={`relative z-10 flex ${compact ? "gap-3" : "gap-6"} min-w-max`}
+      >
       {bracket.rounds.map((round, roundIndex) => {
         const columnHeight = getColumnHeight(round, offsets, matchHeight, gap);
         const margins = compact
@@ -199,6 +218,7 @@ export default function BracketTreeCore({
           <ChampionCard champion={bracket.champion} compact={compact} />
         </div>
       )}
+      </div>
     </div>
   );
 }

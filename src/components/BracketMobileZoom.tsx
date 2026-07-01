@@ -159,7 +159,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
     x: 8,
     y: 8,
   });
-  const [preset, setPreset] = useState<BracketViewPreset>("full");
+  const [preset, setPreset] = useState<BracketViewPreset>("today-tomorrow");
   const [layout, setLayout] = useState<LayoutMode>("bracket");
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
   const panStartRef = useRef<{ x: number; y: number; tx: number; ty: number } | null>(
@@ -351,8 +351,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
               : "border-[var(--card-border)] text-[var(--muted)]"
           }`}
         >
-          Today + tomorrow
-          <span className="text-[var(--muted)] ml-1">({getTodayTomorrowLabel()})</span>
+          {getTodayTomorrowLabel()}
         </button>
         <button
           type="button"
