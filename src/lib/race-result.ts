@@ -67,7 +67,6 @@ export function raceResultFromMatch(match: BracketMatch): RaceResultDetail | nul
   }
 
   const splits = match.splits;
-  if (!splits?.finish) return null;
 
   return {
     id: match.id,
@@ -80,19 +79,19 @@ export function raceResultFromMatch(match: BracketMatch): RaceResultDetail | nul
     verdict: match.verdict,
     station: match.station,
     splits: {
-      barrier: splits.barrier
+      barrier: splits?.barrier
         ? {
             time: splits.barrier.time,
             loserLeading: splits.barrier.loserLeading,
           }
         : undefined,
-      fawley: splits.fawley
+      fawley: splits?.fawley
         ? {
             time: splits.fawley.time,
             loserLeading: splits.fawley.loserLeading,
           }
         : undefined,
-      finish: splits.finish ? { time: splits.finish.time } : undefined,
+      finish: splits?.finish ? { time: splits.finish.time } : undefined,
     },
   };
 }

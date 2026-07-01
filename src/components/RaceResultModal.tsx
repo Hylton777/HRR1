@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import {
   crewDisplayName,
   formatRaceMeta,
@@ -13,23 +14,22 @@ interface RaceResultModalProps {
   onClose: () => void;
 }
 
-function TimingRow({
+function DetailItem({
   label,
-  time,
-  loserLeading,
+  value,
+  className = "",
 }: {
   label: string;
-  time: string;
-  loserLeading?: boolean;
+  value: string;
+  className?: string;
 }) {
   return (
-    <tr className="border-b border-[var(--card-border)] last:border-0">
-      <td className="py-2.5 pr-4 text-sm text-[var(--muted)]">{label}</td>
-      <td className="py-2.5 text-sm font-medium tabular-nums">{time}</td>
-      <td className="py-2.5 pl-3 text-xs text-[var(--muted)]">
-        {loserLeading ? "Loser leading" : ""}
-      </td>
-    </tr>
+    <div className={`text-center ${className}`}>
+      <span className="block text-sm text-[var(--muted)]">{label}</span>
+      <span className="block text-[13px] font-medium text-[var(--hrr-navy)] tabular-nums mt-0.5">
+        {value}
+      </span>
+    </div>
   );
 }
 
@@ -54,11 +54,11 @@ export default function RaceResultModal({
     return () => dialog.removeEventListener("cancel", onCancel);
   }, [onClose]);
 
-  return (
+  const modal = (
     <dialog
       ref={dialogRef}
       onClose={onClose}
-      className="race-result-dialog fixed inset-0 z-50 m-0 h-full max-h-none w-full max-w-none border-0 bg-transparent p-0 backdrop:bg-[var(--hrr-navy)]/50 open:flex open:items-end sm:open:items-center open:justify-center"
+      className="race-result-dialog fixed inset-0 z-[100] m-0 h-full max-h-none w-full max-w-none border-0 bg-transparent p-0 backdrop:bg-[var(--hrr-navy)]/50 open:flex open:items-end sm:open:items-center open:justify-center"
     >
       <button
         type="button"
@@ -68,85 +68,121 @@ export default function RaceResultModal({
       />
       <div
         role="document"
-        className="relative z-10 w-full max-w-md rounded-t-lg sm:rounded-lg border border-[var(--card-border)] bg-[var(--card)] shadow-xl mx-0 sm:mx-4 max-h-[90vh] overflow-y-auto"
+        className="relative z-10 w-full max-w-lg rounded-t-lg sm:rounded-none border border-[var(--card-border)] bg-[var(--card)] shadow-xl mx-0 sm:mx-4 max-h-[90vh] overflow-y-auto"
       >
-        <div className="bg-[var(--hrr-cream)] border-b border-[var(--card-border)] px-4 py-3 flex items-start justify-between gap-3">
-          <div>
-            <p className="text-xs text-[var(--muted)]">{formatRaceMeta(detail)}</p>
-            <h2 className="font-display text-lg font-semibold text-[var(--hrr-navy)]">
-              {detail.roundLabel}
-            </h2>
-          </div>
+        <div className="bg-[var(--hrr-blue)] px-3 py-2 flex items-center justify-between gap-3">
+          <h2 className="text-sm font-medium text-white">
+            Princess Elizabeth Challenge Cup
+          </h2>
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 w-8 h-8 rounded-sm border border-[var(--card-border)] text-[var(--muted)] hover:text-[var(--hrr-navy)] hover:border-[var(--hrr-blue)]"
+            className="shrink-0 text-white/90 hover:text-white text-lg leading-none px-1"
             aria-label="Close"
           >
             ×
           </button>
         </div>
 
-        <div className="px-4 py-4 space-y-4">
-          <div>
-            <p className="text-base font-semibold text-[var(--winner)]">
+        <div className="p-4 sm:p-5 grid grid-cols-12 gap-x-1.5 gap-y-3">
+          <DetailItem
+            label="Race"
+            value={detail.raceNumber ?? "—"}
+            className="col-span-4"
+          />
+          <DetailItem
+            label="Round"
+            value={detail.roundLabel}
+            className="col-span-4"
+          />
+          <DetailItem
+            label="Day"
+            value={
+              [detail.raceDay, detail.raceTime].filter(Boolean).join(" ") || "—"
+            }
+            className="col-span-4"
+          />
+
+          <div className="col-span-12 text-center pt-1">
+            <p className="text-xl font-display font-semibold text-[var(--hrr-blue)] leading-tight">
               {crewDisplayName(detail.winner)}
-              {station && (
-                <span className="ml-2 text-xs font-normal text-[var(--muted)]">
-                  ({station})
-                </span>
-              )}
             </p>
-            <p className="text-sm text-[var(--muted)] mt-1">
-              beat {crewDisplayName(detail.loser)}
+            <p className="text-[13px] italic text-[var(--muted)] mt-1">beat</p>
+            <p className="text-[13px] text-[var(--hrr-blue)]/80 mt-0.5">
+              {crewDisplayName(detail.loser)}
             </p>
             {detail.withdrawn && (
               <p className="text-xs text-[var(--accent)] mt-1">Withdrawn</p>
             )}
           </div>
 
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--hrr-navy)] mb-2">
-              Winning times
-            </p>
-            <table className="w-full">
-              <thead>
-                <tr className="text-left text-[10px] uppercase tracking-wide text-[var(--muted)] border-b border-[var(--card-border)]">
-                  <th className="pb-2 pr-4 font-medium">Checkpoint</th>
-                  <th className="pb-2 font-medium">Time</th>
-                  <th className="pb-2 pl-3 font-medium" />
-                </tr>
-              </thead>
-              <tbody>
-                {detail.splits.barrier && (
-                  <TimingRow
-                    label="Barrier"
-                    time={detail.splits.barrier.time}
-                    loserLeading={detail.splits.barrier.loserLeading}
-                  />
-                )}
-                {detail.splits.fawley && (
-                  <TimingRow
-                    label="Fawley"
-                    time={detail.splits.fawley.time}
-                    loserLeading={detail.splits.fawley.loserLeading}
-                  />
-                )}
-                {detail.splits.finish && (
-                  <TimingRow label="Finish" time={detail.splits.finish.time} />
-                )}
-              </tbody>
-            </table>
-          </div>
+          <div className="col-span-12 border-t border-[var(--card-border)]" />
 
-          <div className="rounded-sm bg-[var(--hrr-cream)] border border-[var(--card-border)] px-3 py-2.5 flex items-center justify-between">
-            <span className="text-xs text-[var(--muted)]">Winning margin</span>
-            <span className="text-sm font-semibold text-[var(--hrr-navy)]">
+          <div className="col-span-6 text-center text-sm">
+            <span className="text-[var(--muted)]">Station </span>
+            <span className="font-medium text-[var(--hrr-navy)]">
+              {station ?? "—"}
+            </span>
+          </div>
+          <div className="col-span-6 text-center text-sm">
+            <span className="text-[var(--muted)]">Result </span>
+            <span className="font-medium text-[var(--hrr-navy)]">
               {detail.verdict}
             </span>
           </div>
+
+          <div className="col-span-12 border-t border-[var(--card-border)] mb-1" />
+
+          {detail.splits.barrier && (
+            <DetailItem
+              label="Barrier"
+              value={detail.splits.barrier.time}
+              className="col-span-3"
+            />
+          )}
+          {detail.splits.fawley && (
+            <DetailItem
+              label="Fawley"
+              value={detail.splits.fawley.time}
+              className="col-span-3"
+            />
+          )}
+          {detail.splits.finish && (
+            <DetailItem
+              label="Finish"
+              value={detail.splits.finish.time}
+              className="col-span-3"
+            />
+          )}
+          <div className="col-span-3 flex items-center justify-center text-center">
+            <div>
+              <span className="block text-sm text-[var(--muted)]">Margin</span>
+              <span className="block text-[13px] font-semibold text-[var(--hrr-navy)] mt-0.5">
+                {detail.verdict}
+              </span>
+            </div>
+          </div>
+
+          {(detail.splits.barrier?.loserLeading ||
+            detail.splits.fawley?.loserLeading) && (
+            <div className="col-span-12 text-xs text-[var(--muted)] text-center">
+              {detail.splits.barrier?.loserLeading && (
+                <span className="mr-3">Loser leading at Barrier</span>
+              )}
+              {detail.splits.fawley?.loserLeading && (
+                <span>Loser leading at Fawley</span>
+              )}
+            </div>
+          )}
+
+          <p className="col-span-12 text-[10px] text-center text-[var(--muted)] pt-1">
+            {formatRaceMeta(detail)}
+          </p>
         </div>
       </div>
     </dialog>
   );
+
+  if (typeof document === "undefined") return null;
+  return createPortal(modal, document.body);
 }

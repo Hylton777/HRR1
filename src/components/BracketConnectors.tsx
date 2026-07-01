@@ -54,6 +54,8 @@ export default function BracketConnectors({
       const y1 = matchCenterY(f1, offsets, headerHeight, matchHeight);
       const childY = matchCenterY(match.id, offsets, headerHeight, matchHeight);
       const childEdge = childLeft;
+      const spineTop = Math.min(y0, y1);
+      const spineBottom = Math.max(y0, y1);
 
       const focused =
         !dimUnfocused ||
@@ -64,15 +66,27 @@ export default function BracketConnectors({
           return feeder && isMatchFocused(feeder);
         });
 
-      // Feeder 1: horizontal to spine, vertical to child row, horizontal to card
+      const dimmed = !focused;
+
+      // Upper feeder → spine
       paths.push({
-        d: `M ${feederRight} ${y0} H ${midX} V ${childY} H ${childEdge}`,
-        dimmed: !focused,
+        d: `M ${feederRight} ${y0} H ${midX}`,
+        dimmed,
       });
-      // Feeder 2: horizontal to spine only (shared vertical segment)
+      // Lower feeder → spine
       paths.push({
         d: `M ${feederRight} ${y1} H ${midX}`,
-        dimmed: !focused,
+        dimmed,
+      });
+      // Vertical spine joining both feeders
+      paths.push({
+        d: `M ${midX} ${spineTop} V ${spineBottom}`,
+        dimmed,
+      });
+      // Spine → child match
+      paths.push({
+        d: `M ${midX} ${childY} H ${childEdge}`,
+        dimmed,
       });
     }
   }

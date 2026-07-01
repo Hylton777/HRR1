@@ -153,7 +153,7 @@ export default function BracketTreeCore({
                         loser={match.loser}
                         status={match.status}
                         verdict={match.verdict}
-                        roundLabel=""
+                        roundLabel={ROUND_NAMES[roundIndex] ?? match.roundLabel}
                         raceTime={match.raceTime}
                         raceNumber={match.raceNumber}
                         raceDay={match.raceDay}

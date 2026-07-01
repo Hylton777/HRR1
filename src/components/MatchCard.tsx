@@ -37,26 +37,26 @@ function displayName(
 }
 
 function buildDetailFromProps(props: MatchCardProps): RaceResultDetail | null {
-  if (props.matchId) {
-    return raceResultFromMatch({
-      id: props.matchId,
-      roundIndex: 0,
-      matchIndex: 0,
-      roundLabel: props.roundLabel || "Race",
-      berks: props.berks,
-      bucks: props.bucks,
-      status: props.status,
-      winner: props.winner,
-      loser: props.loser ?? null,
-      verdict: props.verdict,
-      raceNumber: props.raceNumber ?? null,
-      raceTime: props.raceTime ?? null,
-      raceDay: props.raceDay ?? null,
-      splits: props.splits ?? null,
-      station: props.station ?? null,
-    });
-  }
-  return null;
+  if (!props.matchId || props.status !== "complete") return null;
+  if (!props.winner || !props.loser || !props.verdict) return null;
+
+  return raceResultFromMatch({
+    id: props.matchId,
+    roundIndex: 0,
+    matchIndex: 0,
+    roundLabel: props.roundLabel || "Race",
+    berks: props.berks,
+    bucks: props.bucks,
+    status: props.status,
+    winner: props.winner,
+    loser: props.loser,
+    verdict: props.verdict,
+    raceNumber: props.raceNumber ?? null,
+    raceTime: props.raceTime ?? null,
+    raceDay: props.raceDay ?? null,
+    splits: props.splits ?? null,
+    station: props.station ?? null,
+  });
 }
 
 function CrewRow({
@@ -191,7 +191,7 @@ function CompactBracketBox({
         </div>
       </div>
       {status === "complete" && verdict && (
-        <div className="text-[7px] text-center text-[var(--hrr-navy)] bg-[var(--hrr-cream)] border-t border-[var(--card-border)] leading-tight py-px shrink-0 truncate px-1">
+        <div className="text-[8px] font-semibold text-center text-[var(--hrr-navy)] bg-emerald-50 border-t border-emerald-200 leading-tight py-0.5 shrink-0 truncate px-1">
           {verdict}
         </div>
       )}
@@ -311,7 +311,7 @@ export default function MatchCard(props: MatchCardProps) {
           />
         </div>
         {status === "complete" && verdict && (
-          <div className="px-3 py-1.5 text-xs text-center border-t border-[var(--card-border)] text-[var(--hrr-navy)] font-medium">
+          <div className="px-3 py-2 text-xs text-center border-t border-emerald-200 bg-emerald-50/60 text-[var(--hrr-navy)] font-semibold">
             {verdict}
             {props.splits?.finish?.time ? (
               <span className="text-[var(--muted)] font-normal">
@@ -322,7 +322,7 @@ export default function MatchCard(props: MatchCardProps) {
           </div>
         )}
         {interactive && (
-          <div className="px-3 py-1 text-[10px] text-center text-[var(--muted)] border-t border-[var(--card-border)] bg-[var(--hrr-cream)]/50">
+          <div className="px-3 py-1 text-[10px] text-center text-[var(--muted)] border-t border-[var(--card-border)]">
             Click for split times
           </div>
         )}
