@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
 
@@ -12,6 +12,12 @@ export const metadata: Metadata = {
   title: "Princess Elizabeth Challenge Cup 2026 | Henley Royal Regatta",
   description:
     "Live bracket dashboard for the Princess Elizabeth Challenge Cup at Henley Royal Regatta 2026.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0f1419",
 };
 
 export default function RootLayout({

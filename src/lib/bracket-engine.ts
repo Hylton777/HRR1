@@ -31,6 +31,40 @@ function getCrewName(crew: Crew | null | undefined): string | null {
   return crew?.name ?? null;
 }
 
+function buildCrewRegistry(draw: DrawData): Map<string, Crew> {
+  const registry = new Map<string, Crew>();
+
+  const register = (crew: Crew | null) => {
+    if (!crew?.name) return;
+    registry.set(crew.name.toLowerCase(), crew);
+    if (crew.shortName) {
+      registry.set(crew.shortName.toLowerCase(), crew);
+    }
+  };
+
+  for (const round of draw.rounds) {
+    for (const match of round) {
+      register(match.berks);
+      register(match.bucks);
+    }
+  }
+
+  return registry;
+}
+
+function resolveCrew(raw: string, registry: Map<string, Crew>): Crew {
+  const parsed = parseTimetableCrew(raw);
+  const lower = parsed.toLowerCase();
+
+  for (const [key, crew] of registry) {
+    if (crewsMatch(key, lower) || crewsMatch(crew.name, parsed)) {
+      return crew;
+    }
+  }
+
+  return { name: parsed, shortName: parsed };
+}
+
 function createEmptyMatch(
   match: { id: string; berks: Crew | null; bucks: Crew | null },
   roundIndex: number,
@@ -59,11 +93,6 @@ function applyResultToMatch(
   match: BracketMatch,
   result: HrrResult,
 ): BracketMatch {
-  const berksName = getCrewName(match.berks);
-  const winnerIsBerks = berksName
-    ? crewsMatch(result.winner.name, berksName)
-    : false;
-
   return {
     ...match,
     status: "complete",
@@ -79,8 +108,6 @@ function applyResultToMatch(
       fawley: result.fawley.split,
       finish: result.finish.split,
     },
-    berks: winnerIsBerks ? result.winner : result.loser,
-    bucks: winnerIsBerks ? result.loser : result.winner,
   };
 }
 
@@ -98,23 +125,79 @@ function matchHasBothCrews(
   );
 }
 
-function propagateWinnersWhenEmpty(rounds: BracketMatch[][]): void {
-  for (let ri = 0; ri < rounds.length - 1; ri++) {
-    const currentRound = rounds[ri];
-    const nextRound = rounds[ri + 1];
+function getRoundWinners(round: BracketMatch[]): Set<string> {
+  const winners = new Set<string>();
+  for (const match of round) {
+    if (match.status === "complete" && match.winner?.name) {
+      winners.add(match.winner.name);
+    }
+  }
+  return winners;
+}
 
-    for (let mi = 0; mi < currentRound.length; mi++) {
-      const match = currentRound[mi];
-      if (match.status !== "complete" || !match.winner) continue;
+function pairMatchesRoundWinners(
+  rounds: BracketMatch[][],
+  roundIndex: number,
+  crewA: string,
+  crewB: string,
+): boolean {
+  if (roundIndex <= 0) return false;
+  const prevWinners = getRoundWinners(rounds[roundIndex - 1]);
+  if (prevWinners.size === 0) return false;
 
-      const nextMatchIndex = Math.floor(mi / 2);
-      const nextSide: "berks" | "bucks" = mi % 2 === 0 ? "berks" : "bucks";
-      const nextMatch = nextRound[nextMatchIndex];
-      if (nextMatch && !nextMatch[nextSide]) {
-        nextMatch[nextSide] = match.winner;
+  const aIsWinner = [...prevWinners].some((w) => crewsMatch(w, crewA));
+  const bIsWinner = [...prevWinners].some((w) => crewsMatch(w, crewB));
+  return aIsWinner && bIsWinner;
+}
+
+function findMatchForTimetableRace(
+  rounds: BracketMatch[][],
+  berksRaw: string,
+  bucksRaw: string,
+): BracketMatch | null {
+  for (const round of rounds) {
+    for (const match of round) {
+      if (match.status === "complete") continue;
+      if (matchHasBothCrews(match, berksRaw, bucksRaw)) {
+        return match;
       }
     }
   }
+
+  for (let ri = 0; ri < rounds.length; ri++) {
+    for (const match of rounds[ri]) {
+      if (match.status === "complete") continue;
+      const berks = getCrewName(match.berks);
+      const bucks = getCrewName(match.bucks);
+      if (berks && !bucks) {
+        if (crewsMatch(berks, berksRaw) || crewsMatch(berks, bucksRaw)) {
+          return match;
+        }
+      }
+      if (!berks && bucks) {
+        if (crewsMatch(bucks, berksRaw) || crewsMatch(bucks, bucksRaw)) {
+          return match;
+        }
+      }
+    }
+  }
+
+  for (let ri = 0; ri < rounds.length; ri++) {
+    if (!pairMatchesRoundWinners(rounds, ri, berksRaw, bucksRaw)) continue;
+    for (const match of rounds[ri]) {
+      if (match.status === "complete") continue;
+      if (!match.berks && !match.bucks) return match;
+    }
+  }
+
+  for (const round of rounds) {
+    for (const match of round) {
+      if (match.status === "complete") continue;
+      if (!match.berks && !match.bucks) return match;
+    }
+  }
+
+  return null;
 }
 
 function tryApplyResult(
@@ -148,61 +231,52 @@ function applyTimetableRace(
   match: BracketMatch,
   race: TimetableRace,
   raceDay: string | null,
-): boolean {
-  const berksRaw = parseTimetableCrew(race.berks);
-  const bucksRaw = parseTimetableCrew(race.bucks);
-
-  if (!matchHasBothCrews(match, berksRaw, bucksRaw)) {
-    return false;
-  }
-
+): void {
   match.raceTime = race.time;
   match.raceNumber = race.raceNumber;
   if (raceDay) {
     match.raceDay = raceDay;
   }
-  return true;
 }
 
 function mergeTimetable(
   rounds: BracketMatch[][],
   timetable: TimetableData,
+  registry: Map<string, Crew>,
 ): void {
   const { races, raceDay } = timetable;
+  const sortedRaces = [...races].sort((a, b) => {
+    const numA = parseInt(a.raceNumber, 10) || 0;
+    const numB = parseInt(b.raceNumber, 10) || 0;
+    return numA - numB || a.time.localeCompare(b.time);
+  });
 
-  for (const race of races) {
+  for (const race of sortedRaces) {
     const berksRaw = parseTimetableCrew(race.berks);
     const bucksRaw = parseTimetableCrew(race.bucks);
+    const match = findMatchForTimetableRace(rounds, berksRaw, bucksRaw);
+    if (!match || match.status === "complete") continue;
 
-    for (const round of rounds) {
-      for (const match of round) {
-        if (match.status === "complete") continue;
-
-        const berks = getCrewName(match.berks);
-        const bucks = getCrewName(match.bucks);
-
-        if (berks && bucks) {
-          applyTimetableRace(match, race, raceDay);
-          continue;
-        }
-
-        if (!berks && !bucks) {
-          match.berks = { name: berksRaw, shortName: berksRaw };
-          match.bucks = { name: bucksRaw, shortName: bucksRaw };
-          applyTimetableRace(match, race, raceDay);
-        } else if (berks && !bucks) {
-          const opponent = crewsMatch(berks, berksRaw) ? bucksRaw : berksRaw;
-          if (!crewsMatch(berks, opponent)) {
-            match.bucks = { name: opponent, shortName: opponent };
-          }
-        } else if (!berks && bucks) {
-          const opponent = crewsMatch(bucks, bucksRaw) ? berksRaw : berksRaw;
-          if (!crewsMatch(bucks, opponent)) {
-            match.berks = { name: opponent, shortName: opponent };
-          }
-        }
+    if (!match.berks && !match.bucks) {
+      match.berks = resolveCrew(race.berks, registry);
+      match.bucks = resolveCrew(race.bucks, registry);
+    } else if (match.berks && !match.bucks) {
+      const opponent = crewsMatch(getCrewName(match.berks)!, berksRaw)
+        ? bucksRaw
+        : berksRaw;
+      if (!crewsMatch(getCrewName(match.berks)!, opponent)) {
+        match.bucks = resolveCrew(opponent, registry);
+      }
+    } else if (!match.berks && match.bucks) {
+      const opponent = crewsMatch(getCrewName(match.bucks)!, bucksRaw)
+        ? berksRaw
+        : berksRaw;
+      if (!crewsMatch(getCrewName(match.bucks)!, opponent)) {
+        match.berks = resolveCrew(opponent, registry);
       }
     }
+
+    applyTimetableRace(match, race, raceDay);
   }
 }
 
@@ -246,6 +320,7 @@ export function buildBracket(
   timetable: TimetableData = { raceDay: null, races: [] },
 ): BracketState {
   const draw = cloneDraw();
+  const registry = buildCrewRegistry(draw);
 
   const rounds: BracketMatch[][] = draw.rounds.map((round, roundIndex) =>
     round.map((match, matchIndex) =>
@@ -262,8 +337,7 @@ export function buildBracket(
     tryApplyResult(rounds, result);
   }
 
-  propagateWinnersWhenEmpty(rounds);
-  mergeTimetable(rounds, timetable);
+  mergeTimetable(rounds, timetable, registry);
   updateStatuses(rounds);
 
   const final = rounds[rounds.length - 1][0];

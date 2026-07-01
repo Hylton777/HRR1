@@ -8,8 +8,11 @@ import type { BracketApiResponse } from "@/lib/types";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-function displayName(crew: { name: string; shortName?: string } | null): string {
+function displayName(
+  crew: { name: string; shortName?: string; number?: number } | null,
+): string {
   if (!crew) return "TBD";
+  if (crew.number) return `${crew.number} ${crew.shortName || crew.name}`;
   return crew.shortName || crew.name;
 }
 
@@ -48,7 +51,7 @@ export default function Dashboard() {
   const nextRaces = data.upcomingRaces.slice(0, 6);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <LiveIndicator
         lastUpdated={data.lastUpdated}
         resultCount={data.resultCount}
@@ -56,13 +59,18 @@ export default function Dashboard() {
         onRefresh={() => mutate()}
       />
 
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-8">
-        <section>
-          <h2 className="text-lg font-semibold mb-4">Knockout Bracket</h2>
+      <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-6 sm:gap-8">
+        <section className="min-w-0">
+          <h2 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">
+            Knockout Bracket
+          </h2>
+          <p className="text-xs text-[var(--loser)] mb-3 md:hidden">
+            Berks (B) and Bucks (K) stations match the official draw.
+          </p>
           <Bracket bracket={data.bracket} />
         </section>
 
-        <aside className="xl:sticky xl:top-4 xl:self-start space-y-8">
+        <aside className="xl:sticky xl:top-4 xl:self-start space-y-6 sm:space-y-8 min-w-0">
           <div>
             <h2 className="text-lg font-semibold mb-1">Next Races</h2>
             <p className="text-xs text-[var(--loser)] mb-4 leading-relaxed">
@@ -106,10 +114,12 @@ export default function Dashboard() {
                         )}
                       </span>
                     </div>
-                    <div className="font-medium">
-                      {displayName(race.berks)}{" "}
-                      <span className="text-[var(--loser)] font-normal">vs</span>{" "}
-                      {displayName(race.bucks)}
+                    <div className="font-medium leading-snug">
+                      <span className="text-[var(--berks)]">{displayName(race.berks)}</span>
+                      {" "}
+                      <span className="text-[var(--loser)] font-normal">vs</span>
+                      {" "}
+                      <span className="text-[var(--bucks)]">{displayName(race.bucks)}</span>
                     </div>
                   </div>
                 ))
