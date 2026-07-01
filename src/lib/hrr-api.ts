@@ -13,6 +13,8 @@ export function normalizeCrewName(name: string): string {
     .replace(/,\s*u\.s\.a\.?/gi, "")
     .replace(/,\s*australia/gi, "")
     .replace(/,\s*france/gi, "")
+    .replace(/\s+(rowing club|boat club|school|college)\.?$/gi, "")
+    .replace(/\s+(r\.c|b\.c|sch|coll)\.?$/gi, "")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -20,16 +22,19 @@ export function normalizeCrewName(name: string): string {
 export function crewsMatch(a: string, b: string): boolean {
   const na = normalizeCrewName(a);
   const nb = normalizeCrewName(b);
+  if (!na || !nb) return false;
   if (na === nb) return true;
   if (na.includes(nb) || nb.includes(na)) return true;
 
-  const stripSuffix = (s: string) =>
+  const core = (s: string) =>
     s
+      .replace(/^(the|st|st\.)\s+/i, "")
       .replace(/\s+(sch|school|coll|college|bc|rc|b\.c|r\.c)\.?$/i, "")
       .trim();
-  const sa = stripSuffix(na);
-  const sb = stripSuffix(nb);
-  return sa === sb || sa.includes(sb) || sb.includes(sa);
+
+  const ca = core(na);
+  const cb = core(nb);
+  return ca === cb || ca.includes(cb) || cb.includes(ca);
 }
 
 export async function fetchPeResults(year = "2026"): Promise<{
@@ -37,14 +42,20 @@ export async function fetchPeResults(year = "2026"): Promise<{
   generated: string | null;
 }> {
   const accumulated = new Map<number, HrrResult>();
-  let page = 1;
+  let resultPage = 1;
   let lastPage = 1;
   let generated: string | null = null;
 
-  while (page <= lastPage) {
-    const url = `${HRR_API_BASE}/results?trophy=${PE_TROPHY_SLUG}&page=${page}`;
-    const response = await fetch(url, {
-      next: { revalidate: 0 },
+  // HRR uses "result-page" (not "page") for pagination — see hrr.co.uk app.js
+  while (resultPage <= lastPage) {
+    const params = new URLSearchParams({
+      trophy: PE_TROPHY_SLUG,
+      "race-year": year,
+      "result-page": String(resultPage),
+    });
+
+    const response = await fetch(`${HRR_API_BASE}/results?${params}`, {
+      cache: "no-store",
       headers: { Accept: "application/json" },
     });
 
@@ -65,9 +76,7 @@ export async function fetchPeResults(year = "2026"): Promise<{
     }
 
     lastPage = data.pagination?.lastPage ?? 1;
-    const nextPage = data.pagination?.nextPage;
-    if (!nextPage || nextPage === page) break;
-    page = nextPage;
+    resultPage += 1;
   }
 
   const results = Array.from(accumulated.values()).sort(

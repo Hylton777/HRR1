@@ -65,23 +65,23 @@
       },
       {
         "id": "r1-12",
-        "berks": { "name": "Marlow Rowing Club", "shortName": "Marlow R.C.", "number": 277 },
-        "bucks": { "name": "Kew House School", "shortName": "Kew House Sch.", "number": 272 }
+        "berks": { "name": "St. Paul's School", "shortName": "St. Paul's Sch.", "number": 288 },
+        "bucks": { "name": "Marlow Rowing Club", "shortName": "Marlow R.C.", "number": 277 }
       },
       {
         "id": "r1-13",
-        "berks": { "name": "Sydney University Boat Club, Australia", "shortName": "Sydney Univ. B.C.", "number": 290 },
-        "bucks": { "name": "Shrewsbury School", "shortName": "Shrewsbury Sch.", "number": 284 }
+        "berks": { "name": "Shrewsbury School", "shortName": "Shrewsbury Sch.", "number": 284 },
+        "bucks": { "name": "Leeds Rowing Club", "shortName": "Leeds R.C.", "number": 275 }
       },
       {
         "id": "r1-14",
-        "berks": { "name": "Leeds Rowing Club", "shortName": "Leeds R.C.", "number": 275 },
+        "berks": { "name": "Sydney University Boat Club, Australia", "shortName": "Sydney Univ. B.C.", "number": 290 },
         "bucks": { "name": "Winchester College", "shortName": "Winchester Coll.", "number": 301 }
       },
       {
         "id": "r1-15",
-        "berks": { "name": "St. Paul's School", "shortName": "St. Paul's Sch.", "number": 288 },
-        "bucks": { "name": "KAND Rowing Club, Australia", "shortName": "KAND R.C.", "number": 271 }
+        "berks": { "name": "KAND Rowing Club, Australia", "shortName": "KAND R.C.", "number": 271 },
+        "bucks": { "name": "Kew House School", "shortName": "Kew House Sch.", "number": 272 }
       }
     ],
     [
@@ -118,12 +118,12 @@
       {
         "id": "r2-6",
         "berks": { "name": "St. Paul's School", "shortName": "St. Paul's Sch.", "number": 288 },
-        "bucks": { "name": "Sydney University Boat Club, Australia", "shortName": "Sydney Univ. B.C.", "number": 290 }
+        "bucks": { "name": "KAND Rowing Club, Australia", "shortName": "KAND R.C.", "number": 271 }
       },
       {
         "id": "r2-7",
-        "berks": null,
-        "bucks": null
+        "berks": { "name": "Sydney University Boat Club, Australia", "shortName": "Sydney Univ. B.C.", "number": 290 },
+        "bucks": { "name": "Shrewsbury School", "shortName": "Shrewsbury Sch.", "number": 284 }
       }
     ],
     [
