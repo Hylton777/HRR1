@@ -1,8 +1,16 @@
 import type { BracketMatch } from "./types";
 
+function matchCenter(top: number, matchHeight: number): number {
+  return top + matchHeight / 2;
+}
+
+function topFromCenter(centerY: number, matchHeight: number): number {
+  return centerY - matchHeight / 2;
+}
+
 /**
- * Compute vertical offset (px) for each match so feeder lines align
- * per the official Henley steward draw (not standard binary propagation).
+ * Compute vertical offset (px) for each match so later-round races sit
+ * halfway between their two feeder races (official Henley steward draw).
  */
 export function computeMatchOffsets(
   rounds: BracketMatch[][],
@@ -25,7 +33,8 @@ export function computeMatchOffsets(
         const y0 = offsets.get(match.feeders[0]);
         const y1 = offsets.get(match.feeders[1]);
         if (y0 !== undefined && y1 !== undefined) {
-          offsets.set(match.id, (y0 + y1) / 2);
+          const center = (matchCenter(y0, matchHeight) + matchCenter(y1, matchHeight)) / 2;
+          offsets.set(match.id, topFromCenter(center, matchHeight));
           continue;
         }
       }

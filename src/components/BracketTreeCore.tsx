@@ -34,7 +34,7 @@ function ChampionCard({
 }) {
   return (
     <div
-      className={`bg-gradient-to-br from-[var(--accent)] to-[var(--accent-muted)] rounded-lg text-center ${
+      className={`bg-gradient-to-br from-[var(--hrr-navy)] to-[var(--hrr-blue)] rounded-sm text-center text-white ${
         compact ? "p-2" : "p-4"
       }`}
       data-bracket-region="champion"
@@ -81,7 +81,7 @@ export default function BracketTreeCore({
             data-round-index={roundIndex}
           >
             <h3
-              className={`font-semibold text-[var(--accent)] text-center sticky top-0 bg-[var(--background)] z-10 ${
+              className={`font-display font-semibold text-[var(--hrr-navy)] text-center sticky top-0 bg-[var(--background)] z-10 ${
                 compact
                   ? "text-[10px] mb-1 py-0.5"
                   : "text-sm mb-4 py-1"
@@ -89,7 +89,7 @@ export default function BracketTreeCore({
             >
               {ROUND_NAMES[roundIndex] ?? `Round ${roundIndex + 1}`}
               <span
-                className={`block font-normal text-[var(--loser)] ${
+                className={`block font-sans font-normal text-[var(--muted)] ${
                   compact ? "text-[9px]" : "text-xs"
                 }`}
               >
@@ -98,11 +98,7 @@ export default function BracketTreeCore({
             </h3>
             <div
               className="flex flex-col"
-              style={{
-                gap: 0,
-                minHeight: columnHeight,
-                paddingTop: roundIndex > 0 ? matchHeight / 2 : 0,
-              }}
+              style={{ gap: 0, minHeight: columnHeight }}
             >
               {round.map((match, matchIndex) => {
                 const focused = isMatchInView(match, viewPreset);
@@ -117,9 +113,7 @@ export default function BracketTreeCore({
                     className={`transition-opacity duration-200 ${
                       dimUnfocused && !focused ? "opacity-25" : "opacity-100"
                     }`}
-                    style={{
-                      marginTop: matchIndex === 0 ? 0 : margins[matchIndex],
-                    }}
+                    style={{ marginTop: margins[matchIndex] }}
                   >
                     <MatchCard
                       berks={match.berks}
@@ -149,7 +143,7 @@ export default function BracketTreeCore({
           data-bracket-region="champion-column"
         >
           <h3
-            className={`font-semibold text-[var(--accent)] text-center ${
+            className={`font-display font-semibold text-[var(--hrr-navy)] text-center ${
               compact ? "text-[10px] mb-1" : "text-sm mb-4"
             }`}
           >

@@ -22,24 +22,24 @@ export default function LiveIndicator({
     : "—";
 
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm border border-[var(--card-border)] bg-[var(--card)] rounded-sm px-3 py-2 shadow-sm">
       <div className="flex items-center gap-2">
         <span
           className={`inline-block w-2 h-2 rounded-full ${
-            isValidating ? "bg-yellow-400 animate-pulse" : "bg-green-500"
+            isValidating ? "bg-[var(--hrr-gold)] animate-pulse" : "bg-[var(--winner)]"
           }`}
         />
-        <span className="text-[var(--loser)]">
+        <span className="text-[var(--muted)] font-medium">
           {isValidating ? "Updating…" : "Live"}
         </span>
       </div>
-      <span className="text-[var(--loser)]">
+      <span className="text-[var(--muted)]">
         Updated {formatted} · {resultCount} races
       </span>
       <button
         onClick={onRefresh}
         disabled={isValidating}
-        className="px-3 py-1 rounded border border-[var(--card-border)] hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors disabled:opacity-50"
+        className="px-3 py-1 rounded-sm border border-[var(--card-border)] text-[var(--hrr-blue)] hover:border-[var(--hrr-blue)] hover:bg-[var(--hrr-blue)]/5 transition-colors disabled:opacity-50 text-sm font-medium"
       >
         Refresh
       </button>

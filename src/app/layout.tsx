@@ -1,11 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Roboto } from "next/font/google";
+import { Libre_Baskerville, Roboto } from "next/font/google";
 import "./globals.css";
 
 const roboto = Roboto({
   weight: ["400", "500", "700"],
   subsets: ["latin"],
   display: "swap",
+  variable: "--font-roboto",
+});
+
+const libreBaskerville = Libre_Baskerville({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
 });
 
 export const metadata: Metadata = {
@@ -17,7 +25,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0f1419",
+  themeColor: "#002147",
 };
 
 export default function RootLayout({
@@ -27,7 +35,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${roboto.className} min-h-screen antialiased`}>
+      <body
+        className={`${roboto.variable} ${libreBaskerville.variable} min-h-screen antialiased`}
+      >
         {children}
       </body>
     </html>

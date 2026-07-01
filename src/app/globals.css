@@ -1,23 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f1419;
-  --foreground: #e7ecf1;
-  --card: #1a2332;
-  --card-border: #2d3a4d;
-  --accent: #c8102e;
-  --accent-muted: #8b0a1f;
-  --winner: #22c55e;
-  --loser: #64748b;
-  --berks: #3b82f6;
-  --bucks: #f59e0b;
+  /* Henley Royal Regatta palette */
+  --hrr-navy: #002147;
+  --hrr-blue: #003399;
+  --hrr-cream: #f7f6f3;
+  --hrr-gold: #b8963e;
+  --hrr-red: #cf2e2e;
+
+  --background: #f7f6f3;
+  --foreground: #32373c;
+  --card: #ffffff;
+  --card-border: #d8dde6;
+  --accent: #cf2e2e;
+  --accent-muted: #a82424;
+  --muted: #5c6670;
+  --winner: #1a6b3c;
+  --loser: #8a939c;
+  --berks: #003399;
+  --bucks: #6b4c2a;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Roboto", system-ui, sans-serif;
+  font-family: var(--font-roboto), "Roboto", system-ui, sans-serif;
   overflow-x: hidden;
+}
+
+.font-display {
+  font-family: var(--font-display), "Libre Baskerville", Georgia, serif;
 }
 
 .bracket-scroll {
@@ -36,4 +48,12 @@ body {
 .bracket-scroll::-webkit-scrollbar-thumb {
   background: var(--card-border);
   border-radius: 4px;
+}
+
+.hrr-header-bar {
+  background: linear-gradient(180deg, var(--hrr-navy) 0%, #001833 100%);
+}
+
+.hrr-accent-line {
+  background: linear-gradient(180deg, var(--hrr-gold) 0%, #96752f 100%);
 }

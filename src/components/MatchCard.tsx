@@ -48,12 +48,12 @@ function CrewRow({
         compact ? "px-1 py-0.5 text-[10px]" : "px-2 py-2 sm:py-1.5 text-sm"
       } ${
         isWinner
-          ? "bg-green-950/50 text-[var(--winner)] font-medium"
+          ? "bg-emerald-50 text-[var(--winner)] font-medium"
           : isLoser
             ? "text-[var(--loser)] line-through opacity-60"
             : crew
               ? "text-[var(--foreground)]"
-              : "text-[var(--loser)] italic"
+              : "text-[var(--muted)] italic"
       }`}
     >
       {showStation && (
@@ -91,19 +91,19 @@ export default function MatchCard({
 
   return (
     <div
-      className={`bg-[var(--card)] border rounded-lg overflow-hidden ${
+      className={`bg-[var(--card)] border rounded-sm overflow-hidden shadow-sm ${
         compact ? "w-[120px]" : "w-full md:w-[220px]"
       } ${
         status === "complete"
-          ? "border-green-800/50"
+          ? "border-emerald-200"
           : status === "scheduled"
-            ? "border-[var(--accent)]/40"
+            ? "border-[var(--hrr-blue)]/40"
             : "border-[var(--card-border)]"
       }`}
     >
       {(roundLabel || (status === "scheduled" && !compact)) && (
         <div
-          className={`bg-[var(--card-border)]/30 text-[var(--loser)] flex justify-between gap-1 ${
+          className={`bg-[var(--hrr-cream)] text-[var(--muted)] flex justify-between gap-1 ${
             compact ? "px-1 py-0.5 text-[8px]" : "px-3 py-1.5 text-xs"
           }`}
         >
@@ -115,7 +115,7 @@ export default function MatchCard({
           {status === "scheduled" && (
             <span
               className={`shrink-0 ${
-                raceTime ? "text-[var(--accent)]" : "text-[var(--bucks)]"
+                raceTime ? "text-[var(--hrr-blue)] font-medium" : "text-[var(--bucks)]"
               }`}
             >
               {compact && raceTime
@@ -126,7 +126,7 @@ export default function MatchCard({
         </div>
       )}
       {compact && status === "scheduled" && raceTime && !roundLabel && (
-        <div className="px-1 py-0.5 text-[8px] text-[var(--accent)] text-center border-b border-[var(--card-border)]/40">
+        <div className="px-1 py-0.5 text-[8px] text-[var(--hrr-blue)] text-center border-b border-[var(--card-border)]">
           {raceTime}
         </div>
       )}
@@ -140,7 +140,7 @@ export default function MatchCard({
           compact={compact}
         />
         {!compact && (
-          <div className="text-center text-[10px] text-[var(--loser)] py-0.5">
+          <div className="text-center text-[10px] text-[var(--muted)] py-0.5">
             vs
           </div>
         )}
@@ -154,7 +154,7 @@ export default function MatchCard({
         />
       </div>
       {status === "complete" && verdict && !compact && (
-        <div className="px-3 py-1.5 text-xs text-center border-t border-[var(--card-border)] text-[var(--loser)]">
+        <div className="px-3 py-1.5 text-xs text-center border-t border-[var(--card-border)] text-[var(--muted)]">
           {verdict}
         </div>
       )}

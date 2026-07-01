@@ -71,6 +71,8 @@ function getFocusBounds(
     maxY = Math.max(maxY, y + el.offsetHeight);
   });
 
+  if (minX === Infinity || maxX <= minX || maxY <= minY) return null;
+
   return new DOMRect(minX, minY, maxX - minX, maxY - minY);
 }
 
@@ -81,19 +83,21 @@ function computeFitTransform(
   padding = 12,
 ): Transform {
   const focus = target ?? new DOMRect(0, 0, content.width, content.height);
+  const focusWidth = Math.max(focus.width, 1);
+  const focusHeight = Math.max(focus.height, 1);
   const scale = clamp(
     Math.min(
-      (viewport.width - padding * 2) / focus.width,
-      (viewport.height - padding * 2) / focus.height,
+      (viewport.width - padding * 2) / focusWidth,
+      (viewport.height - padding * 2) / focusHeight,
     ),
     MIN_SCALE,
     MAX_SCALE,
   );
 
   const x =
-    (viewport.width - focus.width * scale) / 2 - focus.x * scale;
+    (viewport.width - focusWidth * scale) / 2 - focus.x * scale;
   const y =
-    (viewport.height - focus.height * scale) / 2 - focus.y * scale;
+    (viewport.height - focusHeight * scale) / 2 - focus.y * scale;
 
   return { scale, x, y };
 }
@@ -104,7 +108,7 @@ function DayStackView({ bracket }: { bracket: BracketState }) {
 
   if (dayGroups.length === 0) {
     return (
-      <p className="text-sm text-[var(--loser)] p-4 text-center">
+      <p className="text-sm text-[var(--muted)] p-4 text-center">
         No races scheduled yet.
       </p>
     );
@@ -118,9 +122,9 @@ function DayStackView({ bracket }: { bracket: BracketState }) {
           data-bracket-region="day-stack"
           data-day-id={day.id}
         >
-          <h3 className="text-xs font-semibold text-[var(--accent)] mb-2 sticky top-0 bg-[var(--background)] py-1 z-10">
+          <h3 className="text-xs font-semibold text-[var(--hrr-navy)] mb-2 sticky top-0 bg-[var(--background)] py-1 z-10">
             {day.label}
-            <span className="text-[var(--loser)] font-normal ml-2">
+            <span className="text-[var(--muted)] font-normal ml-2">
               {matches.length} race{matches.length !== 1 ? "s" : ""}
             </span>
           </h3>
@@ -315,8 +319,8 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
           }}
           className={`px-2.5 py-1 rounded text-xs border ${
             layout === "bracket" && preset === "full"
-              ? "border-[var(--accent)] text-[var(--accent)]"
-              : "border-[var(--card-border)] text-[var(--loser)]"
+              ? "border-[var(--hrr-blue)] text-[var(--hrr-blue)] bg-[var(--hrr-blue)]/5"
+              : "border-[var(--card-border)] text-[var(--muted)]"
           }`}
         >
           Fit all
@@ -329,8 +333,8 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
           }}
           className={`px-2.5 py-1 rounded text-xs border ${
             layout === "bracket" && preset === "today"
-              ? "border-[var(--accent)] text-[var(--accent)]"
-              : "border-[var(--card-border)] text-[var(--loser)]"
+              ? "border-[var(--hrr-blue)] text-[var(--hrr-blue)] bg-[var(--hrr-blue)]/5"
+              : "border-[var(--card-border)] text-[var(--muted)]"
           }`}
         >
           Today
@@ -343,20 +347,20 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
           }}
           className={`px-2.5 py-1 rounded text-xs border ${
             layout === "bracket" && preset === "today-tomorrow"
-              ? "border-[var(--accent)] text-[var(--accent)]"
-              : "border-[var(--card-border)] text-[var(--loser)]"
+              ? "border-[var(--hrr-blue)] text-[var(--hrr-blue)] bg-[var(--hrr-blue)]/5"
+              : "border-[var(--card-border)] text-[var(--muted)]"
           }`}
         >
           Today + tomorrow
-          <span className="text-[var(--loser)] ml-1">({getTodayTomorrowLabel()})</span>
+          <span className="text-[var(--muted)] ml-1">({getTodayTomorrowLabel()})</span>
         </button>
         <button
           type="button"
           onClick={() => setLayout("day-stack")}
           className={`px-2.5 py-1 rounded text-xs border ${
             layout === "day-stack"
-              ? "border-[var(--accent)] text-[var(--accent)]"
-              : "border-[var(--card-border)] text-[var(--loser)]"
+              ? "border-[var(--hrr-blue)] text-[var(--hrr-blue)] bg-[var(--hrr-blue)]/5"
+              : "border-[var(--card-border)] text-[var(--muted)]"
           }`}
         >
           By day
@@ -374,8 +378,8 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
             }}
             className={`px-2 py-0.5 rounded text-[10px] border ${
               layout === "bracket" && preset === roundPreset
-                ? "border-[var(--berks)] text-[var(--berks)]"
-                : "border-[var(--card-border)] text-[var(--loser)]"
+              ? "border-[var(--berks)] text-[var(--berks)] bg-[var(--berks)]/5"
+              : "border-[var(--card-border)] text-[var(--muted)]"
             }`}
           >
             {label}
@@ -389,7 +393,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
               setPreset(e.target.value as BracketViewPreset);
             }
           }}
-          className="ml-auto text-[10px] bg-[var(--card)] border border-[var(--card-border)] rounded px-1.5 py-0.5 text-[var(--loser)]"
+          className="ml-auto text-[10px] bg-[var(--card)] border border-[var(--card-border)] rounded-sm px-1.5 py-0.5 text-[var(--muted)]"
         >
           <option value="">Day…</option>
           {PE_RACE_DAYS.map((day) => (
@@ -404,7 +408,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
               type="button"
               aria-label="Zoom out"
               onClick={() => zoomBy(-0.08)}
-              className="w-7 h-7 rounded border border-[var(--card-border)] text-[var(--loser)] text-sm"
+              className="w-7 h-7 rounded-sm border border-[var(--card-border)] text-[var(--muted)] text-sm hover:border-[var(--hrr-blue)]"
             >
               −
             </button>
@@ -412,7 +416,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
               type="button"
               aria-label="Zoom in"
               onClick={() => zoomBy(0.08)}
-              className="w-7 h-7 rounded border border-[var(--card-border)] text-[var(--loser)] text-sm"
+              className="w-7 h-7 rounded-sm border border-[var(--card-border)] text-[var(--muted)] text-sm hover:border-[var(--hrr-blue)]"
             >
               +
             </button>
@@ -420,18 +424,18 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
         )}
       </div>
 
-      <p className="text-[10px] text-[var(--loser)] leading-snug">
+      <p className="text-[10px] text-[var(--muted)] leading-snug">
         Pinch to zoom · drag to pan · B/K stations match the official draw
       </p>
 
       {layout === "day-stack" ? (
-        <div className="bracket-viewport rounded-lg border border-[var(--card-border)] bg-[var(--card)]/20 max-h-[65vh] overflow-y-auto">
+        <div className="bracket-viewport rounded-sm border border-[var(--card-border)] bg-[var(--card)] shadow-sm max-h-[65vh] overflow-y-auto">
           <DayStackView bracket={bracket} />
         </div>
       ) : (
         <div
           ref={viewportRef}
-          className="bracket-viewport relative rounded-lg border border-[var(--card-border)] bg-[var(--card)]/20 h-[58vh] min-h-[280px] overflow-hidden touch-none"
+          className="bracket-viewport relative rounded-sm border border-[var(--card-border)] bg-[var(--card)] shadow-sm h-[58vh] min-h-[280px] overflow-hidden touch-none"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
