@@ -5,7 +5,7 @@ import Bracket from "@/components/Bracket";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
 import LiveIndicator from "@/components/LiveIndicator";
 import NextRacesPanel from "@/components/NextRacesPanel";
-import RaceResultCard from "@/components/RaceResultCard";
+import RecentResultsPanel from "@/components/RecentResultsPanel";
 import type { BracketApiResponse } from "@/lib/types";
 
 async function fetcher(url: string): Promise<BracketApiResponse> {
@@ -53,39 +53,7 @@ export default function Dashboard() {
     );
   }
 
-  const recentResults = (data.results ?? []).slice(0, 5);
   const nextRaces = (data.upcomingRaces ?? []).slice(0, 6);
-
-  const recentResultsPanel = (
-    <>
-      <h2 className="font-display text-lg font-semibold mb-4 text-[var(--hrr-navy)]">
-        Recent Results
-      </h2>
-      <div className="space-y-3">
-        {recentResults.length === 0 ? (
-          <p className="text-[var(--muted)] text-sm">
-            No races completed yet.
-          </p>
-        ) : (
-          recentResults.map((result) => (
-            <RaceResultCard key={result.id} result={result} />
-          ))
-        )}
-      </div>
-      <p className="text-xs text-[var(--muted)] leading-relaxed mt-4">
-        Data sourced from{" "}
-        <a
-          href="https://www.hrr.co.uk/results/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-[var(--hrr-blue)]"
-        >
-          Henley Royal Regatta live results
-        </a>
-        . Auto-refreshes every 30 seconds.
-      </p>
-    </>
-  );
 
   return (
     <ClientErrorBoundary>
@@ -113,7 +81,9 @@ export default function Dashboard() {
               />
             </div>
             <Bracket bracket={data.bracket} />
-            <div className="xl:hidden mt-6">{recentResultsPanel}</div>
+            <div className="xl:hidden mt-6">
+              <RecentResultsPanel results={data.results ?? []} />
+            </div>
           </section>
 
           <aside className="hidden xl:block xl:sticky xl:top-4 xl:self-start space-y-6 sm:space-y-8 min-w-0">
@@ -126,7 +96,7 @@ export default function Dashboard() {
                 timetableDay={data.timetableDay}
               />
             </div>
-            <div>{recentResultsPanel}</div>
+            <RecentResultsPanel results={data.results ?? []} />
           </aside>
         </div>
       </div>

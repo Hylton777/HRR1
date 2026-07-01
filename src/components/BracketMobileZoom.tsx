@@ -334,7 +334,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
               : "border-[var(--card-border)] text-[var(--muted)]"
           }`}
         >
-          Fit all
+          Show all
         </button>
         <button
           type="button"
