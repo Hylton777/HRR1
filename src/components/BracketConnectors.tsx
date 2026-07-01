@@ -1,126 +1,175 @@
 "use client";
 
+import { useLayoutEffect, useState, type RefObject } from "react";
 import type { BracketMatch } from "@/lib/types";
+import { isMatchInView, type BracketViewPreset } from "@/lib/regatta-days";
 
 interface BracketConnectorsProps {
+  rootRef: RefObject<HTMLElement | null>;
   rounds: BracketMatch[][];
-  offsets: Map<string, number>;
-  matchHeight: number;
-  columnWidth: number;
-  columnGap: number;
-  headerHeight: number;
   compact?: boolean;
   dimUnfocused?: boolean;
-  isMatchFocused?: (match: BracketMatch) => boolean;
+  viewPreset?: BracketViewPreset;
 }
 
-function matchCenterY(
-  matchId: string,
-  offsets: Map<string, number>,
-  headerHeight: number,
-  matchHeight: number,
-): number {
-  return (offsets.get(matchId) ?? 0) + headerHeight + matchHeight / 2;
+interface MeasuredBox {
+  left: number;
+  right: number;
+  centerY: number;
 }
 
-export default function BracketConnectors({
-  rounds,
-  offsets,
-  matchHeight,
-  columnWidth,
-  columnGap,
-  headerHeight,
-  compact = false,
-  dimUnfocused = false,
-  isMatchFocused,
-}: BracketConnectorsProps) {
-  const columnLeft = (roundIndex: number) =>
-    roundIndex * (columnWidth + columnGap);
+interface ConnectorPath {
+  d: string;
+  dimmed: boolean;
+}
 
-  const paths: { d: string; dimmed: boolean }[] = [];
+interface ConnectorLayout {
+  width: number;
+  height: number;
+  paths: ConnectorPath[];
+}
+
+function measureRelative(el: HTMLElement, root: HTMLElement): MeasuredBox {
+  const rootRect = root.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+  const scaleX =
+    root.offsetWidth > 0 ? rootRect.width / root.offsetWidth : 1;
+  const scaleY =
+    root.offsetHeight > 0 ? rootRect.height / root.offsetHeight : 1;
+
+  const left = (elRect.left - rootRect.left) / scaleX;
+  const top = (elRect.top - rootRect.top) / scaleY;
+  const width = elRect.width / scaleX;
+  const height = elRect.height / scaleY;
+
+  return {
+    left,
+    right: left + width,
+    centerY: top + height / 2,
+  };
+}
+
+function buildConnectorPaths(
+  rounds: BracketMatch[][],
+  measureMatch: (id: string) => MeasuredBox | null,
+  isDimmed: (match: BracketMatch, roundIndex: number) => boolean,
+): ConnectorPath[] {
+  const paths: ConnectorPath[] = [];
 
   for (let ri = 1; ri < rounds.length; ri++) {
     const round = rounds[ri];
-    const prevLeft = columnLeft(ri - 1);
-    const childLeft = columnLeft(ri);
-    const midX = prevLeft + columnWidth + columnGap / 2;
-    const feederRight = prevLeft + columnWidth;
 
     for (const match of round) {
       if (!match.feeders || match.feeders.length !== 2) continue;
 
       const [f0, f1] = match.feeders;
-      const y0 = matchCenterY(f0, offsets, headerHeight, matchHeight);
-      const y1 = matchCenterY(f1, offsets, headerHeight, matchHeight);
-      const childY = matchCenterY(match.id, offsets, headerHeight, matchHeight);
-      const childEdge = childLeft;
+      const p0 = measureMatch(f0);
+      const p1 = measureMatch(f1);
+      const child = measureMatch(match.id);
+      if (!p0 || !p1 || !child) continue;
+
+      const midX = (p0.right + child.left) / 2;
+      const y0 = p0.centerY;
+      const y1 = p1.centerY;
+      const childY = child.centerY;
       const spineTop = Math.min(y0, y1);
       const spineBottom = Math.max(y0, y1);
+      const dimmed = isDimmed(match, ri);
 
-      const focused =
-        !dimUnfocused ||
-        !isMatchFocused ||
-        isMatchFocused(match) ||
-        match.feeders.some((id) => {
-          const feeder = rounds[ri - 1]?.find((m) => m.id === id);
-          return feeder && isMatchFocused(feeder);
-        });
+      paths.push({ d: `M ${p0.right} ${y0} H ${midX}`, dimmed });
+      paths.push({ d: `M ${p1.right} ${y1} H ${midX}`, dimmed });
+      paths.push({ d: `M ${midX} ${spineTop} V ${spineBottom}`, dimmed });
 
-      const dimmed = !focused;
+      if (childY < spineTop) {
+        paths.push({ d: `M ${midX} ${childY} V ${spineTop}`, dimmed });
+      } else if (childY > spineBottom) {
+        paths.push({ d: `M ${midX} ${spineBottom} V ${childY}`, dimmed });
+      }
 
-      // Upper feeder → spine
-      paths.push({
-        d: `M ${feederRight} ${y0} H ${midX}`,
-        dimmed,
-      });
-      // Lower feeder → spine
-      paths.push({
-        d: `M ${feederRight} ${y1} H ${midX}`,
-        dimmed,
-      });
-      // Vertical spine joining both feeders
-      paths.push({
-        d: `M ${midX} ${spineTop} V ${spineBottom}`,
-        dimmed,
-      });
-      // Spine → child match
-      paths.push({
-        d: `M ${midX} ${childY} H ${childEdge}`,
-        dimmed,
-      });
+      paths.push({ d: `M ${midX} ${childY} H ${child.left}`, dimmed });
     }
   }
 
-  if (paths.length === 0) return null;
+  return paths;
+}
 
-  const totalWidth =
-    rounds.length * columnWidth + Math.max(0, rounds.length - 1) * columnGap;
-  let maxBottom = headerHeight;
-  for (const [, top] of offsets) {
-    maxBottom = Math.max(maxBottom, top + headerHeight + matchHeight);
-  }
-  const totalHeight = maxBottom + 8;
+export default function BracketConnectors({
+  rootRef,
+  rounds,
+  compact = false,
+  dimUnfocused = false,
+  viewPreset = "full",
+}: BracketConnectorsProps) {
+  const [layout, setLayout] = useState<ConnectorLayout | null>(null);
+
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const measure = () => {
+      const measureMatch = (id: string): MeasuredBox | null => {
+        const el = root.querySelector(
+          `[data-match-id="${id}"]`,
+        ) as HTMLElement | null;
+        if (!el) return null;
+        return measureRelative(el, root);
+      };
+
+      const isDimmed = (match: BracketMatch, roundIndex: number) => {
+        if (!dimUnfocused) return false;
+        if (isMatchInView(match, viewPreset)) return false;
+        return !match.feeders?.some((id) => {
+          const feeder = rounds[roundIndex - 1]?.find((m) => m.id === id);
+          return feeder && isMatchInView(feeder, viewPreset);
+        });
+      };
+
+      const paths = buildConnectorPaths(rounds, measureMatch, isDimmed);
+      setLayout({
+        width: root.scrollWidth,
+        height: root.scrollHeight,
+        paths,
+      });
+    };
+
+    measure();
+    const raf = requestAnimationFrame(measure);
+
+    const resizeObserver = new ResizeObserver(measure);
+    resizeObserver.observe(root);
+
+    const onWindowResize = () => measure();
+    window.addEventListener("resize", onWindowResize);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", onWindowResize);
+    };
+  }, [rootRef, rounds, compact, dimUnfocused, viewPreset]);
+
+  if (!layout || layout.paths.length === 0) return null;
 
   const strokeWidth = compact ? 1 : 1.5;
-  const strokeColor = "var(--connector-stroke, #c5cdd8)";
+  const strokeColor = "var(--connector-stroke, #94a3b8)";
 
   return (
     <svg
-      className="absolute top-0 left-0 pointer-events-none z-0"
-      width={totalWidth}
-      height={totalHeight}
+      className="absolute top-0 left-0 pointer-events-none z-[1]"
+      width={layout.width}
+      height={layout.height}
       aria-hidden
     >
-      {paths.map((path, i) => (
+      {layout.paths.map((path, i) => (
         <path
           key={i}
           d={path.d}
           fill="none"
           stroke={strokeColor}
           strokeWidth={strokeWidth}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={path.dimmed ? "opacity-20" : "opacity-70"}
+          strokeLinecap="square"
+          strokeLinejoin="miter"
+          className={path.dimmed ? "opacity-20" : "opacity-80"}
         />
       ))}
     </svg>
