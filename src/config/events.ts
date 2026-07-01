@@ -139,7 +139,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     year: 2026,
     displayName: "Prince of Wales Challenge Cup",
     shortLabel: "POW",
-    headerSubtitle: "Live knockout bracket · 16 crews · Club fours",
+    headerSubtitle: "Live knockout bracket · 16 crews · Intermediate quads",
     crewCount: 16,
     draw: powDraw as DrawData,
     raceDays: POW_RACE_DAYS,

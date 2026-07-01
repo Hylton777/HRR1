@@ -8,11 +8,8 @@ export function isSeededCrew(
 ): boolean {
   if (!crew) return false;
   if (crew.seeded) return true;
-  if (
-    crew.number != null &&
-    event.seededCrewNumbers.includes(crew.number)
-  ) {
-    return true;
+  if (crew.number != null) {
+    return event.seededCrewNumbers.includes(crew.number);
   }
   return event.seededCrewNames.some((name) => crewsMatch(crew.name, name));
 }
