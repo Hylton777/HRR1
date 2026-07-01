@@ -129,6 +129,11 @@ export async function fetchPeTimetable() {
   });
 }
 
+export function parseTimetableCrewNumber(raw: string): number | null {
+  const match = raw.match(/^(\d+)\s+/);
+  return match ? parseInt(match[1], 10) : null;
+}
+
 export function parseTimetableCrew(raw: string): string {
   return raw.replace(/^\d+\s+/, "").trim();
 }

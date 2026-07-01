@@ -3,6 +3,8 @@ export function normalizeCrewName(name: string): string {
     .toLowerCase()
     .replace(/['']/g, "'")
     .replace(/\./g, "")
+    .replace(/\s*&\s*/g, " and ")
+    .replace(/\buniv\b/g, "university")
     .replace(/,\s*u\.s\.a\.?/gi, "")
     .replace(/,\s*australia/gi, "")
     .replace(/,\s*france/gi, "")

@@ -2,6 +2,7 @@ import type { EventConfig } from "@/config/events";
 import {
   crewsMatch,
   parseTimetableCrew,
+  parseTimetableCrewNumber,
   resultMatchesPair,
 } from "./hrr-api";
 import { enrichCrew, withSeededFlag } from "./crew-seeds";
@@ -125,19 +126,42 @@ function applyResultToMatch(
   };
 }
 
+function crewMatchesSlot(
+  crew: Crew | null,
+  timetableName: string,
+  timetableNumber: number | null,
+): boolean {
+  if (!crew) return false;
+  if (
+    timetableNumber != null &&
+    crew.number != null &&
+    crew.number === timetableNumber
+  ) {
+    return true;
+  }
+  if (crewsMatch(crew.name, timetableName)) return true;
+  if (crew.shortName && crewsMatch(crew.shortName, timetableName)) return true;
+  return false;
+}
+
 function matchHasBothCrews(
   match: BracketMatch,
   crewA: string,
   crewB: string,
+  crewANumber: number | null = null,
+  crewBNumber: number | null = null,
 ): boolean {
-  const berks = getCrewName(match.berks);
-  const bucks = getCrewName(match.bucks);
+  const berks = match.berks;
+  const bucks = match.bucks;
   if (!berks || !bucks) return false;
   return (
-    (crewsMatch(berks, crewA) && crewsMatch(bucks, crewB)) ||
-    (crewsMatch(berks, crewB) && crewsMatch(bucks, crewA))
+    (crewMatchesSlot(berks, crewA, crewANumber) &&
+      crewMatchesSlot(bucks, crewB, crewBNumber)) ||
+    (crewMatchesSlot(berks, crewB, crewBNumber) &&
+      crewMatchesSlot(bucks, crewA, crewANumber))
   );
 }
+
 
 function getRoundWinners(round: BracketMatch[]): Set<string> {
   const winners = new Set<string>();
@@ -168,30 +192,14 @@ function findMatchForTimetableRace(
   rounds: BracketMatch[][],
   berksRaw: string,
   bucksRaw: string,
+  berksNumber: number | null,
+  bucksNumber: number | null,
 ): BracketMatch | null {
   for (const round of rounds) {
     for (const match of round) {
       if (match.status === "complete") continue;
-      if (matchHasBothCrews(match, berksRaw, bucksRaw)) {
+      if (matchHasBothCrews(match, berksRaw, bucksRaw, berksNumber, bucksNumber)) {
         return match;
-      }
-    }
-  }
-
-  for (let ri = 0; ri < rounds.length; ri++) {
-    for (const match of rounds[ri]) {
-      if (match.status === "complete") continue;
-      const berks = getCrewName(match.berks);
-      const bucks = getCrewName(match.bucks);
-      if (berks && !bucks) {
-        if (crewsMatch(berks, berksRaw) || crewsMatch(berks, bucksRaw)) {
-          return match;
-        }
-      }
-      if (!berks && bucks) {
-        if (crewsMatch(bucks, berksRaw) || crewsMatch(bucks, bucksRaw)) {
-          return match;
-        }
       }
     }
   }
@@ -204,10 +212,27 @@ function findMatchForTimetableRace(
     }
   }
 
-  for (const round of rounds) {
-    for (const match of round) {
+  for (let ri = 0; ri < rounds.length; ri++) {
+    for (const match of rounds[ri]) {
       if (match.status === "complete") continue;
-      if (!match.berks && !match.bucks) return match;
+      const berks = getCrewName(match.berks);
+      const bucks = getCrewName(match.bucks);
+      if (berks && !bucks) {
+        if (
+          crewMatchesSlot(match.berks, berksRaw, berksNumber) ||
+          crewMatchesSlot(match.berks, bucksRaw, bucksNumber)
+        ) {
+          return match;
+        }
+      }
+      if (!berks && bucks) {
+        if (
+          crewMatchesSlot(match.bucks, berksRaw, berksNumber) ||
+          crewMatchesSlot(match.bucks, bucksRaw, bucksNumber)
+        ) {
+          return match;
+        }
+      }
     }
   }
 
@@ -270,26 +295,38 @@ function mergeTimetable(
   for (const race of sortedRaces) {
     const berksRaw = parseTimetableCrew(race.berks);
     const bucksRaw = parseTimetableCrew(race.bucks);
-    const match = findMatchForTimetableRace(rounds, berksRaw, bucksRaw);
+    const berksNumber = parseTimetableCrewNumber(race.berks);
+    const bucksNumber = parseTimetableCrewNumber(race.bucks);
+    const match = findMatchForTimetableRace(
+      rounds,
+      berksRaw,
+      bucksRaw,
+      berksNumber,
+      bucksNumber,
+    );
     if (!match || match.status === "complete") continue;
 
-    if (!match.berks && !match.bucks) {
+    const bothDrawCrewsKnown = Boolean(match.berks && match.bucks);
+    const emptySlot = !match.berks && !match.bucks;
+
+    if (emptySlot) {
+      if (!pairMatchesRoundWinners(rounds, match.roundIndex, berksRaw, bucksRaw)) {
+        continue;
+      }
       match.berks = resolveCrew(race.berks, registry);
       match.bucks = resolveCrew(race.bucks, registry);
     } else if (match.berks && !match.bucks) {
-      const opponent = crewsMatch(getCrewName(match.berks)!, berksRaw)
-        ? bucksRaw
-        : berksRaw;
-      if (!crewsMatch(getCrewName(match.berks)!, opponent)) {
-        match.bucks = resolveCrew(opponent, registry);
-      }
+      const opponentRaw = crewMatchesSlot(match.berks, berksRaw, berksNumber)
+        ? race.bucks
+        : race.berks;
+      match.bucks = resolveCrew(opponentRaw, registry);
     } else if (!match.berks && match.bucks) {
-      const opponent = crewsMatch(getCrewName(match.bucks)!, bucksRaw)
-        ? berksRaw
-        : berksRaw;
-      if (!crewsMatch(getCrewName(match.bucks)!, opponent)) {
-        match.berks = resolveCrew(opponent, registry);
-      }
+      const opponentRaw = crewMatchesSlot(match.bucks, bucksRaw, bucksNumber)
+        ? race.berks
+        : race.bucks;
+      match.berks = resolveCrew(opponentRaw, registry);
+    } else if (!bothDrawCrewsKnown) {
+      continue;
     }
 
     applyTimetableRace(match, race, raceDay);
