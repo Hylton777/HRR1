@@ -146,14 +146,19 @@ export default function BracketTreeCore({
                       style={{ top, width: columnWidth }}
                     >
                       <MatchCard
+                        matchId={match.id}
                         berks={match.berks}
                         bucks={match.bucks}
                         winner={match.winner}
+                        loser={match.loser}
                         status={match.status}
                         verdict={match.verdict}
                         roundLabel=""
                         raceTime={match.raceTime}
                         raceNumber={match.raceNumber}
+                        raceDay={match.raceDay}
+                        splits={match.splits}
+                        station={match.station}
                         compact
                       />
                     </div>
@@ -181,14 +186,19 @@ export default function BracketTreeCore({
                       style={{ marginTop: margins?.[matchIndex] ?? 0 }}
                     >
                       <MatchCard
+                        matchId={match.id}
                         berks={match.berks}
                         bucks={match.bucks}
                         winner={match.winner}
+                        loser={match.loser}
                         status={match.status}
                         verdict={match.verdict}
                         roundLabel={match.roundLabel}
                         raceTime={match.raceTime}
                         raceNumber={match.raceNumber}
+                        raceDay={match.raceDay}
+                        splits={match.splits}
+                        station={match.station}
                         showStations={roundIndex === 0}
                         compact={false}
                       />

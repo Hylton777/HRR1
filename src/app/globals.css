@@ -57,3 +57,7 @@ body {
 .hrr-accent-line {
   background: linear-gradient(180deg, var(--hrr-gold) 0%, #96752f 100%);
 }
+
+.race-result-dialog::backdrop {
+  background: color-mix(in srgb, var(--hrr-navy) 50%, transparent);
+}

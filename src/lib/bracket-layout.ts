@@ -1,7 +1,7 @@
 import type { BracketMatch } from "./types";
 
-/** Must match compact MatchCard CSS height exactly */
-export const COMPACT_MATCH_HEIGHT = 48;
+/** Must match compact MatchCard CSS height exactly (includes verdict strip when complete) */
+export const COMPACT_MATCH_HEIGHT = 56;
 export const COMPACT_MATCH_GAP = 8;
 export const COMPACT_MATCH_WIDTH = 128;
 

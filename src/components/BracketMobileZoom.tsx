@@ -132,16 +132,21 @@ function DayStackView({ bracket }: { bracket: BracketState }) {
             {matches.map((match) => (
               <MatchCard
                 key={match.id}
+                matchId={match.id}
                 berks={match.berks}
                 bucks={match.bucks}
                 winner={match.winner}
+                loser={match.loser}
                 status={match.status}
                 verdict={match.verdict}
                 roundLabel={match.roundLabel}
                 raceTime={match.raceTime}
                 raceNumber={match.raceNumber}
+                raceDay={match.raceDay}
+                splits={match.splits}
+                station={match.station}
                 showStations
-                compact
+                compact={false}
               />
             ))}
           </div>

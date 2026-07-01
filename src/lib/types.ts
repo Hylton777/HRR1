@@ -4,10 +4,15 @@ export interface Crew {
   number?: number;
 }
 
+export interface SplitTiming {
+  time: string;
+  loserLeading?: boolean;
+}
+
 export interface RaceSplits {
-  barrier?: string;
-  fawley?: string;
-  finish?: string;
+  barrier?: SplitTiming;
+  fawley?: SplitTiming;
+  finish?: SplitTiming;
 }
 
 export interface HrrResult {

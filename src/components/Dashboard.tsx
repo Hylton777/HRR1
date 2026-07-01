@@ -5,6 +5,7 @@ import Bracket from "@/components/Bracket";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
 import LiveIndicator from "@/components/LiveIndicator";
 import NextRacesPanel from "@/components/NextRacesPanel";
+import RaceResultCard from "@/components/RaceResultCard";
 import type { BracketApiResponse } from "@/lib/types";
 
 async function fetcher(url: string): Promise<BracketApiResponse> {
@@ -67,26 +68,7 @@ export default function Dashboard() {
           </p>
         ) : (
           recentResults.map((result) => (
-            <div
-              key={result.id}
-              className="bg-[var(--card)] border border-[var(--card-border)] rounded-sm p-3 text-sm shadow-sm"
-            >
-              <div className="text-xs text-[var(--muted)] mb-1">
-                Race {result.number} · {result.raceDay} {result.raceTime}
-              </div>
-              <div className="font-medium text-[var(--winner)]">
-                {result.winner?.shortName || result.winner?.name || "—"}
-              </div>
-              <div className="text-[var(--muted)] text-xs">
-                beat{" "}
-                {result.loser?.shortName || result.loser?.name || "—"}
-              </div>
-              {result.verdict && result.finish?.split && (
-                <div className="text-xs text-[var(--muted)] mt-1">
-                  {result.verdict} · {result.finish.split}
-                </div>
-              )}
-            </div>
+            <RaceResultCard key={result.id} result={result} />
           ))
         )}
       </div>

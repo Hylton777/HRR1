@@ -113,9 +113,15 @@ function applyResultToMatch(
     raceDay: result.raceDay,
     station: result.station,
     splits: {
-      barrier: result.barrier.split,
-      fawley: result.fawley.split,
-      finish: result.finish.split,
+      barrier: {
+        time: result.barrier.split,
+        loserLeading: result.barrier.loserLeading,
+      },
+      fawley: {
+        time: result.fawley.split,
+        loserLeading: result.fawley.loserLeading,
+      },
+      finish: { time: result.finish.split },
     },
   };
 }
