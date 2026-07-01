@@ -1,135 +1,160 @@
 {
   "event": "The Princess Elizabeth Challenge Cup",
   "year": 2026,
+  "source": "Henley Royal Regatta 2026 official draw chart",
   "rounds": [
     [
       {
         "id": "r1-0",
-        "berks": { "name": "Reading Blue Coat School", "shortName": "Reading Blue Coat Sch.", "number": 282 },
-        "bucks": { "name": "Boulogne 92 Aviron, France", "shortName": "Boulogne 92 Aviron", "number": 258 }
+        "drawRace": 1,
+        "berks": { "name": "The King's School, Worcester", "shortName": "King's Sch., Worcester", "number": 295 },
+        "bucks": { "name": "Westminster School", "shortName": "Westminster Sch.", "number": 300 }
       },
       {
         "id": "r1-1",
-        "berks": { "name": "Bedford School", "shortName": "Bedford Sch.", "number": 256 },
-        "bucks": { "name": "Eton College", "shortName": "Eton Coll.", "number": 267 }
+        "drawRace": 2,
+        "berks": { "name": "The King's School, Chester", "shortName": "King's Sch., Chester", "number": 293 },
+        "bucks": { "name": "Shiplake College", "shortName": "Shiplake Coll.", "number": 283 }
       },
       {
         "id": "r1-2",
+        "drawRace": 3,
+        "berks": { "name": "Claires Court School", "shortName": "Claires Court Sch.", "number": 262 },
+        "bucks": { "name": "Enniskillen Royal Boat Club", "shortName": "Enniskillen Royal B.C.", "number": 266 }
+      },
+      {
+        "id": "r1-3",
+        "drawRace": 4,
+        "berks": { "name": "Phillips Exeter Academy, U.S.A.", "shortName": "Phillips Exeter", "number": 280 },
+        "bucks": { "name": "St. Edward's School", "shortName": "St. Edward's Sch.", "number": 286 }
+      },
+      {
+        "id": "r1-4",
+        "drawRace": 5,
+        "berks": { "name": "Latymer Upper School", "shortName": "Latymer Upper Sch.", "number": 274 },
+        "bucks": { "name": "King's College School, Wimbledon", "shortName": "King's Coll. Sch.", "number": 273 }
+      },
+      {
+        "id": "r1-5",
+        "drawRace": 6,
+        "berks": { "name": "Dulwich College", "shortName": "Dulwich Coll.", "number": 264 },
+        "bucks": { "name": "Deerfield Academy, U.S.A.", "shortName": "Deerfield Academy", "number": 263 }
+      },
+      {
+        "id": "r1-6",
+        "drawRace": 7,
+        "berks": { "name": "Los Gatos Rowing Club, U.S.A.", "shortName": "Los Gatos R.C.", "number": 276 },
+        "bucks": { "name": "The Windsor Boys' School", "shortName": "Windsor Boys' Sch.", "number": 296 }
+      },
+      {
+        "id": "r1-7",
+        "drawRace": 8,
+        "berks": { "name": "Montclair High School, U.S.A.", "shortName": "Montclair High Sch.", "number": 278 },
+        "bucks": { "name": "Hampton School", "shortName": "Hampton Sch.", "number": 270 }
+      },
+      {
+        "id": "r1-8",
+        "drawRace": 9,
         "berks": { "name": "Radley College", "shortName": "Radley Coll.", "number": 281 },
         "bucks": { "name": "Belen Jesuit Preparatory School, U.S.A.", "shortName": "Belen Jesuit Prep. Sch.", "number": 257 }
       },
       {
-        "id": "r1-3",
+        "id": "r1-9",
+        "drawRace": 10,
         "berks": { "name": "Abingdon School", "shortName": "Abingdon Sch.", "number": 254 },
         "bucks": { "name": "Tideway Scullers' School", "shortName": "Tideway Scullers' Sch.", "number": 297 }
       },
       {
-        "id": "r1-4",
-        "berks": { "name": "The Windsor Boys' School", "shortName": "Windsor Boys' Sch.", "number": 296 },
-        "bucks": { "name": "Los Gatos Rowing Club, U.S.A.", "shortName": "Los Gatos R.C.", "number": 276 }
-      },
-      {
-        "id": "r1-5",
-        "berks": { "name": "Hampton School", "shortName": "Hampton Sch.", "number": 270 },
-        "bucks": { "name": "Montclair High School, U.S.A.", "shortName": "Montclair High Sch.", "number": 278 }
-      },
-      {
-        "id": "r1-6",
-        "berks": { "name": "Deerfield Academy, U.S.A.", "shortName": "Deerfield Academy", "number": 263 },
-        "bucks": { "name": "Dulwich College", "shortName": "Dulwich Coll.", "number": 264 }
-      },
-      {
-        "id": "r1-7",
-        "berks": { "name": "King's College School, Wimbledon", "shortName": "King's Coll. Sch.", "number": 273 },
-        "bucks": { "name": "Latymer Upper School", "shortName": "Latymer Upper Sch.", "number": 274 }
-      },
-      {
-        "id": "r1-8",
-        "berks": { "name": "Shiplake College", "shortName": "Shiplake Coll.", "number": 283 },
-        "bucks": { "name": "The King's School, Chester", "shortName": "King's Sch., Chester", "number": 293 }
-      },
-      {
-        "id": "r1-9",
-        "berks": { "name": "Enniskillen Royal Boat Club", "shortName": "Enniskillen Royal B.C.", "number": 266 },
-        "bucks": { "name": "Claires Court School", "shortName": "Claires Court Sch.", "number": 262 }
-      },
-      {
         "id": "r1-10",
-        "berks": { "name": "St. Edward's School", "shortName": "St. Edward's Sch.", "number": 286 },
-        "bucks": { "name": "Phillips Exeter Academy, U.S.A.", "shortName": "Phillips Exeter", "number": 280 }
+        "drawRace": 11,
+        "berks": { "name": "Reading Blue Coat School", "shortName": "Reading Blue Coat Sch.", "number": 282 },
+        "bucks": { "name": "Boulogne 92 Aviron, France", "shortName": "Boulogne 92 Aviron", "number": 258 }
       },
       {
         "id": "r1-11",
-        "berks": { "name": "Westminster School", "shortName": "Westminster Sch.", "number": 300 },
-        "bucks": { "name": "The King's School, Worcester", "shortName": "King's Sch., Worcester", "number": 295 }
+        "drawRace": 12,
+        "berks": { "name": "Bedford School", "shortName": "Bedford Sch.", "number": 256 },
+        "bucks": { "name": "Eton College", "shortName": "Eton Coll.", "number": 267 }
       },
       {
         "id": "r1-12",
+        "drawRace": 13,
         "berks": { "name": "St. Paul's School", "shortName": "St. Paul's Sch.", "number": 288 },
         "bucks": { "name": "Marlow Rowing Club", "shortName": "Marlow R.C.", "number": 277 }
       },
       {
         "id": "r1-13",
-        "berks": { "name": "Shrewsbury School", "shortName": "Shrewsbury Sch.", "number": 284 },
-        "bucks": { "name": "Leeds Rowing Club", "shortName": "Leeds R.C.", "number": 275 }
+        "drawRace": 14,
+        "berks": { "name": "Kew House School", "shortName": "Kew House Sch.", "number": 272 },
+        "bucks": { "name": "KAND Rowing Club, Australia", "shortName": "KAND R.C.", "number": 271 }
       },
       {
         "id": "r1-14",
+        "drawRace": 15,
         "berks": { "name": "Sydney University Boat Club, Australia", "shortName": "Sydney Univ. B.C.", "number": 290 },
         "bucks": { "name": "Winchester College", "shortName": "Winchester Coll.", "number": 301 }
       },
       {
         "id": "r1-15",
-        "berks": { "name": "KAND Rowing Club, Australia", "shortName": "KAND R.C.", "number": 271 },
-        "bucks": { "name": "Kew House School", "shortName": "Kew House Sch.", "number": 272 }
+        "drawRace": 16,
+        "berks": { "name": "Shrewsbury School", "shortName": "Shrewsbury Sch.", "number": 284 },
+        "bucks": { "name": "Leeds Rowing Club", "shortName": "Leeds R.C.", "number": 275 }
       }
     ],
     [
       {
         "id": "r2-0",
+        "drawRace": 1,
         "feeders": ["r1-0", "r1-1"],
-        "berks": { "name": "Bedford School", "shortName": "Bedford Sch.", "number": 256 },
-        "bucks": { "name": "Reading Blue Coat School", "shortName": "Reading Blue Coat Sch.", "number": 282 }
-      },
-      {
-        "id": "r2-1",
-        "feeders": ["r1-2", "r1-3"],
-        "berks": { "name": "Radley College", "shortName": "Radley Coll.", "number": 281 },
-        "bucks": { "name": "Abingdon School", "shortName": "Abingdon Sch.", "number": 254 }
-      },
-      {
-        "id": "r2-2",
-        "feeders": ["r1-4", "r1-5"],
-        "berks": { "name": "Hampton School", "shortName": "Hampton Sch.", "number": 270 },
-        "bucks": { "name": "The Windsor Boys' School", "shortName": "Windsor Boys' Sch.", "number": 296 }
-      },
-      {
-        "id": "r2-3",
-        "feeders": ["r1-6", "r1-7"],
-        "berks": { "name": "King's College School, Wimbledon", "shortName": "King's Coll. Sch.", "number": 273 },
-        "bucks": { "name": "Deerfield Academy, U.S.A.", "shortName": "Deerfield Academy", "number": 263 }
-      },
-      {
-        "id": "r2-4",
-        "feeders": ["r1-8", "r1-11"],
         "berks": { "name": "Shiplake College", "shortName": "Shiplake Coll.", "number": 283 },
         "bucks": { "name": "Westminster School", "shortName": "Westminster Sch.", "number": 300 }
       },
       {
-        "id": "r2-5",
-        "feeders": ["r1-9", "r1-10"],
+        "id": "r2-1",
+        "drawRace": 2,
+        "feeders": ["r1-2", "r1-3"],
         "berks": { "name": "St. Edward's School", "shortName": "St. Edward's Sch.", "number": 286 },
         "bucks": { "name": "Enniskillen Royal Boat Club", "shortName": "Enniskillen Royal B.C.", "number": 266 }
       },
       {
+        "id": "r2-2",
+        "drawRace": 3,
+        "feeders": ["r1-4", "r1-5"],
+        "berks": { "name": "King's College School, Wimbledon", "shortName": "King's Coll. Sch.", "number": 273 },
+        "bucks": { "name": "Deerfield Academy, U.S.A.", "shortName": "Deerfield Academy", "number": 263 }
+      },
+      {
+        "id": "r2-3",
+        "drawRace": 4,
+        "feeders": ["r1-6", "r1-7"],
+        "berks": { "name": "Hampton School", "shortName": "Hampton Sch.", "number": 270 },
+        "bucks": { "name": "The Windsor Boys' School", "shortName": "Windsor Boys' Sch.", "number": 296 }
+      },
+      {
+        "id": "r2-4",
+        "drawRace": 5,
+        "feeders": ["r1-8", "r1-9"],
+        "berks": { "name": "Radley College", "shortName": "Radley Coll.", "number": 281 },
+        "bucks": { "name": "Abingdon School", "shortName": "Abingdon Sch.", "number": 254 }
+      },
+      {
+        "id": "r2-5",
+        "drawRace": 6,
+        "feeders": ["r1-10", "r1-11"],
+        "berks": { "name": "Bedford School", "shortName": "Bedford Sch.", "number": 256 },
+        "bucks": { "name": "Reading Blue Coat School", "shortName": "Reading Blue Coat Sch.", "number": 282 }
+      },
+      {
         "id": "r2-6",
-        "feeders": ["r1-12", "r1-15"],
+        "drawRace": 7,
+        "feeders": ["r1-12", "r1-13"],
         "berks": { "name": "St. Paul's School", "shortName": "St. Paul's Sch.", "number": 288 },
         "bucks": { "name": "KAND Rowing Club, Australia", "shortName": "KAND R.C.", "number": 271 }
       },
       {
         "id": "r2-7",
-        "feeders": ["r1-13", "r1-14"],
+        "drawRace": 8,
+        "feeders": ["r1-14", "r1-15"],
         "berks": { "name": "Sydney University Boat Club, Australia", "shortName": "Sydney Univ. B.C.", "number": 290 },
         "bucks": { "name": "Shrewsbury School", "shortName": "Shrewsbury Sch.", "number": 284 }
       }
@@ -137,33 +162,37 @@
     [
       {
         "id": "qf-0",
-        "feeders": ["r2-0", "r2-4"],
+        "drawRace": 1,
+        "feeders": ["r2-0", "r2-5"],
         "berks": { "name": "Bedford School", "shortName": "Bedford Sch.", "number": 256 },
         "bucks": { "name": "Shiplake College", "shortName": "Shiplake Coll.", "number": 283 }
       },
       {
         "id": "qf-1",
-        "feeders": ["r2-1", "r2-5"],
+        "drawRace": 2,
+        "feeders": ["r2-1", "r2-4"],
         "berks": { "name": "Radley College", "shortName": "Radley Coll.", "number": 281 },
         "bucks": { "name": "St. Edward's School", "shortName": "St. Edward's Sch.", "number": 286 }
       },
       {
         "id": "qf-2",
-        "feeders": ["r2-2", "r2-6"],
+        "drawRace": 3,
+        "feeders": ["r2-3", "r2-6"],
         "berks": { "name": "Hampton School", "shortName": "Hampton Sch.", "number": 270 },
         "bucks": { "name": "St. Paul's School", "shortName": "St. Paul's Sch.", "number": 288 }
       },
       {
         "id": "qf-3",
-        "feeders": ["r2-3", "r2-7"],
+        "drawRace": 4,
+        "feeders": ["r2-2", "r2-7"],
         "berks": { "name": "King's College School, Wimbledon", "shortName": "King's Coll. Sch.", "number": 273 },
         "bucks": { "name": "Sydney University Boat Club, Australia", "shortName": "Sydney Univ. B.C.", "number": 290 }
       }
     ],
     [
-      { "id": "sf-0", "feeders": ["qf-0", "qf-1"], "berks": null, "bucks": null },
-      { "id": "sf-1", "feeders": ["qf-2", "qf-3"], "berks": null, "bucks": null }
+      { "id": "sf-0", "drawRace": 1, "feeders": ["qf-0", "qf-1"], "berks": null, "bucks": null },
+      { "id": "sf-1", "drawRace": 2, "feeders": ["qf-2", "qf-3"], "berks": null, "bucks": null }
     ],
-    [{ "id": "final-0", "feeders": ["sf-0", "sf-1"], "berks": null, "bucks": null }]
+    [{ "id": "final-0", "drawRace": 1, "feeders": ["sf-0", "sf-1"], "berks": null, "bucks": null }]
   ]
 }

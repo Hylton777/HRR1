@@ -39,10 +39,7 @@ function idealOffsetForMatch(
   return match.matchIndex * cell * Math.pow(2, roundIndex);
 }
 
-/**
- * Spread matches that share the same feeder-centred position so every race
- * in the column remains visible (Henley steward draw crosses bracket halves).
- */
+/** Nudge matches apart only when feeder midpoints would overlap in the column */
 function resolveCollisionsInRound(
   round: BracketMatch[],
   idealOffsets: Map<string, number>,
@@ -53,7 +50,7 @@ function resolveCollisionsInRound(
     const da = idealOffsets.get(a.id) ?? 0;
     const db = idealOffsets.get(b.id) ?? 0;
     if (da !== db) return da - db;
-    return a.matchIndex - b.matchIndex;
+    return (a.drawRace ?? a.matchIndex) - (b.drawRace ?? b.matchIndex);
   });
 
   let prevBottom = -Infinity;
@@ -61,15 +58,16 @@ function resolveCollisionsInRound(
   for (const match of sorted) {
     const ideal = idealOffsets.get(match.id) ?? 0;
     const minTop = prevBottom === -Infinity ? ideal : prevBottom + gap;
-    const top = Math.max(ideal, minTop);
-    idealOffsets.set(match.id, top);
-    prevBottom = top + matchHeight;
+    if (ideal < minTop) {
+      idealOffsets.set(match.id, minTop);
+    }
+    prevBottom = (idealOffsets.get(match.id) ?? ideal) + matchHeight;
   }
 }
 
 /**
  * Compute vertical offset (px) for each match so later-round races sit
- * halfway between their two feeder races, without overlapping in the column.
+ * exactly halfway between their two feeder races in the previous column.
  */
 export function computeMatchOffsets(
   rounds: BracketMatch[][],
@@ -162,6 +160,29 @@ export function validateRoundCounts(rounds: BracketMatch[][]): string[] {
     warnings.push(
       `Unexpected extra rounds: ${rounds.length} > ${EXPECTED_ROUND_SIZES.length}`,
     );
+  }
+
+  return warnings;
+}
+
+/** Check no two matches in a round share the same vertical slot */
+export function validateRoundOffsets(
+  round: BracketMatch[],
+  offsets: Map<string, number>,
+): string[] {
+  const warnings: string[] = [];
+  const seen = new Map<number, string>();
+
+  for (const match of round) {
+    const top = offsets.get(match.id);
+    if (top === undefined) continue;
+    const existing = seen.get(top);
+    if (existing) {
+      warnings.push(
+        `${match.id} overlaps ${existing} at offset ${top}px — check draw order/feeder map`,
+      );
+    }
+    seen.set(top, match.id);
   }
 
   return warnings;

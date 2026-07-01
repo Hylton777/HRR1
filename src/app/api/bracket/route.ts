@@ -15,7 +15,9 @@ export async function GET() {
 
     const bracket = buildBracket(results, timetable);
     const roundCounts = bracket.rounds.map((r) => r.length);
-    const bracketWarnings = validateRoundCounts(bracket.rounds);
+    const bracketWarnings = [
+      ...validateRoundCounts(bracket.rounds),
+    ];
 
     const response: BracketApiResponse = {
       bracket,

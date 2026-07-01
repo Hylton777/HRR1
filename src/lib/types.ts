@@ -40,6 +40,8 @@ export interface HrrResultsResponse {
 
 export interface DrawMatch {
   id: string;
+  /** Race number within this round on the official Henley draw chart (1-based) */
+  drawRace?: number;
   berks: Crew | null;
   bucks: Crew | null;
   /** Parent match ids in the official draw (Henley steward pairings) */
@@ -58,6 +60,7 @@ export interface BracketMatch {
   id: string;
   roundIndex: number;
   matchIndex: number;
+  drawRace?: number;
   roundLabel: string;
   feeders?: string[];
   berks: Crew | null;
