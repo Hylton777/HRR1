@@ -241,12 +241,15 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
 
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
 
-    if (pointersRef.current.size === 2 && pinchStartRef.current) {
+    if (pointersRef.current.size === 2) {
+      const pinchStart = pinchStartRef.current;
+      if (!pinchStart) return;
+
       const pts = [...pointersRef.current.values()];
       const dist = distance(pts[0], pts[1]);
-      const ratio = dist / pinchStartRef.current.distance;
+      const ratio = dist / pinchStart.distance;
       const nextScale = clamp(
-        pinchStartRef.current.scale * ratio,
+        pinchStart.scale * ratio,
         MIN_SCALE,
         MAX_SCALE,
       );
@@ -257,23 +260,26 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
 
       const originX = midX - viewport.left;
       const originY = midY - viewport.top;
-      const scaleRatio = nextScale / pinchStartRef.current.scale;
+      const scaleRatio = nextScale / pinchStart.scale;
 
       setTransform({
         scale: nextScale,
-        x: originX - (originX - pinchStartRef.current.tx) * scaleRatio,
-        y: originY - (originY - pinchStartRef.current.ty) * scaleRatio,
+        x: originX - (originX - pinchStart.tx) * scaleRatio,
+        y: originY - (originY - pinchStart.ty) * scaleRatio,
       });
       return;
     }
 
-    if (pointersRef.current.size === 1 && panStartRef.current) {
-      const dx = event.clientX - panStartRef.current.x;
-      const dy = event.clientY - panStartRef.current.y;
+    if (pointersRef.current.size === 1) {
+      const panStart = panStartRef.current;
+      if (!panStart) return;
+
+      const dx = event.clientX - panStart.x;
+      const dy = event.clientY - panStart.y;
       setTransform((t) => ({
         ...t,
-        x: panStartRef.current!.tx + dx,
-        y: panStartRef.current!.ty + dy,
+        x: panStart.tx + dx,
+        y: panStart.ty + dy,
       }));
     }
   };
