@@ -425,7 +425,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
       </div>
 
       <p className="text-[10px] text-[var(--muted)] leading-snug">
-        Pinch to zoom · drag to pan · B/K stations match the official draw
+        Pinch to zoom · drag to pan · paired boxes show Berks (top) vs Bucks (bottom)
       </p>
 
       {layout === "day-stack" ? (

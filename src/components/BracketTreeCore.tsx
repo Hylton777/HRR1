@@ -2,6 +2,11 @@
 
 import type { BracketState } from "@/lib/types";
 import {
+  COMPACT_MATCH_GAP,
+  COMPACT_MATCH_HEIGHT,
+  COMPACT_MATCH_WIDTH,
+  DESKTOP_MATCH_GAP,
+  DESKTOP_MATCH_HEIGHT,
   computeMatchOffsets,
   getColumnHeight,
   getMatchMarginTops,
@@ -60,8 +65,9 @@ export default function BracketTreeCore({
   dimUnfocused = false,
   columnClassName = "",
 }: BracketTreeCoreProps) {
-  const matchHeight = compact ? 52 : 88;
-  const gap = compact ? 4 : 8;
+  const matchHeight = compact ? COMPACT_MATCH_HEIGHT : DESKTOP_MATCH_HEIGHT;
+  const gap = compact ? COMPACT_MATCH_GAP : DESKTOP_MATCH_GAP;
+  const columnWidth = compact ? COMPACT_MATCH_WIDTH : 220;
   const offsets = computeMatchOffsets(bracket.rounds, matchHeight, gap);
 
   return (
@@ -70,8 +76,10 @@ export default function BracketTreeCore({
       data-bracket-root
     >
       {bracket.rounds.map((round, roundIndex) => {
-        const margins = getMatchMarginTops(round, offsets, matchHeight);
         const columnHeight = getColumnHeight(round, offsets, matchHeight, gap);
+        const margins = compact
+          ? null
+          : getMatchMarginTops(round, offsets, matchHeight);
 
         return (
           <div
@@ -79,6 +87,7 @@ export default function BracketTreeCore({
             className={`flex flex-col shrink-0 ${columnClassName}`}
             data-bracket-region="round"
             data-round-index={roundIndex}
+            style={compact ? { width: columnWidth } : undefined}
           >
             <h3
               className={`font-display font-semibold text-[var(--hrr-navy)] text-center sticky top-0 bg-[var(--background)] z-10 ${
@@ -96,41 +105,79 @@ export default function BracketTreeCore({
                 {round.length} race{round.length !== 1 ? "s" : ""}
               </span>
             </h3>
-            <div
-              className="flex flex-col"
-              style={{ gap: 0, minHeight: columnHeight }}
-            >
-              {round.map((match, matchIndex) => {
-                const focused = isMatchInView(match, viewPreset);
+            {compact ? (
+              <div
+                className="relative"
+                style={{ height: columnHeight, width: columnWidth }}
+              >
+                {round.map((match) => {
+                  const focused = isMatchInView(match, viewPreset);
+                  const top = offsets.get(match.id) ?? 0;
 
-                return (
-                  <div
-                    key={match.id}
-                    data-bracket-region="match"
-                    data-match-id={match.id}
-                    data-round-index={roundIndex}
-                    data-focused={focused ? "true" : "false"}
-                    className={`transition-opacity duration-200 ${
-                      dimUnfocused && !focused ? "opacity-25" : "opacity-100"
-                    }`}
-                    style={{ marginTop: margins[matchIndex] }}
-                  >
-                    <MatchCard
-                      berks={match.berks}
-                      bucks={match.bucks}
-                      winner={match.winner}
-                      status={match.status}
-                      verdict={match.verdict}
-                      roundLabel={compact ? "" : match.roundLabel}
-                      raceTime={match.raceTime}
-                      raceNumber={match.raceNumber}
-                      showStations={roundIndex === 0 || compact}
-                      compact={compact}
-                    />
-                  </div>
-                );
-              })}
-            </div>
+                  return (
+                    <div
+                      key={match.id}
+                      data-bracket-region="match"
+                      data-match-id={match.id}
+                      data-round-index={roundIndex}
+                      data-focused={focused ? "true" : "false"}
+                      className={`absolute left-0 transition-opacity duration-200 ${
+                        dimUnfocused && !focused ? "opacity-25" : "opacity-100"
+                      }`}
+                      style={{ top, width: columnWidth }}
+                    >
+                      <MatchCard
+                        berks={match.berks}
+                        bucks={match.bucks}
+                        winner={match.winner}
+                        status={match.status}
+                        verdict={match.verdict}
+                        roundLabel=""
+                        raceTime={match.raceTime}
+                        raceNumber={match.raceNumber}
+                        compact
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div
+                className="flex flex-col"
+                style={{ gap: 0, minHeight: columnHeight }}
+              >
+                {round.map((match, matchIndex) => {
+                  const focused = isMatchInView(match, viewPreset);
+
+                  return (
+                    <div
+                      key={match.id}
+                      data-bracket-region="match"
+                      data-match-id={match.id}
+                      data-round-index={roundIndex}
+                      data-focused={focused ? "true" : "false"}
+                      className={`transition-opacity duration-200 ${
+                        dimUnfocused && !focused ? "opacity-25" : "opacity-100"
+                      }`}
+                      style={{ marginTop: margins?.[matchIndex] ?? 0 }}
+                    >
+                      <MatchCard
+                        berks={match.berks}
+                        bucks={match.bucks}
+                        winner={match.winner}
+                        status={match.status}
+                        verdict={match.verdict}
+                        roundLabel={match.roundLabel}
+                        raceTime={match.raceTime}
+                        raceNumber={match.raceNumber}
+                        showStations={roundIndex === 0}
+                        compact={false}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         );
       })}

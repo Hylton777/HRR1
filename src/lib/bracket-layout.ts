@@ -1,5 +1,13 @@
 import type { BracketMatch } from "./types";
 
+/** Must match compact MatchCard CSS height exactly */
+export const COMPACT_MATCH_HEIGHT = 48;
+export const COMPACT_MATCH_GAP = 8;
+export const COMPACT_MATCH_WIDTH = 128;
+
+export const DESKTOP_MATCH_HEIGHT = 96;
+export const DESKTOP_MATCH_GAP = 8;
+
 function matchCenter(top: number, matchHeight: number): number {
   return top + matchHeight / 2;
 }
@@ -33,7 +41,8 @@ export function computeMatchOffsets(
         const y0 = offsets.get(match.feeders[0]);
         const y1 = offsets.get(match.feeders[1]);
         if (y0 !== undefined && y1 !== undefined) {
-          const center = (matchCenter(y0, matchHeight) + matchCenter(y1, matchHeight)) / 2;
+          const center =
+            (matchCenter(y0, matchHeight) + matchCenter(y1, matchHeight)) / 2;
           offsets.set(match.id, topFromCenter(center, matchHeight));
           continue;
         }
@@ -44,6 +53,21 @@ export function computeMatchOffsets(
   }
 
   return offsets;
+}
+
+export function getColumnHeight(
+  round: BracketMatch[],
+  offsets: Map<string, number>,
+  matchHeight: number,
+  gap: number,
+): number {
+  if (round.length === 0) return 0;
+  let maxBottom = 0;
+  for (const match of round) {
+    const top = offsets.get(match.id) ?? 0;
+    maxBottom = Math.max(maxBottom, top + matchHeight);
+  }
+  return maxBottom + gap;
 }
 
 export function getMatchMarginTops(
@@ -66,19 +90,4 @@ export function getMatchMarginTops(
 
   const orderMap = new Map(sorted.map((m, i) => [m.id, i]));
   return round.map((m) => margins[orderMap.get(m.id) ?? 0] ?? 0);
-}
-
-export function getColumnHeight(
-  round: BracketMatch[],
-  offsets: Map<string, number>,
-  matchHeight: number,
-  gap: number,
-): number {
-  if (round.length === 0) return 0;
-  let maxBottom = 0;
-  for (const match of round) {
-    const top = offsets.get(match.id) ?? 0;
-    maxBottom = Math.max(maxBottom, top + matchHeight);
-  }
-  return maxBottom + gap;
 }
