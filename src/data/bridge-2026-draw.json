@@ -57,23 +57,23 @@
           "number": 25
         },
         "bucks": {
-          "name": "Dartmouth College, U.S.A.",
-          "shortName": "Dartmouth Coll., USA",
-          "number": 16
+          "name": "Molesey Boat Club and University of London",
+          "shortName": "Molesey B.C. & Univ. of London",
+          "number": 20
         }
       },
       {
         "id": "qf-2",
         "drawRace": 3,
         "berks": {
-          "name": "Molesey Boat Club and University of London",
-          "shortName": "Molesey B.C. & Univ. of London",
-          "number": 20
-        },
-        "bucks": {
           "name": "Thames Rowing Club",
           "shortName": "Thames R.C.",
           "number": 24
+        },
+        "bucks": {
+          "name": "Dartmouth College, U.S.A.",
+          "shortName": "Dartmouth Coll., USA",
+          "number": 16
         }
       },
       {

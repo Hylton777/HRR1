@@ -42,7 +42,7 @@
         "berks": {
           "name": "Leander Club",
           "shortName": "Leander Club",
-          "number": 1
+          "number": 6
         },
         "bucks": null
       },
@@ -52,12 +52,12 @@
         "berks": {
           "name": "Molesey Boat Club and Amsterdamsche Studenten Roeivereeniging Nereus, Netherlands",
           "shortName": "Molesey B.C. & A.S.R. Nereus, NED",
-          "number": 2
+          "number": 9
         },
         "bucks": {
           "name": "Nautilus Rowing Club",
           "shortName": "Nautilus R.C.",
-          "number": 3
+          "number": 10
         }
       },
       {
@@ -66,12 +66,12 @@
         "berks": {
           "name": "University of Washington, U.S.A.",
           "shortName": "Univ. of Washington, USA",
-          "number": 4
+          "number": 14
         },
         "bucks": {
           "name": "Thames Rowing Club",
           "shortName": "Thames R.C.",
-          "number": 5
+          "number": 13
         }
       },
       {
@@ -81,7 +81,7 @@
         "berks": {
           "name": "Cambridge University and Harvard University, U.S.A.",
           "shortName": "Cambridge Univ. & Harvard Univ., USA",
-          "number": 6
+          "number": 5
         },
         "bucks": null
       }

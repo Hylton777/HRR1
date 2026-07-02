@@ -10,27 +10,27 @@
         "drawRace": 1,
         "berks": {
           "name": "Leander Club and Hartpury University",
-          "shortName": "Leander Club & Hartpury Univ",
+          "shortName": "Leander Club & Hartpury Univ.",
           "number": 466
         },
         "bucks": {
-          "name": "Riverside Boat Club, U.S.A.",
+          "name": "Amsterdamsche Studenten Roeivereeniging Nereus, Netherlands",
           "shortName": "A.S.R. Nereus, NED",
-          "number": 472
+          "number": 463
         }
       },
       {
         "id": "qf-1",
         "drawRace": 2,
         "berks": {
-          "name": "Koninklijke Studenten Roeivereeniging Njord and Delftsche Studenten",
-          "shortName": "K .S .R .V . Njord & D .S .R .V . Laga,...",
+          "name": "Koninklijke Studenten Roeivereeniging Njord and Delftsche Studenten Roeivereeniging Laga, Netherlands",
+          "shortName": "K.S.R.V. Njord & D.S.R.V. Laga, NED",
           "number": 465
         },
         "bucks": {
-          "name": "Riverside Boat Club, U.S.A.",
+          "name": "Algemene Amsterdamsche Studenten Roeivereniging Skøll, Netherlands",
           "shortName": "A.A.S.R. Skøll, NED",
-          "number": 472
+          "number": 462
         }
       },
       {
@@ -38,12 +38,13 @@
         "drawRace": 3,
         "berks": {
           "name": "Reading University",
-          "shortName": "Reading Univ",
+          "shortName": "Reading Univ.",
           "number": 471
         },
         "bucks": {
-          "name": "Molesey B .C",
-          "shortName": "Molesey B .C"
+          "name": "Molesey Boat Club",
+          "shortName": "Molesey B.C.",
+          "number": 468
         }
       },
       {
@@ -51,12 +52,12 @@
         "drawRace": 4,
         "berks": {
           "name": "Edinburgh University and Leeds Rowing Club",
-          "shortName": "Edinburgh Univ. & Leeds R.C",
+          "shortName": "Edinburgh Univ. & Leeds R.C.",
           "number": 464
         },
         "bucks": {
           "name": "Tideway Scullers' School and Delftsche Studenten Roeivereeniging Proteus-Eretes, Netherlands",
-          "shortName": "Tideway Sc . Sch . & D .S .R .Proteus-E...",
+          "shortName": "Tideway Sc. Sch. & Proteus-Eretes, NED",
           "number": 476
         }
       }

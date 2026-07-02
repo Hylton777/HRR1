@@ -448,8 +448,12 @@ export function crewResultMatchesDraw(
   drawCrew: Crew,
   resultCrew: Crew,
 ): boolean {
-  if (drawCrew.number != null && resultCrew.number != null) {
-    return drawCrew.number === resultCrew.number;
+  if (
+    drawCrew.number != null &&
+    resultCrew.number != null &&
+    drawCrew.number === resultCrew.number
+  ) {
+    return true;
   }
 
   for (const drawName of nameVariants(drawCrew)) {
