@@ -270,7 +270,7 @@
         "drawRace": 7,
         "feeders": [
           "r1-12",
-          "r1-13"
+          "r1-14"
         ],
         "berks": null,
         "bucks": null
@@ -279,7 +279,7 @@
         "id": "r2-7",
         "drawRace": 8,
         "feeders": [
-          "r1-14",
+          "r1-13",
           "r1-15"
         ],
         "berks": null,
