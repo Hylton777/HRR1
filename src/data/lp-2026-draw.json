@@ -49,31 +49,20 @@
       {
         "id": "qf-1",
         "drawRace": 2,
-        "feeders": ["r1-1"],
         "berks": {
           "name": "Molesey Boat Club and Amsterdamsche Studenten Roeivereeniging Nereus, Netherlands",
           "shortName": "Molesey B.C. & A.S.R. Nereus, NED",
           "number": 2
         },
-        "bucks": null
+        "bucks": {
+          "name": "Nautilus Rowing Club",
+          "shortName": "Nautilus R.C.",
+          "number": 3
+        }
       },
       {
         "id": "qf-2",
         "drawRace": 3,
-        "berks": {
-          "name": "Nautilus Rowing Club",
-          "shortName": "Nautilus R.C.",
-          "number": 3
-        },
-        "bucks": {
-          "name": "Cambridge University and Harvard University, U.S.A.",
-          "shortName": "Cambridge Univ. & Harvard Univ., USA",
-          "number": 6
-        }
-      },
-      {
-        "id": "qf-3",
-        "drawRace": 4,
         "berks": {
           "name": "University of Washington, U.S.A.",
           "shortName": "Univ. of Washington, USA",
@@ -84,6 +73,17 @@
           "shortName": "Thames R.C.",
           "number": 5
         }
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": ["r1-1"],
+        "berks": {
+          "name": "Cambridge University and Harvard University, U.S.A.",
+          "shortName": "Cambridge Univ. & Harvard Univ., USA",
+          "number": 6
+        },
+        "bucks": null
       }
     ],
     [

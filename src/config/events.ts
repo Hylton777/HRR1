@@ -194,7 +194,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     timetableCodes: ["Ladies'"],
     year: 2026,
     displayName: "Ladies' Challenge Plate",
-    shortLabel: "Ladies'",
+    shortLabel: "Ladies",
     headerSubtitle: "Live knockout bracket · 10 crews · 2 Thursday heats, 6 byes to Friday",
     crewCount: 10,
     draw: lpDraw as DrawData,
