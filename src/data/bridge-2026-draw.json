@@ -51,15 +51,16 @@
       {
         "id": "qf-1",
         "drawRace": 2,
-        "feeders": [
-          "r1-1"
-        ],
         "berks": {
           "name": "University of Miami, U.S.A.",
           "shortName": "Univ. of Miami, USA",
           "number": 25
         },
-        "bucks": null
+        "bucks": {
+          "name": "Dartmouth College, U.S.A.",
+          "shortName": "Dartmouth Coll., USA",
+          "number": 16
+        }
       },
       {
         "id": "qf-2",
@@ -78,16 +79,15 @@
       {
         "id": "qf-3",
         "drawRace": 4,
+        "feeders": [
+          "r1-1"
+        ],
         "berks": {
-          "name": "Dartmouth College, U.S.A.",
-          "shortName": "Dartmouth Coll., USA",
-          "number": 16
-        },
-        "bucks": {
           "name": "Nautilus Rowing Club and Cambridge University",
           "shortName": "Nautilus R.C. & Cambridge Univ.",
           "number": 21
-        }
+        },
+        "bucks": null
       }
     ],
     [
