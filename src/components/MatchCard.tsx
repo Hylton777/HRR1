@@ -89,7 +89,7 @@ function CrewRow({
         compact ? "px-2 py-2 sm:py-1.5 text-sm" : "px-2 py-2 sm:py-1.5 text-sm"
       } ${
         isWinner
-          ? "bg-emerald-50 text-[var(--winner)] font-medium"
+          ? `bg-emerald-50 text-[var(--winner)] ${isSeededCrew(crew, event) ? "font-bold" : "font-medium"}`
           : isLoser
             ? "text-[var(--loser)] line-through opacity-60"
             : crew
@@ -135,12 +135,16 @@ function CompactBracketBox({
   onOpenDetail?: () => void;
   event: ReturnType<typeof useEvent>;
 }) {
-  const rowClass = (isWinner: boolean, isLoser: boolean, hasCrew: boolean) => {
-    if (isWinner) return "bg-emerald-50/80 text-[var(--winner)] font-medium";
+  const rowClass = (isWinner: boolean, isLoser: boolean, hasCrew: boolean, crew: MatchCardProps["berks"]) => {
+    if (isWinner) {
+      return `bg-emerald-50/80 text-[var(--winner)] ${isSeededCrew(crew, event) ? "font-bold" : "font-medium"}`;
+    }
     if (status === "complete" && isLoser)
       return "text-[var(--loser)] line-through opacity-50";
     if (!hasCrew) return "text-[var(--muted)] italic";
-    return "text-[var(--foreground)]";
+    return isSeededCrew(crew, event)
+      ? "text-[var(--foreground)] font-bold"
+      : "text-[var(--foreground)]";
   };
 
   const interactive = status === "complete" && !!onOpenDetail;
@@ -186,7 +190,7 @@ function CompactBracketBox({
       )}
       <div className="flex flex-col flex-1 min-h-0">
         <div
-          className={`flex-1 flex items-center px-1.5 min-h-0 border-b border-[var(--card-border)] text-[9px] leading-tight ${rowClass(berksWon, status === "complete" && !berksWon && !!berks, !!berks)}`}
+          className={`flex-1 flex items-center px-1.5 min-h-0 border-b border-[var(--card-border)] text-[9px] leading-tight ${rowClass(berksWon, status === "complete" && !berksWon && !!berks, !!berks, berks)}`}
           data-connector-anchor="berks"
         >
           <span
@@ -197,7 +201,7 @@ function CompactBracketBox({
           </span>
         </div>
         <div
-          className={`flex-1 flex items-center px-1.5 min-h-0 text-[9px] leading-tight ${rowClass(bucksWon, status === "complete" && !bucksWon && !!bucks, !!bucks)}`}
+          className={`flex-1 flex items-center px-1.5 min-h-0 text-[9px] leading-tight ${rowClass(bucksWon, status === "complete" && !bucksWon && !!bucks, !!bucks, bucks)}`}
           data-connector-anchor="bucks"
         >
           <span
@@ -298,12 +302,8 @@ export default function MatchCard(props: MatchCardProps) {
             ) : (
               <span />
             )}
-            {status === "scheduled" && (
-              <span
-                className={`shrink-0 ${
-                  raceTime ? "text-[var(--hrr-blue)] font-medium" : "text-[var(--bucks)]"
-                }`}
-              >
+            {status === "scheduled" && formatRaceSchedule(raceTime, raceNumber) && (
+              <span className="shrink-0 text-[var(--hrr-blue)] font-medium">
                 {formatRaceSchedule(raceTime, raceNumber)}
               </span>
             )}

@@ -52,7 +52,7 @@ export default function RecentResultsPanel({ results }: RecentResultsPanelProps)
         >
           Henley Royal Regatta live results
         </a>
-        . Auto-refreshes every 30 seconds.
+        .
       </p>
     </>
   );

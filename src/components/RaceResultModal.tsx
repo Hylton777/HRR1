@@ -8,7 +8,7 @@ import {
   formatStation,
   type RaceResultDetail,
 } from "@/lib/race-result";
-import { isSeededCrew } from "@/lib/crew-seeds";
+import { enrichCrewFromEvent, isSeededCrew } from "@/lib/crew-seeds";
 import { useEvent } from "./EventContext";
 
 interface RaceResultModalProps {
@@ -42,6 +42,8 @@ export default function RaceResultModal({
   const event = useEvent();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const station = formatStation(detail.station);
+  const winner = enrichCrewFromEvent(detail.winner, event) ?? detail.winner;
+  const loser = enrichCrewFromEvent(detail.loser, event) ?? detail.loser;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -107,12 +109,12 @@ export default function RaceResultModal({
           />
 
           <div className="col-span-12 text-center pt-1">
-            <p className={`text-xl font-display leading-tight text-[var(--hrr-blue)] ${isSeededCrew(detail.winner, event) ? "font-bold" : "font-semibold"}`}>
-              {crewDisplayName(detail.winner)}
+            <p className={`text-xl font-display leading-tight text-[var(--hrr-blue)] ${isSeededCrew(winner, event) ? "font-bold" : "font-semibold"}`}>
+              {crewDisplayName(winner)}
             </p>
             <p className="text-[13px] italic text-[var(--muted)] mt-1">beat</p>
-            <p className={`text-[13px] mt-0.5 text-[var(--hrr-blue)]/80 ${isSeededCrew(detail.loser, event) ? "font-bold" : ""}`}>
-              {crewDisplayName(detail.loser)}
+            <p className={`text-[13px] mt-0.5 text-[var(--hrr-blue)]/80 ${isSeededCrew(loser, event) ? "font-bold" : ""}`}>
+              {crewDisplayName(loser)}
             </p>
             {detail.withdrawn && (
               <p className="text-xs text-[var(--accent)] mt-1">Withdrawn</p>

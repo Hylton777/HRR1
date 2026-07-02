@@ -1,6 +1,52 @@
 import { crewsMatch } from "./crew-match";
 import type { EventConfig } from "@/config/events";
-import type { Crew } from "./types";
+import type { Crew, DrawData } from "./types";
+
+const registryByDraw = new WeakMap<DrawData, Map<string, Crew>>();
+
+function buildRegistryFromDraw(
+  draw: DrawData,
+  event: Pick<EventConfig, "seededCrewNumbers" | "seededCrewNames">,
+): Map<string, Crew> {
+  const registry = new Map<string, Crew>();
+
+  const register = (crew: Crew | null) => {
+    if (!crew?.name) return;
+    const enriched = withSeededFlag(crew, event);
+    registry.set(enriched.name.toLowerCase(), enriched);
+    if (enriched.shortName) {
+      registry.set(enriched.shortName.toLowerCase(), enriched);
+    }
+  };
+
+  for (const round of draw.rounds) {
+    for (const match of round) {
+      register(match.berks);
+      register(match.bucks);
+    }
+  }
+
+  return registry;
+}
+
+function getEventCrewRegistry(
+  event: Pick<EventConfig, "draw" | "seededCrewNumbers" | "seededCrewNames">,
+): Map<string, Crew> {
+  let registry = registryByDraw.get(event.draw);
+  if (!registry) {
+    registry = buildRegistryFromDraw(event.draw, event);
+    registryByDraw.set(event.draw, registry);
+  }
+  return registry;
+}
+
+export function enrichCrewFromEvent(
+  crew: Crew | null | undefined,
+  event: Pick<EventConfig, "draw" | "seededCrewNumbers" | "seededCrewNames">,
+): Crew | null {
+  if (!crew) return null;
+  return enrichCrew(crew, event, getEventCrewRegistry(event));
+}
 
 export function isSeededCrew(
   crew: { name: string; shortName?: string; number?: number; seeded?: boolean } | null,

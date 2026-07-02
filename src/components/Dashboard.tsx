@@ -76,12 +76,9 @@ export default function Dashboard({ eventId }: DashboardProps) {
 
           <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-6 sm:gap-8">
             <section className="min-w-0">
-              <h2 className="font-display text-base sm:text-lg font-semibold mb-1 text-[var(--hrr-navy)]">
+              <h2 className="font-display text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-[var(--hrr-navy)]">
                 Knockout Bracket
               </h2>
-              <p className="text-xs text-[var(--muted)] mb-3 sm:mb-4">
-                Bold crew names were seeded on the official Henley draw chart.
-              </p>
               <div className="xl:hidden mb-4">
                 <NextRacesPanel
                   races={nextRaces}
@@ -108,6 +105,10 @@ export default function Dashboard({ eventId }: DashboardProps) {
               <RecentResultsPanel results={data.results ?? []} />
             </aside>
           </div>
+
+          <p className="text-xs text-[var(--muted)] text-center pt-4 border-t border-[var(--card-border)]">
+            Auto-refreshes every 30 seconds. Produced by Hylton Harvey.
+          </p>
         </div>
       </ClientErrorBoundary>
     </EventProvider>

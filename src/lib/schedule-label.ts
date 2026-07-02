@@ -5,7 +5,8 @@ export function formatRaceSchedule(
   if (raceTime) {
     return raceNumber ? `Race ${raceNumber} · ${raceTime}` : raceTime;
   }
-  return "Upcoming";
+  if (raceNumber) return `Race ${raceNumber}`;
+  return "";
 }
 
 export function formatUpcomingRaceMeta(
@@ -13,7 +14,7 @@ export function formatUpcomingRaceMeta(
   raceNumber: string | null,
   raceDay: string | null,
 ): string {
-  if (!raceTime) return "Upcoming";
+  if (!raceTime) return "";
 
   const parts: string[] = [];
   if (raceNumber) parts.push(`Race ${raceNumber}`);
