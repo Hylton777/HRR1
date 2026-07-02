@@ -1,9 +1,11 @@
 import peDraw from "@/data/pe-2026-draw.json";
 import powDraw from "@/data/pow-2026-draw.json";
+import lpDraw from "@/data/lp-2026-draw.json";
+import wyfoldDraw from "@/data/wyfold-2026-draw.json";
 import type { DrawData } from "@/lib/types";
 import type { RegattaDay } from "@/lib/regatta-days";
 
-export type EventId = "pe" | "pow";
+export type EventId = "pe" | "pow" | "lp" | "wyfold";
 
 export interface EventConfig {
   id: EventId;
@@ -62,6 +64,37 @@ const PE_RACE_DAYS: RegattaDay[] = [
 ];
 
 const POW_RACE_DAYS: RegattaDay[] = [
+  {
+    id: "thu",
+    label: "Thursday 2 July",
+    shortLabel: "Thu",
+    isoDate: "2026-07-02",
+    primaryRoundIndex: 0,
+  },
+  {
+    id: "fri",
+    label: "Friday 3 July",
+    shortLabel: "Fri",
+    isoDate: "2026-07-03",
+    primaryRoundIndex: 1,
+  },
+  {
+    id: "sat",
+    label: "Saturday 4 July",
+    shortLabel: "Sat",
+    isoDate: "2026-07-04",
+    primaryRoundIndex: 2,
+  },
+  {
+    id: "sun",
+    label: "Sunday 5 July",
+    shortLabel: "Sun",
+    isoDate: "2026-07-05",
+    primaryRoundIndex: 3,
+  },
+];
+
+const LP_RACE_DAYS: RegattaDay[] = [
   {
     id: "thu",
     label: "Thursday 2 July",
@@ -155,9 +188,78 @@ export const EVENTS: Record<EventId, EventConfig> = {
     noRacingNote:
       "POW races Thu–Sun — times publish around 9pm BST the evening before.",
   },
+  lp: {
+    id: "lp",
+    trophySlug: "the-ladies-challenge-plate",
+    timetableCodes: ["Ladies'"],
+    year: 2026,
+    displayName: "Ladies' Challenge Plate",
+    shortLabel: "LP",
+    headerSubtitle: "Live knockout bracket · 10 crews · Intermediate men's eights",
+    crewCount: 10,
+    draw: lpDraw as DrawData,
+    raceDays: LP_RACE_DAYS,
+    roundSizes: [5, 2, 1, 1],
+    roundLabels: ["1st Round", "2nd Round", "Semi-Final", "Final"],
+    seededCrewNumbers: [1, 3, 4, 6],
+    seededCrewNames: [
+      "Leander Club",
+      "Nautilus Rowing Club",
+      "University of Washington, U.S.A.",
+      "Cambridge University and Harvard University, U.S.A.",
+    ],
+    noRacingNote:
+      "LP races Thu–Sun — times publish around 9pm BST the evening before.",
+  },
+  wyfold: {
+    id: "wyfold",
+    trophySlug: "the-wyfold-challenge-cup",
+    timetableCodes: ["Wyfold"],
+    year: 2026,
+    displayName: "Wyfold Challenge Cup",
+    shortLabel: "Wyfold",
+    headerSubtitle: "Live knockout bracket · 32 crews · Club coxless fours",
+    crewCount: 32,
+    draw: wyfoldDraw as DrawData,
+    raceDays: PE_RACE_DAYS,
+    roundSizes: [16, 8, 4, 2, 1],
+    roundLabels: [
+      "1st Round",
+      "2nd Round",
+      "Quarter-Final",
+      "Semi-Final",
+      "Final",
+    ],
+    seededCrewNumbers: [
+      383, 388, 392, 393, 395, 397, 400, 401, 405, 409, 413, 415, 416, 420,
+    ],
+    seededCrewNames: [
+      "Derby Rowing Club 'A'",
+      "Haldens Roklub, Norway",
+      "Koninklijke Roeivereniging Club Gent, Belgium",
+      "London Rowing Club",
+      "Marlow Rowing Club",
+      "Mercantile Rowing Club, Australia",
+      "Molesey Boat Club",
+      "Northwich Rowing Club",
+      "Quintin Boat Club",
+      "St. Andrew Boat Club 'A'",
+      "Sydney Rowing Club 'A', Australia",
+      "Thames Rowing Club 'A'",
+      "Thames Rowing Club 'B'",
+      "Vesta Rowing Club",
+    ],
+    noRacingNote:
+      "Heats run Tue–Wed; knockout continues Fri–Sun — times publish around 9pm BST the evening before.",
+  },
 };
 
-export const EVENT_LIST: EventConfig[] = [EVENTS.pe, EVENTS.pow];
+export const EVENT_LIST: EventConfig[] = [
+  EVENTS.pe,
+  EVENTS.pow,
+  EVENTS.lp,
+  EVENTS.wyfold,
+];
 
 export function getEventConfig(id: string): EventConfig | null {
   if (id in EVENTS) return EVENTS[id as EventId];
