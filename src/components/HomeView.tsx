@@ -10,6 +10,7 @@ import {
 } from "@/config/events";
 import Dashboard from "@/components/Dashboard";
 import EventTabs from "@/components/EventTabs";
+import { formatEventHeaderLine } from "@/config/event-selector-groups";
 
 function eventIdFromParams(params: URLSearchParams): EventId {
   const value = params.get("event");
@@ -54,7 +55,7 @@ export default function HomeView() {
                 {event.displayName}
               </h1>
               <p className="text-xs sm:text-sm text-white/75 mt-1">
-                {event.headerSubtitle}
+                {formatEventHeaderLine(event)}
               </p>
             </div>
             <EventTabs

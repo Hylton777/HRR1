@@ -78,6 +78,21 @@ export function getEventBoatClassLabel(category: string): string {
   return BOAT_CLASS_LABELS[suffix] ?? suffix.replace(/-/g, " ");
 }
 
+/** Dropdown option: tier omitted (optgroup supplies it). */
+export function formatEventSelectorOption(event: EventConfig): string {
+  return `${event.shortLabel} · ${getEventBoatClassLabel(event.category)}`;
+}
+
+/** Header event line: includes tier, e.g. PE · Junior Men's Eight. */
+export function formatEventHeaderLine(event: EventConfig): string {
+  const tier = getEventTier(event.category);
+  const boat = getEventBoatClassLabel(event.category);
+  if (tier === "other") {
+    return `${event.shortLabel} · ${boat}`;
+  }
+  return `${event.shortLabel} · ${TIER_LABELS[tier]} ${boat}`;
+}
+
 export function compareEventsForSelector(a: EventConfig, b: EventConfig): number {
   const tierA = getEventTier(a.category);
   const tierB = getEventTier(b.category);
