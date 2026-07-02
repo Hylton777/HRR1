@@ -173,6 +173,75 @@ function getRoundWinners(round: BracketMatch[]): Set<string> {
   return winners;
 }
 
+function buildMatchIndex(
+  rounds: BracketMatch[][],
+): Map<string, BracketMatch> {
+  const map = new Map<string, BracketMatch>();
+  for (const round of rounds) {
+    for (const match of round) {
+      map.set(match.id, match);
+    }
+  }
+  return map;
+}
+
+function getFeederWinner(
+  matchById: Map<string, BracketMatch>,
+  feederId: string,
+): Crew | null {
+  const feeder = matchById.get(feederId);
+  if (feeder?.status === "complete" && feeder.winner) {
+    return feeder.winner;
+  }
+  return null;
+}
+
+/** Fill empty berks/bucks slots from completed feeder races (e.g. Wyfold R2, QF). */
+function propagateFeederWinners(
+  rounds: BracketMatch[][],
+  event: EventConfig,
+  registry: Map<string, Crew>,
+  matchById: Map<string, BracketMatch>,
+): boolean {
+  let changed = false;
+
+  for (const round of rounds) {
+    for (const match of round) {
+      if (match.status === "complete" || !match.feeders?.length) continue;
+
+      if (match.feeders.length === 2) {
+        const feederBerks = getFeederWinner(matchById, match.feeders[0]);
+        const feederBucks = getFeederWinner(matchById, match.feeders[1]);
+
+        if (!match.berks && feederBerks) {
+          match.berks = enrichCrew(feederBerks, event, registry);
+          changed = true;
+        }
+        if (!match.bucks && feederBucks) {
+          match.bucks = enrichCrew(feederBucks, event, registry);
+          changed = true;
+        }
+        continue;
+      }
+
+      if (match.feeders.length === 1) {
+        const feederWinner = getFeederWinner(matchById, match.feeders[0]);
+        if (!feederWinner) continue;
+
+        if (match.berks && !match.bucks) {
+          match.bucks = enrichCrew(feederWinner, event, registry);
+          changed = true;
+        } else if (!match.berks && match.bucks) {
+          match.berks = enrichCrew(feederWinner, event, registry);
+          changed = true;
+        }
+      }
+    }
+  }
+
+  return changed;
+}
+
 function pairMatchesRoundWinners(
   rounds: BracketMatch[][],
   roundIndex: number,
@@ -244,6 +313,7 @@ function tryApplyResult(
   result: HrrResult,
   event: EventConfig,
   registry: Map<string, Crew>,
+  matchById: Map<string, BracketMatch>,
 ): boolean {
   for (let ri = 0; ri < rounds.length; ri++) {
     for (let mi = 0; mi < rounds[ri].length; mi++) {
@@ -262,6 +332,31 @@ function tryApplyResult(
       if (berks && bucks && resultMatchesPair(result, berks, bucks)) {
         rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
         return true;
+      }
+
+      if (match.feeders?.length === 2) {
+        const feederBerks = getFeederWinner(matchById, match.feeders[0]);
+        const feederBucks = getFeederWinner(matchById, match.feeders[1]);
+        if (
+          feederBerks &&
+          feederBucks &&
+          resultMatchesPair(result, feederBerks.name, feederBucks.name)
+        ) {
+          const prepared: BracketMatch = {
+            ...match,
+            berks:
+              match.berks ?? enrichCrew(feederBerks, event, registry),
+            bucks:
+              match.bucks ?? enrichCrew(feederBucks, event, registry),
+          };
+          rounds[ri][mi] = applyResultToMatch(
+            prepared,
+            result,
+            event,
+            registry,
+          );
+          return true;
+        }
       }
     }
   }
@@ -446,8 +541,35 @@ export function buildBracket(
       new Date(a.raceDateTime).getTime() - new Date(b.raceDateTime).getTime(),
   );
 
+  const applied = new Set<number>();
+  const maxIterations = Math.max(sortedResults.length * 4, 16);
+  let iterations = 0;
+  let progress = true;
+
+  while (progress && iterations < maxIterations) {
+    progress = false;
+    iterations += 1;
+    const matchById = buildMatchIndex(rounds);
+
+    for (const result of sortedResults) {
+      if (applied.has(result.id)) continue;
+      if (
+        tryApplyResult(rounds, result, event, registry, matchById)
+      ) {
+        applied.add(result.id);
+        progress = true;
+      }
+    }
+
+    if (
+      propagateFeederWinners(rounds, event, registry, buildMatchIndex(rounds))
+    ) {
+      progress = true;
+    }
+  }
+
   for (const result of sortedResults) {
-    if (!tryApplyResult(rounds, result, event, registry)) {
+    if (!applied.has(result.id)) {
       console.warn(
         `[bracket] Unmatched result: race ${result.number} ${result.winner.name} beat ${result.loser.name}`,
       );
