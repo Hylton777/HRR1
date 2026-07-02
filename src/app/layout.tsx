@@ -17,9 +17,21 @@ const libreBaskerville = Libre_Baskerville({
 });
 
 export const metadata: Metadata = {
-  title: "Princess Elizabeth Challenge Cup 2026 | Henley Royal Regatta",
+  title: "Henley Results | Henley Royal Regatta",
   description:
-    "Live bracket dashboard for the Princess Elizabeth Challenge Cup at Henley Royal Regatta 2026.",
+    "Live knockout brackets and results for all events at Henley Royal Regatta 2026.",
+  openGraph: {
+    title: "Henley Results | Henley Royal Regatta",
+    description:
+      "Live knockout brackets and results for all events at Henley Royal Regatta 2026.",
+    siteName: "Henley Royal Regatta",
+  },
+  twitter: {
+    card: "summary",
+    title: "Henley Results | Henley Royal Regatta",
+    description:
+      "Live knockout brackets and results for all events at Henley Royal Regatta 2026.",
+  },
 };
 
 export const viewport: Viewport = {
