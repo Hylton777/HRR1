@@ -11,6 +11,7 @@ Manual and automated checks for verifying the live bracket site. This document r
 | Layer | Location | Role |
 |-------|----------|------|
 | Draw (static) | `src/data/{event-id}-2026-draw.json` | Official pairings: `berks`, `bucks`, `feeders`, `drawRace` |
+| **Official draw PDF** | [Henley 2026 Draw (2 July)](https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf) | **Source of truth for bracket order** — every round top-to-bottom, not HRR `raceDateTime` |
 | Event config | `src/config/events.ts` | `roundSizes`, `roundLabels`, `seededCrewNumbers`, `trophySlug`, `crewCount` |
 | Results API | `src/lib/hrr-api.ts` → `fetchEventResults()` | `https://www.hrr.co.uk/wp-json/hrr/v1/results` |
 | Timetable scrape | `src/lib/hrr-api.ts` → `fetchEventTimetable()` | `https://www.hrr.co.uk/compete/race-timetable/` |
@@ -75,7 +76,7 @@ With the dev server running (`npm run dev`):
 python3 scripts/audit-event-results.py http://localhost:3000
 ```
 
-**Pass criteria:** `verify-phase1-engine.ts` prints `PASS`; `audit-all-events.ts` ends with `ISSUES: 0 errors, 0 warnings`; `audit-display-consistency.ts` prints `PASS` (enrichment drift warnings are acceptable — see §4); `validate-bye-draws.ts` prints `PASS`; `npm run build` succeeds.
+**Pass criteria:** `verify-phase1-engine.ts` prints `PASS`; `audit-all-events.ts` ends with `ISSUES: 0 errors, 0 warnings`; `audit-display-consistency.ts` prints `PASS` (enrichment drift warnings are acceptable — see §4); `validate-bye-draws.ts` prints `PASS`; `npm run build` succeeds. **Draw-sheet:** every event in §2 per-event table verified against the [official draw PDF](https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf) — no round built from race-time order alone.
 
 After draw JSON changes for bye-format events:
 
@@ -119,20 +120,64 @@ npx tsx scripts/test-deep-check.ts
 
 - [ ] **Matches within a round follow `drawRace`** — Each `DrawMatch` in `src/data/*-draw.json` has `drawRace` (1-based race number on the official chart). `bracket-layout.ts` sorts by `drawRace ?? matchIndex` for collision resolution. Manual: compare vertical order in `BracketTreeCore` column to the [official draw PDF](https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf) for one event (e.g. `pe`, `thames`).
 
+- [ ] **Draw-sheet order, not race-time order (all 30 events, all rounds)** — Every match in every round must follow the **[official Henley draw PDF](https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf)** (steward chart, top-to-bottom), **not** the chronological order results appear in the HRR API (`raceDateTime`). Race timetable and live results are for *when* a race is rowed; the draw PDF is for *where* it sits in the bracket tree.
+  - **Convention in this repo:** `rounds[ri][0]` = top of the chart for that round (`drawRace: 1`); index increases down the page. Standard 32-crew trees pair **adjacent** draw races into the next round (1+2→R2-1, 3+4→R2-2, …) once R1 is in draw-sheet order.
+  - **Never build a round from** `sorted(results, raceDateTime)` alone — that was the root cause of the Temple bug (London vs Newcastle listed first because it raced earliest, instead of Brookes 'E' vs Asopos at the top of the chart). The same class of bug affected `fawley` and `wargrave` before repair.
+  - **Safe sources:** transcribe from the official draw PDF (`scripts/generate-all-events.py`, manual JSON like `pe` / `pow` / `wyfold` / `goblets` / `diamond`), or rebuild from results then **re-sort pairings into draw-sheet order** (`repair_temple()` / `repair_fawley()` / `repair_wargrave()` pattern in `scripts/phase2-bye-draws.py` and `scripts/phase3-bye-draws.py`).
+  - **At-risk scripts:** `repair-draw-from-results.py`, `rebuild-r1-from-hrr-results.py`, and any `repair_*()` that appends Tuesday/Wednesday results in API order without a draw-sheet sort step.
+  - **Per-round checks (every event):** (1) `drawRace === matchIndex + 1` for every match in the round; (2) compare vertical order in `BracketTreeCore` to the PDF section for that round; (3) confirm `feeders` match the steward chart (bye-format events may be non-adjacent — see §1).
+  - **Automated audit (ad-hoc):** compare each event's R1 pairing sequence to `extract_r1_pairings()` from the draw PDF; flag when correlation with race-time ≥ 85% and PDF correlation is low. A dedicated `scripts/audit-draw-sheet-order.ts` is not yet checked in — run before each regatta day after draw repairs.
+
+- [ ] **Per-event draw-sheet checklist (all 30)** — Each row must match the [official draw PDF](https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf). Status as of 2026-07-02:
+
+  | Event | Draw JSON source | Draw-sheet verification |
+  |-------|------------------|-------------------------|
+  | `grand` | PDF (`final_only`, 2 crews) | Single final — two crews on chart; order = PDF |
+  | `remenham` | PDF (`final_only`) | Same as `grand` |
+  | `princess-grace` | PDF (`final_only`) | Same as `grand` |
+  | `stewards` | PDF (`three_crew`) | Three-crew semi + final order per PDF |
+  | `lp` | PDF bye (`roundSizes` 2-4-2-1) | R1 heats + QF bye slots top-to-bottom; `r1-0`→`qf-0`, `r1-1`→`qf-3` |
+  | `bridge` | PDF bye | Same ten-crew pattern as `lp` |
+  | `town` | PDF bye | Bye QF slots + feeder order per PDF |
+  | `visitors` | PDF bye | Bye QF slots + feeder order per PDF |
+  | `queen-mother` | PDF bye | Bye last-16 slots per PDF |
+  | `queen-victoria` | PDF bye | Ten-crew pattern; `validate-bye-draws.ts` |
+  | `princess-royal` | PDF bye | Bye last-16 slots per PDF |
+  | `thames` | PDF generated (`2 July 2026`) | R1 16 heats top-to-bottom vs PDF section |
+  | `stonor` | PDF generated | R1 order vs PDF |
+  | `britannia` | PDF generated | R1 order vs PDF |
+  | `danesfield` | PDF generated | R1 order vs PDF |
+  | `princess-of-wales` | PDF generated | R1 order vs PDF |
+  | `hambleden-pairs` | PDF generated | R1 order vs PDF |
+  | `double-sculls` | PDF generated | R1 order vs PDF |
+  | `pe` | Manual from PDF (`SKIP_EXISTING`) | 32-crew tree; R1 top-to-bottom vs PDF |
+  | `pow` | Manual from PDF | Multi-day tree; each round vs PDF |
+  | `wyfold` | Manual from PDF | 32-crew tree; R1 vs PDF |
+  | `goblets` | Manual from PDF | Sculls draw; pairing order vs PDF |
+  | `diamond` | Manual from PDF | Handicap rounds vs PDF |
+  | `temple` | `repair_temple()` + PDF | **OK** — R1 Brookes 'E'/Asopos first … London/Newcastle last; 24/24 results (PR #31) |
+  | `fawley` | `repair_fawley()` + PDF | **OK** — R1 George Watson/Los Gatos 'A' first; `r2-6` Tideway + Kingston, `r2-7` Hinksey + Claires; 16/16 results (PR #33) |
+  | `wargrave` | `repair_wargrave()` + PDF continued page | **OK** — R1 York/Bristol first … Molesey 'C'/Vesta 'A' last; bye last-16 per PDF; 18/18 results (PR #34) |
+  | `island` | `phase2-bye-draws.py` | R1 + bye QFs verified vs PDF |
+  | `prince-philip` | `phase2-bye-draws.py` | Eight single-feeder QFs vs PDF |
+  | `prince-albert` | `phase2-bye-draws.py` | Multi-stage tree (`qf`→`sf`→`qf2`→`sf2`) vs PDF |
+  | `diamond-jubilee` | `phase3-bye-draws.py` | Last-16 bye pairings vs PDF |
+
+  **Regression rule:** if any event's first racing day results correlate ≥ 85% with `raceDateTime` order but &lt; 85% with the PDF section, treat the draw JSON as race-time ordered and repair before the next round.
+
+- [ ] **Temple reference (draw-sheet)** — Wednesday R1 heats 1–16 top-to-bottom: Brookes 'E'/Asopos … London/Newcastle. Thursday adjacent feeders: 3+4→`r2-1` (Washington/Njord), 5+6→`r2-2` (Laga/Wesleyan), 13+14→`r2-6` (day-2 race 7), 15+16→`r2-7` (day-2 race 8). Repair: `repair_temple()` + `TEMPLE_OFFICIAL_R1_KEYS` in `scripts/phase3-bye-draws.py`.
+
+- [ ] **Fawley reference (draw-sheet)** — Tuesday R1 top-to-bottom: George Watson/Los Gatos 'A', St Paul's/Lea, … Los Gatos 'B'/Claires. Thursday last-16: `r2-6` Kingston feeder vs **Tideway** bye; `r2-7` Claires feeder vs **Hinksey** bye. Repair: `repair_fawley()` + `FAWLEY_OFFICIAL_R1_KEYS` in `scripts/phase3-bye-draws.py`.
+
+- [ ] **Wargrave reference (draw-sheet)** — Continued draw page; Tuesday R1: York/Bristol … Molesey 'C'/Vesta 'A'. Wednesday last-16: Mercantile, Leander, Avon, Thames 'A', London 'A', Tyne, Molesey 'A', Sydney + respective R1 winners. Distinct squad `shortName` for Thames/Molesey/London/Vesta. Repair: `repair_wargrave()` in `scripts/phase2-bye-draws.py`.
+
 - [ ] **Round column order matches `roundLabels`** — Column headers come from `event.roundLabels[roundIndex]` in `BracketTreeCore.tsx`. Confirm against HRR schedule for events with non-default labels:
   - `island`: `1st Round`, `Quarter-Final`, `Semi-Final`, `Penultimate`, `Final`
   - `diamond-jubilee` / `princess-royal`: `Last 16` instead of `2nd Round`
   - `prince-albert`: `Qualifier`, `Last 16`, `Quarter-Final`, `Semi-Final`, `Final`
   - Source: `roundLabels` in `src/config/events.ts`
 
-- [ ] **`roundSizes` matches draw JSON length** — For each event, `draw.rounds[i].length === roundSizes[i]`. Automated: `validateRoundCounts()` in `src/lib/bracket-layout.ts` (surfaced as `bracketWarnings` on `/api/bracket/{eventId}`). API check: `roundCounts` array in JSON response.
-
-- [ ] **Temple draw-sheet order** — R1 array follows the official draw top-to-bottom (race 1 = `r1-0` Brookes 'E' vs Asopos; race 16 = `r1-15` London vs Newcastle). Adjacent feeders then wire correctly: heats 3+4 → `r2-1` (Njord vs Washington), 5+6 → `r2-2` (Laga vs Wesleyan), 13+14 → `r2-6` (day-2 race 7), 15+16 → `r2-7` (day-2 race 8). Automated repair: `scripts/phase3-bye-draws.py` `repair_temple()`. Confirm bracket connectors align and all 24 Temple results apply.
-
-- [ ] **Fawley draw-sheet order** — R1 top-to-bottom: George Watson/Los Gatos 'A', St Paul's/Lea, … Los Gatos 'B'/Claires. Thursday last-16: `r2-6` = Kingston feeder vs **Tideway** bye; `r2-7` = Claires feeder vs **Hinksey** bye (not swapped). Repair: `repair_fawley()` + `FAWLEY_OFFICIAL_R1_KEYS` in `scripts/phase3-bye-draws.py`. All 16 HRR results should apply.
-
-- [ ] **Wargrave draw-sheet order** — R1 follows the continued draw page top-to-bottom (race 1 = `r1-0` York vs Bristol; race 8 = `r1-7` Molesey 'C' vs Vesta 'A'). Wednesday last-16 bye pairings: `r2-0` Mercantile + Bristol winner, `r2-3` Thames 'A' + London 'B' winner, `r2-4` London 'A' + Cambridge winner, `r2-5` Tyne + Thames 'B' winner, `r2-6` Molesey 'A' + Lea winner, `r2-7` Sydney + Molesey 'C' winner. Distinct squad `shortName` values required for Thames/Molesey/London/Vesta. Automated repair: `scripts/phase2-bye-draws.py` `repair_wargrave()`. Confirm all 18 Wargrave results apply.
-
+- [ ] **`roundSizes` matches draw JSON length`** — For each event, `draw.rounds[i].length === roundSizes[i]`. Automated: `validateRoundCounts()` in `src/lib/bracket-layout.ts` (surfaced as `bracketWarnings` on `/api/bracket/{eventId}`). API check: `roundCounts` array in JSON response.
 
 - [ ] **Regatta day per round** — `raceDays` in `events.ts` drives which rounds are expected on which day (`getScheduledRegattaDayForRound()` in `src/lib/regatta-days.ts`). Manual: on Wednesday, Wednesday-round matches may show times; Friday rounds should not show stale times from timetable bleed (`stripUnpublishedScheduleTimes` in `bracket-engine.ts`).
 
@@ -267,7 +312,7 @@ The draw, HRR results, and timetable can all supply crew names. Once `buildBrack
 
 ## Event coverage matrix
 
-All 30 events (use when spot-checking manually):
+All 30 events — each must use **draw-sheet order** (§2) from the [official draw PDF](https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf), not race-time order:
 
 `grand`, `remenham`, `lp`, `bridge`, `thames`, `wargrave`, `temple`, `island`, `pe`, `prince-philip`, `stewards`, `town`, `visitors`, `wyfold`, `queen-mother`, `princess-grace`, `pow`, `princess-of-wales`, `danesfield`, `queen-victoria`, `fawley`, `diamond-jubilee`, `britannia`, `prince-albert`, `goblets`, `hambleden-pairs`, `double-sculls`, `stonor`, `diamond`, `princess-royal`
 
