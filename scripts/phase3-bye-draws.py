@@ -177,8 +177,62 @@ def repair_diamond_jubilee() -> None:
     write_draw("diamond-jubilee", draw)
 
 
+# Official Temple draw sheet order (top = race 1). Each tuple matches both crews in a heat.
+TEMPLE_OFFICIAL_R1_KEYS: list[tuple[str, str]] = [
+    ("brookes university 'e'", "asopos"),
+    ("laga 'b'", "syracuse"),
+    ("njord", "imperial"),
+    ("radley", "washington"),
+    ("brookes university 'c'", "laga 'a'"),
+    ("wesleyan", "aegir"),
+    ("nereus 'b'", "massachusetts"),
+    ("sydney", "nereus 'a'"),
+    ("brookes university 'a'", "orca"),
+    ("nottingham", "paul"),
+    ("yale", "brookes university 'b'"),
+    ("durham", "santa clara"),
+    ("cambridge university 'a'", "brookes university 'd'"),
+    ("bristol", "cambridge university 'b'"),
+    ("trinity", "drexel"),
+    ("london", "newcastle"),
+]
+
+
+def normalize_pairing_key(name: str) -> str:
+    return gae["normalize_name_key"](gae["normalize_apostrophes"](name))
+
+
+def pairing_matches_keys(berks: dict, bucks: dict, key_a: str, key_b: str) -> bool:
+    names = [normalize_pairing_key(berks["name"]), normalize_pairing_key(bucks["name"])]
+    return any(key_a in name for name in names) and any(key_b in name for name in names)
+
+
+def order_temple_r1_pairings(pairings: list[tuple[dict, dict]]) -> list[tuple[dict, dict]]:
+    ordered: list[tuple[dict, dict]] = []
+    remaining = list(pairings)
+    for key_a, key_b in TEMPLE_OFFICIAL_R1_KEYS:
+        for idx, (berks, bucks) in enumerate(remaining):
+            if pairing_matches_keys(berks, bucks, key_a, key_b):
+                ordered.append((berks, bucks))
+                remaining.pop(idx)
+                break
+        else:
+            raise ValueError(f"Temple R1 pairing not found for {key_a!r} vs {key_b!r}")
+    if remaining:
+        raise ValueError(f"Unmatched Temple R1 pairings remain: {len(remaining)}")
+    return ordered
+
+
+def apply_nereus_short_names(slot: dict) -> None:
+    name = slot.get("name", "")
+    if "Nereus 'A'" in name:
+        slot["shortName"] = "A.S.R. Nereus 'A'"
+    elif "Nereus 'B'" in name:
+        slot["shortName"] = "A.S.R. Nereus 'B'"
+
+
 def repair_temple() -> None:
-    """Rebuild Temple from Wednesday R1 results + standard 32-crew tree."""
+    """Rebuild Temple from Wednesday R1 results in official draw-sheet order."""
     results = fetch_results("the-temple-challenge-cup")
     by_day: dict[str, list[dict]] = defaultdict(list)
     for result in results:
@@ -187,15 +241,17 @@ def repair_temple() -> None:
     first_day = sorted(by_day.keys(), key=lambda day: by_day[day][0].get("raceDateTime", ""))[0]
     r1_results = by_day[first_day]
 
-    r1: list[dict] = []
-    for idx, result in enumerate(r1_results):
+    pairings: list[tuple[dict, dict]] = []
+    for result in r1_results:
         berks, bucks = station_crews(result)
         for slot in (berks, bucks):
-            name = slot.get("name", "")
-            if "Nereus 'A'" in name:
-                slot["shortName"] = "A.S.R. Nereus 'A'"
-            elif "Nereus 'B'" in name:
-                slot["shortName"] = "A.S.R. Nereus 'B'"
+            apply_nereus_short_names(slot)
+        pairings.append((berks, bucks))
+
+    ordered = order_temple_r1_pairings(pairings)
+
+    r1: list[dict] = []
+    for idx, (berks, bucks) in enumerate(ordered):
         r1.append(
             {
                 "id": f"r1-{idx}",
@@ -208,10 +264,10 @@ def repair_temple() -> None:
     rounds = build_rounds_from_r1(r1)
 
     # Nereus A/B internal second-round slot needs distinct squad labels.
-    rounds[1][4] = {
-        "id": "r2-4",
-        "drawRace": 5,
-        "feeders": ["r1-8", "r1-9"],
+    rounds[1][3] = {
+        "id": "r2-3",
+        "drawRace": 4,
+        "feeders": ["r1-6", "r1-7"],
         "berks": {
             "name": "Amsterdamsche Studenten Roeivereeniging Nereus 'A', Netherlands",
             "shortName": "A.S.R. Nereus 'A'",
@@ -222,28 +278,11 @@ def repair_temple() -> None:
         },
     }
 
-    # Henley pairs day-1 races 13+15 into R2 race 7 and 14+16 into R2 race 8
-    # (cross-pairing: Wesleyan/Laga and Njord/Washington on Thursday).
-    rounds[1][6] = {
-        "id": "r2-6",
-        "drawRace": 7,
-        "feeders": ["r1-12", "r1-14"],
-        "berks": None,
-        "bucks": None,
-    }
-    rounds[1][7] = {
-        "id": "r2-7",
-        "drawRace": 8,
-        "feeders": ["r1-13", "r1-15"],
-        "berks": None,
-        "bucks": None,
-    }
-
     draw = {
         "event": "The Temple Challenge Cup",
         "year": 2026,
-        "source": "Henley Royal Regatta 2026 Draw (Phase 3: R1 from results + standard tree)",
-        "sourceUrl": "https://www.hrr.co.uk/wp-json/hrr/v1/results",
+        "source": "Henley Royal Regatta 2026 Draw (official order + Nereus internal R2)",
+        "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
         "rounds": rounds,
     }
     write_draw("temple", draw)
