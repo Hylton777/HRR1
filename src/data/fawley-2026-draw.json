@@ -1,0 +1,372 @@
+{
+  "event": "The Fawley Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "The King's School, Worcester",
+          "shortName": "King's Sch., Worcester",
+          "number": 596
+        },
+        "bucks": {
+          "name": "Westminster Sch",
+          "shortName": "Westminster Sch"
+        }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "King's Sch ., Chester",
+          "shortName": "King's Sch ., Chester"
+        },
+        "bucks": {
+          "name": "Shiplake College 'A'",
+          "shortName": "Shiplake Coll",
+          "number": 583
+        }
+      },
+      {
+        "id": "r1-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "Claires Court School 'A'",
+          "shortName": "Claires Court Sch",
+          "number": 546
+        },
+        "bucks": {
+          "name": "Enniskillen Royal B .C",
+          "shortName": "Enniskillen Royal B .C"
+        }
+      },
+      {
+        "id": "r1-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "Phillips Exeter, USA",
+          "shortName": "Phillips Exeter, USA"
+        },
+        "bucks": {
+          "name": "St. Edward's Sch",
+          "shortName": "St. Edward's Sch"
+        }
+      },
+      {
+        "id": "r1-4",
+        "drawRace": 5,
+        "berks": {
+          "name": "Latymer Upper Sch",
+          "shortName": "Latymer Upper Sch"
+        },
+        "bucks": {
+          "name": "King's Coll. Sch",
+          "shortName": "King's Coll. Sch"
+        }
+      },
+      {
+        "id": "r1-5",
+        "drawRace": 6,
+        "berks": {
+          "name": "Dulwich Coll",
+          "shortName": "Dulwich Coll"
+        },
+        "bucks": {
+          "name": "Deerfield Academy, USA",
+          "shortName": "Deerfield Academy, USA"
+        }
+      },
+      {
+        "id": "r1-6",
+        "drawRace": 7,
+        "berks": {
+          "name": "Los Gatos Rowing Club 'A', U.S.A.",
+          "shortName": "Los Gatos R .C ., USA",
+          "number": 566
+        },
+        "bucks": {
+          "name": "The Windsor Boys' School",
+          "shortName": "Windsor Boys' Sch",
+          "number": 597
+        }
+      },
+      {
+        "id": "r1-7",
+        "drawRace": 8,
+        "berks": {
+          "name": "Montclair High Sch ., USA",
+          "shortName": "Montclair High Sch ., USA"
+        },
+        "bucks": {
+          "name": "Hampton Sch",
+          "shortName": "Hampton Sch"
+        }
+      },
+      {
+        "id": "r1-8",
+        "drawRace": 9,
+        "berks": {
+          "name": "Radley Coll",
+          "shortName": "Radley Coll"
+        },
+        "bucks": {
+          "name": "Belen Jesuit Preparatory School 'A', U.S.A.",
+          "shortName": "Belen Jesuit Prep . Sch ., USA",
+          "number": 541
+        }
+      },
+      {
+        "id": "r1-9",
+        "drawRace": 10,
+        "berks": {
+          "name": "Abingdon School",
+          "shortName": "Abingdon Sch",
+          "number": 535
+        },
+        "bucks": {
+          "name": "Tideway Scullers' School 'A'",
+          "shortName": "Tideway Scullers' Sch",
+          "number": 598
+        }
+      },
+      {
+        "id": "r1-10",
+        "drawRace": 11,
+        "berks": {
+          "name": "Reading Blue Coat Sch",
+          "shortName": "Reading Blue Coat Sch"
+        },
+        "bucks": {
+          "name": "Boulogne 92 Aviron, FRA",
+          "shortName": "Boulogne 92 Aviron, FRA"
+        }
+      },
+      {
+        "id": "r1-11",
+        "drawRace": 12,
+        "berks": {
+          "name": "Bedford Sch",
+          "shortName": "Bedford Sch"
+        },
+        "bucks": {
+          "name": "Eton College",
+          "shortName": "Eton Coll",
+          "number": 550
+        }
+      },
+      {
+        "id": "r1-12",
+        "drawRace": 13,
+        "berks": {
+          "name": "St. Paul's School 'A'",
+          "shortName": "St. Paul's Sch",
+          "number": 589
+        },
+        "bucks": {
+          "name": "Marlow R .C",
+          "shortName": "Marlow R .C"
+        }
+      },
+      {
+        "id": "r1-13",
+        "drawRace": 14,
+        "berks": {
+          "name": "Kew House School",
+          "shortName": "Kew House Sch",
+          "number": 557
+        },
+        "bucks": {
+          "name": "KAND R .C ., AUS",
+          "shortName": "KAND R .C ., AUS"
+        }
+      },
+      {
+        "id": "r1-14",
+        "drawRace": 15,
+        "berks": {
+          "name": "Sydney Univ. B.C., AUS",
+          "shortName": "Sydney Univ. B.C., AUS"
+        },
+        "bucks": {
+          "name": "Winchester College",
+          "shortName": "Winchester Coll",
+          "number": 605
+        }
+      },
+      {
+        "id": "r1-15",
+        "drawRace": 16,
+        "berks": {
+          "name": "Shrewsbury Sch",
+          "shortName": "Shrewsbury Sch"
+        },
+        "bucks": {
+          "name": "Leeds R .C",
+          "shortName": "Leeds R .C"
+        }
+      }
+    ],
+    [
+      {
+        "id": "r2-0",
+        "drawRace": 1,
+        "feeders": [
+          "r1-0",
+          "r1-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-1",
+        "drawRace": 2,
+        "feeders": [
+          "r1-2",
+          "r1-3"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-2",
+        "drawRace": 3,
+        "feeders": [
+          "r1-4",
+          "r1-5"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-3",
+        "drawRace": 4,
+        "feeders": [
+          "r1-6",
+          "r1-7"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-4",
+        "drawRace": 5,
+        "feeders": [
+          "r1-8",
+          "r1-9"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-5",
+        "drawRace": 6,
+        "feeders": [
+          "r1-10",
+          "r1-11"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-6",
+        "drawRace": 7,
+        "feeders": [
+          "r1-12",
+          "r1-13"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-7",
+        "drawRace": 8,
+        "feeders": [
+          "r1-14",
+          "r1-15"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": [
+          "r2-0",
+          "r2-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": [
+          "r2-2",
+          "r2-3"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "feeders": [
+          "r2-4",
+          "r2-5"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": [
+          "r2-6",
+          "r2-7"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

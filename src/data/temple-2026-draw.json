@@ -1,0 +1,377 @@
+{
+  "event": "The Temple Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "Oxford Brookes Univ . 'E'",
+          "shortName": "Oxford Brookes Univ . 'E'"
+        },
+        "bucks": {
+          "name": "Syracuse University, U.S.A.",
+          "shortName": "A.L.S.R.V . Asopos de Vliet, NED",
+          "number": 184
+        }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "D .S .R .V . Laga 'B', NED",
+          "shortName": "D .S .R .V . Laga 'B', NED"
+        },
+        "bucks": {
+          "name": "Syracuse University, U.S.A.",
+          "shortName": "Syracuse Univ., USA",
+          "number": 184
+        }
+      },
+      {
+        "id": "r1-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "K .S .R .V . Njord, NED",
+          "shortName": "K .S .R .V . Njord, NED"
+        },
+        "bucks": {
+          "name": "Imperial Coll . London",
+          "shortName": "Imperial Coll . London"
+        }
+      },
+      {
+        "id": "r1-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "Radley Coll",
+          "shortName": "Radley Coll"
+        },
+        "bucks": {
+          "name": "University of Washington, U.S.A.",
+          "shortName": "Univ. of Washington, USA",
+          "number": 199
+        }
+      },
+      {
+        "id": "r1-4",
+        "drawRace": 5,
+        "berks": {
+          "name": "Oxford Brookes Univ . 'C'",
+          "shortName": "Oxford Brookes Univ . 'C'"
+        },
+        "bucks": {
+          "name": "D.S.R.V . Laga 'A', NED",
+          "shortName": "D.S.R.V . Laga 'A', NED"
+        }
+      },
+      {
+        "id": "r1-5",
+        "drawRace": 6,
+        "berks": {
+          "name": "Wesleyan University, U.S.A.",
+          "shortName": "Wesleyan Univ ., USA",
+          "number": 200
+        },
+        "bucks": {
+          "name": "G.S.R. Aegir, NED",
+          "shortName": "G.S.R. Aegir, NED"
+        }
+      },
+      {
+        "id": "r1-6",
+        "drawRace": 7,
+        "berks": {
+          "name": "Syracuse University, U.S.A.",
+          "shortName": "A .S .R . Nereus 'B', NED",
+          "number": 184
+        },
+        "bucks": {
+          "name": "Massachusetts Inst . T ech ., USA",
+          "shortName": "Massachusetts Inst . T ech ., USA"
+        }
+      },
+      {
+        "id": "r1-7",
+        "drawRace": 8,
+        "berks": {
+          "name": "Sydney University, Australia",
+          "shortName": "Sydney Univ ., AUS",
+          "number": 183
+        },
+        "bucks": {
+          "name": "Syracuse University, U.S.A.",
+          "shortName": "A.S.R. Nereus 'A', NED",
+          "number": 184
+        }
+      },
+      {
+        "id": "r1-8",
+        "drawRace": 9,
+        "berks": {
+          "name": "Southampton University 'A'",
+          "shortName": "Oxford Brookes Univ. 'A'",
+          "number": 177
+        },
+        "bucks": {
+          "name": "Syracuse University, U.S.A.",
+          "shortName": "A .U .S .R . Orca, NED",
+          "number": 184
+        }
+      },
+      {
+        "id": "r1-9",
+        "drawRace": 10,
+        "berks": {
+          "name": "Nottingham Univ",
+          "shortName": "Nottingham Univ"
+        },
+        "bucks": {
+          "name": "St. Paul's School 'A'",
+          "shortName": "St . Paul's Sch",
+          "number": 181
+        }
+      },
+      {
+        "id": "r1-10",
+        "drawRace": 11,
+        "berks": {
+          "name": "Yale University, U.S.A.",
+          "shortName": "Yale Univ., USA",
+          "number": 201
+        },
+        "bucks": {
+          "name": "Southampton University 'B'",
+          "shortName": "Oxford Brookes Univ . 'B'",
+          "number": 178
+        }
+      },
+      {
+        "id": "r1-11",
+        "drawRace": 12,
+        "berks": {
+          "name": "Durham Univ",
+          "shortName": "Durham Univ"
+        },
+        "bucks": {
+          "name": "Santa Clara Univ ., USA",
+          "shortName": "Santa Clara Univ ., USA"
+        }
+      },
+      {
+        "id": "r1-12",
+        "drawRace": 13,
+        "berks": {
+          "name": "Southampton University 'A'",
+          "shortName": "Cambridge Univ. 'A'",
+          "number": 177
+        },
+        "bucks": {
+          "name": "Oxford Brookes Univ . 'D'",
+          "shortName": "Oxford Brookes Univ . 'D'"
+        }
+      },
+      {
+        "id": "r1-13",
+        "drawRace": 14,
+        "berks": {
+          "name": "University of Bristol 'A'",
+          "shortName": "Univ . of Bristol",
+          "number": 191
+        },
+        "bucks": {
+          "name": "Southampton University 'B'",
+          "shortName": "Cambridge Univ . 'B'",
+          "number": 178
+        }
+      },
+      {
+        "id": "r1-14",
+        "drawRace": 15,
+        "berks": {
+          "name": "Trinity College, Hartford, U.S.A.",
+          "shortName": "Trinity Coll., Hartford, USA",
+          "number": 189
+        },
+        "bucks": {
+          "name": "Drexel Univ ., USA",
+          "shortName": "Drexel Univ ., USA"
+        }
+      },
+      {
+        "id": "r1-15",
+        "drawRace": 16,
+        "berks": {
+          "name": "University of London",
+          "shortName": "Univ. of London",
+          "number": 195
+        },
+        "bucks": {
+          "name": "Newcastle Univ",
+          "shortName": "Newcastle Univ"
+        }
+      }
+    ],
+    [
+      {
+        "id": "r2-0",
+        "drawRace": 1,
+        "feeders": [
+          "r1-0",
+          "r1-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-1",
+        "drawRace": 2,
+        "feeders": [
+          "r1-2",
+          "r1-3"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-2",
+        "drawRace": 3,
+        "feeders": [
+          "r1-4",
+          "r1-5"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-3",
+        "drawRace": 4,
+        "feeders": [
+          "r1-6",
+          "r1-7"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-4",
+        "drawRace": 5,
+        "feeders": [
+          "r1-8",
+          "r1-9"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-5",
+        "drawRace": 6,
+        "feeders": [
+          "r1-10",
+          "r1-11"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-6",
+        "drawRace": 7,
+        "feeders": [
+          "r1-12",
+          "r1-13"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-7",
+        "drawRace": 8,
+        "feeders": [
+          "r1-14",
+          "r1-15"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": [
+          "r2-0",
+          "r2-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": [
+          "r2-2",
+          "r2-3"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "feeders": [
+          "r2-4",
+          "r2-5"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": [
+          "r2-6",
+          "r2-7"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

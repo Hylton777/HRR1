@@ -1,0 +1,128 @@
+{
+  "event": "The Bridge Challenge Plate",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "Algemene Utrechtse Studenten Roeivereniging Orca and Nijmeegse Studenten Roeivereniging Phocas, Netherlands",
+          "shortName": "A.U.S.R. Orca & N.S.R.V. Phocas, NED",
+          "number": 15
+        },
+        "bucks": {
+          "name": "Leander Club",
+          "shortName": "Leander Club",
+          "number": 17
+        }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "Oxford Brookes University and Taurus Boat Club",
+          "shortName": "Oxford Brookes Univ. & Taurus B.C.",
+          "number": 22
+        },
+        "bucks": {
+          "name": "Leander Club and Imperial College London",
+          "shortName": "Leander Club & Imperial Coll. London",
+          "number": 18
+        }
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": [
+          "r1-0"
+        ],
+        "berks": {
+          "name": "Yale University, U.S.A.",
+          "shortName": "Yale Univ., USA",
+          "number": 26
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": [
+          "r1-1"
+        ],
+        "berks": {
+          "name": "University of Miami, U.S.A.",
+          "shortName": "Univ. of Miami, USA",
+          "number": 25
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "Molesey Boat Club and University of London",
+          "shortName": "Molesey B.C. & Univ. of London",
+          "number": 20
+        },
+        "bucks": {
+          "name": "Thames Rowing Club",
+          "shortName": "Thames R.C.",
+          "number": 24
+        }
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "Dartmouth College, U.S.A.",
+          "shortName": "Dartmouth Coll., USA",
+          "number": 16
+        },
+        "bucks": {
+          "name": "Nautilus Rowing Club and Cambridge University",
+          "shortName": "Nautilus R.C. & Cambridge Univ.",
+          "number": 21
+        }
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

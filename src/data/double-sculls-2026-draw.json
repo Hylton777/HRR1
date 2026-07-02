@@ -1,0 +1,100 @@
+{
+  "event": "The Double Sculls Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "J.A. Cracknell & H.J. Aitchison (Itchen Imperial Rowing Club)",
+          "shortName": "Cracknell & Aitchison",
+          "number": 779
+        },
+        "bucks": {
+          "name": "L. Lindorfer & J. Schöberl (Wassersportverein Ottensheim, Austria and Oxford University)",
+          "shortName": "Lindorfer & Schöberl",
+          "number": 782
+        }
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "N.R. Mohr & A.J. Biddle (Peterhouse, Cambridge)",
+          "shortName": "Mohr & Biddle",
+          "number": 786
+        },
+        "bucks": {
+          "name": "J. Podrazil & D. Nedela (Armádni Sportovni Centrum Dukla Praha, Czechia)",
+          "shortName": "Podrazil & Nedela, CZE",
+          "number": 789
+        }
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "M.Q. Oddershede & J.R. Poulsen (Bagsværd Roklub, Denmark)",
+          "shortName": "Oddershede & Poulsen, DEN",
+          "number": 787
+        },
+        "bucks": {
+          "name": "T. Wilkinson & G. Spoelstra (Greenbank Falmouth Rowing Club and Exeter Rowing Club)",
+          "shortName": "Wilkinson & Spoelstra",
+          "number": 795
+        }
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "J.M. Cartwright & J.O. Gare (Leander Club)",
+          "shortName": "Cartwright & Gare",
+          "number": 777
+        },
+        "bucks": {
+          "name": "C.T. Black & D. Smith (Nottingham Rowing Club)",
+          "shortName": "Black & Smith",
+          "number": 776
+        }
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

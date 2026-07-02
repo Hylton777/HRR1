@@ -1,0 +1,128 @@
+{
+  "event": "The Queen Victoria Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "University of London",
+          "shortName": "Univ. of London",
+          "number": 534
+        },
+        "bucks": {
+          "name": "Reading University 'B'",
+          "shortName": "Reading Univ. 'B'",
+          "number": 527
+        }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "Edinburgh University",
+          "shortName": "Edinburgh Univ.",
+          "number": 517
+        },
+        "bucks": {
+          "name": "Reading University 'C'",
+          "shortName": "Reading Univ. 'C'",
+          "number": 528
+        }
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": [
+          "r1-0"
+        ],
+        "berks": {
+          "name": "Bath University",
+          "shortName": "Bath Univ.",
+          "number": 514
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": [
+          "r1-1"
+        ],
+        "berks": {
+          "name": "University of Birmingham 'A'",
+          "shortName": "Univ. of Birmingham",
+          "number": 531
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "Oxford Brookes University 'A'",
+          "shortName": "Oxford Brookes Univ.",
+          "number": 522
+        },
+        "bucks": {
+          "name": "Algemene Amsterdamsche Studenten Roeivereniging Skøll, Netherlands",
+          "shortName": "A.A.S.R. Skøll, NED",
+          "number": 512
+        }
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "Reading University 'A'",
+          "shortName": "Reading Univ. 'A'",
+          "number": 526
+        },
+        "bucks": {
+          "name": "Delftsche Studenten Roeivereeniging Proteus-Eretes, Netherlands",
+          "shortName": "D.S.R. Proteus-Eretes, NED",
+          "number": 516
+        }
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

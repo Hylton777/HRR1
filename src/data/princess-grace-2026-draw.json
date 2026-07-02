@@ -1,0 +1,23 @@
+{
+  "event": "The Princess Grace Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "Leander Club and Reading University",
+          "shortName": "Leander Club & Reading Univ",
+          "number": 433
+        },
+        "bucks": {
+          "name": "Hollandia R .C ., NED",
+          "shortName": "Hollandia R .C ., NED"
+        }
+      }
+    ]
+  ]
+}

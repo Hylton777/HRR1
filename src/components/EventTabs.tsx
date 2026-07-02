@@ -8,46 +8,86 @@ interface EventTabsProps {
   onChange: (id: string) => void;
 }
 
+const CATEGORY_LABELS: Record<string, string> = {
+  "premier-mens-eights": "Premier — Men's",
+  "premier-womens-eights": "Premier — Women's",
+  "premier-mens-coxless-fours": "Premier — Men's fours",
+  "premier-mens-coxless-pairs": "Premier — Men's pairs",
+  "premier-mens-doubles": "Premier — Men's doubles",
+  "premier-mens-sculls": "Premier — Men's sculls",
+  "premier-womens-coxless-pairs": "Premier — Women's pairs",
+  "premier-womens-doubles": "Premier — Women's doubles",
+  "premier-womens-sculls": "Premier — Women's sculls",
+  "senior-womens-coxless-fours": "Senior — Women's fours",
+  "senior-womens-quads": "Senior — Women's quads",
+  "intermediate-mens-eights": "Intermediate — Men's eights",
+  "intermediate-mens-coxless-fours": "Intermediate — Men's fours",
+  "intermediate-mens-quads": "Intermediate — Men's quads",
+  "intermediate-quads": "Intermediate — Quads",
+  "intermediate-womens-eights": "Intermediate — Women's eights",
+  "intermediate-womens-quads": "Intermediate — Women's quads",
+  "club-mens-eights": "Club — Men's eights",
+  "club-womens-eights": "Club — Women's eights",
+  "club-mens-coxless-fours": "Club — Men's fours",
+  "club-coxless-fours": "Club — Coxless fours",
+  "student-mens-eights": "Student — Men's eights",
+  "student-womens-eights": "Student — Women's eights",
+  "student-mens-coxed-fours": "Student — Men's fours",
+  "student-mens-coxless-fours": "Student — Men's coxless fours",
+  "junior-mens-eights": "Junior — Men's eights",
+  "junior-womens-eights": "Junior — Women's eights",
+  "junior-mens-quads": "Junior — Men's quads",
+  "junior-womens-quads": "Junior — Women's quads",
+};
+
+function subtitleForEvent(event: EventConfig): string {
+  if (event.id === "lp") return "Challenge Plate";
+  return event.displayName
+    .replace(" Challenge Cup", "")
+    .replace(" Challenge Plate", "")
+    .replace(" Challenge Trophy", "")
+    .replace(" Challenge Sculls", "");
+}
+
 export default function EventTabs({
   events,
   activeId,
   onChange,
 }: EventTabsProps) {
+  const grouped = events.reduce<Record<string, EventConfig[]>>((acc, event) => {
+    const key = event.category || "other";
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(event);
+    return acc;
+  }, {});
+
+  const groupOrder = events.map((e) => e.category).filter((c, i, a) => a.indexOf(c) === i);
+
   return (
-    <div
-      className="flex gap-1 p-1 bg-white/10 rounded-sm w-fit max-w-full overflow-x-auto"
-      role="tablist"
-      aria-label="Henley events"
-    >
-      {events.map((event) => {
-        const active = event.id === activeId;
-        return (
-          <button
-            key={event.id}
-            type="button"
-            role="tab"
-            aria-selected={active}
-            onClick={() => onChange(event.id)}
-            className={`px-3 sm:px-4 py-1.5 rounded-sm text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${
-              active
-                ? "bg-white text-[var(--hrr-navy)] shadow-sm"
-                : "text-white/80 hover:text-white hover:bg-white/10"
-            }`}
+    <label className="flex flex-col gap-1 min-w-[12rem] sm:min-w-[16rem]">
+      <span className="text-[10px] uppercase tracking-[0.2em] text-white/60">
+        Event
+      </span>
+      <select
+        value={activeId}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full rounded-sm border border-white/20 bg-white/10 text-white text-sm px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-white/40 cursor-pointer"
+        aria-label="Select Henley event"
+      >
+        {groupOrder.map((category) => (
+          <optgroup
+            key={category}
+            label={CATEGORY_LABELS[category] ?? category}
+            className="text-[var(--hrr-navy)]"
           >
-            {event.shortLabel}
-            <span className="hidden sm:inline text-current/70 font-normal">
-              {" "}
-              ·{" "}
-              {event.id === "lp"
-                ? "Challenge Plate"
-                : event.displayName
-                    .replace(" Challenge Cup", "")
-                    .replace(" Challenge Plate", "")
-                    .replace(" Challenge Trophy", "")}
-            </span>
-          </button>
-        );
-      })}
-    </div>
+            {grouped[category]?.map((event) => (
+              <option key={event.id} value={event.id} className="text-[var(--hrr-navy)]">
+                {event.shortLabel} · {subtitleForEvent(event)}
+              </option>
+            ))}
+          </optgroup>
+        ))}
+      </select>
+    </label>
   );
 }

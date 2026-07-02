@@ -1,0 +1,154 @@
+{
+  "event": "The Princess Royal Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "E.E.M. Keurentjes (Delftsche Studenten Roeivereeniging Proteus-Eretes, Netherlands)",
+          "shortName": "E.E.M. Keurentjes, NED",
+          "number": 851
+        },
+        "bucks": {
+          "name": "N. Malaei (Strathclyde Park Rowing Club)",
+          "shortName": "N. Malaei",
+          "number": 853
+        }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "G.A. Robinson-Ranger (Leander Club)",
+          "shortName": "G.A. Robinson-Ranger",
+          "number": 860
+        },
+        "bucks": {
+          "name": "A.G. Hempleman-Adams (Leander Club)",
+          "shortName": "A.G. Hempleman-Adams",
+          "number": 848
+        }
+      },
+      {
+        "id": "r1-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "V . Preil (Hungarian Rowing Association, Hungary)",
+          "shortName": "V. Preil, HUN",
+          "number": 859
+        },
+        "bucks": {
+          "name": "E. Collier-Hezel (University of Washington, U.S.A.)",
+          "shortName": "E. Collier-Hezel, USA",
+          "number": 844
+        }
+      },
+      {
+        "id": "r1-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "E.E. Martin (Riverside Boat Club, U.S.A.)",
+          "shortName": "E.E. Martin, USA",
+          "number": 854
+        },
+        "bucks": {
+          "name": "U.S.A. Fleming (Nottingham Rowing Club)",
+          "shortName": "U.S.A. Fleming",
+          "number": 846
+        }
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": [
+          "r1-0"
+        ],
+        "berks": {
+          "name": "J. Jongsma (Hollandia Roeiclub, Netherlands)",
+          "shortName": "J. Jongsma, NED",
+          "number": 850
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": [
+          "r1-1"
+        ],
+        "berks": {
+          "name": "L.R. Henry (Leicester Rowing Club)",
+          "shortName": "L.R. Henry",
+          "number": 849
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "feeders": [
+          "r1-2"
+        ],
+        "berks": {
+          "name": "P. Badenhorst (Rowing South Africa, South Africa)",
+          "shortName": "P. Badenhorst, RSA",
+          "number": 842
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": [
+          "r1-3"
+        ],
+        "berks": {
+          "name": "M. Lobnig (Völkermarkter Sport- und Turnverein 1868, Austria)",
+          "shortName": "M. Lobnig, AUT",
+          "number": 852
+        },
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "event": "The Diamond Jubilee Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "George Heriot's School",
+          "shortName": "George Heriot's Sch",
+          "number": 612
+        },
+        "bucks": {
+          "name": "Claires Court School",
+          "shortName": "Claires Court Sch",
+          "number": 611
+        }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "Tideway Scullers' School 'B'",
+          "shortName": "Tideway Scullers' Sch . 'B'",
+          "number": 654
+        },
+        "bucks": {
+          "name": "Yarm School",
+          "shortName": "Yarm Sch",
+          "number": 660
+        }
+      },
+      {
+        "id": "r1-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "Sir William Borlase's Grammar School",
+          "shortName": "Sir William Borlase's G .S",
+          "number": 644
+        },
+        "bucks": {
+          "name": "Maidenhead Rowing Club 'B'",
+          "shortName": "Maidenhead R .C . 'B'",
+          "number": 631
+        }
+      },
+      {
+        "id": "r1-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "Sydney R .C ., AUS",
+          "shortName": "Sydney R .C ., AUS"
+        },
+        "bucks": {
+          "name": "Marlow Rowing Club 'B'",
+          "shortName": "Marlow R .C . 'B'",
+          "number": 633
+        }
+      },
+      {
+        "id": "r1-4",
+        "drawRace": 5,
+        "berks": {
+          "name": "Shiplake College 'A'",
+          "shortName": "Shiplake Coll",
+          "number": 641
+        },
+        "bucks": {
+          "name": "Headington School 'A'",
+          "shortName": "Headington Sch . 'A'",
+          "number": 617
+        }
+      },
+      {
+        "id": "r1-5",
+        "drawRace": 6,
+        "berks": {
+          "name": "Wallingford R .C",
+          "shortName": "Wallingford R .C"
+        },
+        "bucks": {
+          "name": "York City Rowing Club",
+          "shortName": "York City R .C",
+          "number": 661
+        }
+      },
+      {
+        "id": "r1-6",
+        "drawRace": 7,
+        "berks": {
+          "name": "Headington School 'B'",
+          "shortName": "Headington Sch . 'B'",
+          "number": 618
+        },
+        "bucks": {
+          "name": "City of Cambridge Rowing Club 'A'",
+          "shortName": "City of Cambridge R .C",
+          "number": 609
+        }
+      },
+      {
+        "id": "r1-7",
+        "drawRace": 8,
+        "berks": {
+          "name": "Oundle School",
+          "shortName": "Oundle Sch",
+          "number": 637
+        },
+        "bucks": {
+          "name": "Hartpury College 'B'",
+          "shortName": "Hartpury Coll . 'B'",
+          "number": 616
+        }
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": [
+          "r1-0",
+          "r1-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": [
+          "r1-2",
+          "r1-3"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "feeders": [
+          "r1-4",
+          "r1-5"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": [
+          "r1-6",
+          "r1-7"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "event": "The Town Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "University of London and Molesey Boat Club",
+          "shortName": "Univ. of London & Molesey B.C.",
+          "number": 350
+        },
+        "bucks": {
+          "name": "Deutscher Ruder-Club von 1884 e.V., Hannover and Bonner Ruder-Gesellschaft e.V., Germany",
+          "shortName": "D.R.C. Hannover & Bonner RG, GER",
+          "number": 343
+        }
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "Leander Club and Oxford Brookes University",
+          "shortName": "Leander Club & Oxford Brookes Univ.",
+          "number": 345
+        },
+        "bucks": {
+          "name": "University of Washington, U.S.A.",
+          "shortName": "Univ. of Washington, USA",
+          "number": 351
+        }
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "University of London",
+          "shortName": "Univ. of London",
+          "number": 349
+        },
+        "bucks": {
+          "name": "Hollandia Roeiclub, Netherlands",
+          "shortName": "Hollandia R.C., NED",
+          "number": 344
+        }
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "Ruder-Club Potsdam e.V and Ruderverein Wandsbek e.V., Germany",
+          "shortName": "R.C. Potsdam & R.V. Wandsbek, GER",
+          "number": 348
+        },
+        "bucks": {
+          "name": "Nautilus Rowing Club 'B'",
+          "shortName": "Nautilus R.C. 'B'",
+          "number": 347
+        }
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": [
+          "r1-0"
+        ],
+        "berks": {
+          "name": "Nautilus Rowing Club 'A'",
+          "shortName": "Nautilus R.C. 'A'",
+          "number": 346
+        },
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "event": "The Remenham Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "Team Italia, Italy",
+          "shortName": "Team Italia, ITA",
+          "number": 4
+        },
+        "bucks": {
+          "name": "Leander Club and Molesey Boat Club",
+          "shortName": "Leander Club & Molesey B .C",
+          "number": 3
+        }
+      }
+    ]
+  ]
+}
