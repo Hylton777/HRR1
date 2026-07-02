@@ -14,7 +14,7 @@ The app is multi-event: draw JSON + `events.ts` config drive everything else (`/
 4. **Verify bracket shape** — `roundSizes` must match `draw.rounds[].length` per round.
 5. **Verify feeder mapping** — every progression path must match the steward chart, including byes.
 6. **Verify visual alignment** — connector lines must run from each heat to the correct TBD slot.
-7. **Configure seeds, timetable codes, race days** — see lessons below.
+7. **Configure seeds, timetable codes, race days** — seeds from **italic names on the draw PDF only** (not pre-qual lists); see lessons below.
 8. **Build and hit API** — `npm run build`, `curl /api/bracket/<event-id>`.
 9. **Smoke-test UI** — tab label, 2-day mobile view, bold seeds, no phantom future-round crews.
 
@@ -215,7 +215,11 @@ Bye crew pre-drawn on berks, winner slot empty on bucks:
 
 ## Seeding (bold crew names)
 
-**Prefer `seededCrewNumbers`** — official draw numbers are authoritative.
+**The official draw PDF is the only authoritative source for seeds.** On the steward chart, **italic crew names are seeded**; roman (upright) names are not — even if that crew appears on a JRN pre-qualified list or qualified via the qualifying races.
+
+**Do not** mark a crew as seeded because it pre-qualified, had a strong entry, or appears in press previews. Always read the draw PDF and list only italicized crews.
+
+**Prefer `seededCrewNumbers`** — official draw numbers are authoritative once confirmed against italics on the chart.
 
 ```ts
 seededCrewNumbers: [434, 443, 446, 450],
@@ -228,7 +232,7 @@ seededCrewNumbers: [434, 443, 446, 450],
 
 **POW lesson:** "Leander Club" (443) must be bold; "Leander Club & Leeds" (444) must **not** — numbered seeds prevent false positives.
 
-Italics on the PDF chart = selected/seeded crews. Cross-check with JRN pre-qualified lists when available.
+**Goblets lesson (2026):** Donaghy & Nares (753) pre-qualified but are **not** italicized on the draw — they must not be in `seededCrewNumbers`. Pre-qualification ≠ seeding.
 
 ---
 

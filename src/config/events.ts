@@ -291,11 +291,10 @@ export const EVENTS: Record<EventId, EventConfig> = {
     raceDays: GOBLETS_RACE_DAYS,
     roundSizes: [4, 2, 1],
     roundLabels: ["Quarter-Final", "Semi-Final", "Final"],
-    seededCrewNumbers: [749, 751, 753, 759, 761],
+    seededCrewNumbers: [749, 751, 759, 761],
     seededCrewNames: [
       "K. Borković & B. Cesarec, H.V.K. Gusar Split, Croatia",
       "R. Corrigan & N. Timoney, Portora Boat Club, Ireland",
-      "O.P.F. Donaghy & L.G.J. Nares, Taurus Boat Club",
       "P.H.R. Martin & S. Achterfeld, Kettwiger Rudergesellschaft e.V. and Renn-Ruder Gemeinschaft Mülheim/Ruhr, Germany",
       "J.N. Wincomb & T.W.K. Digby, Marlow Rowing Club and Leander Club",
     ],
