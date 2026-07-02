@@ -70,7 +70,7 @@
       "headerCategory": "Intermediate men's eights",
       "raceDayPreset": "lp",
       "category": "intermediate-mens-eights",
-      "entriesTitle": "THE LADIES’ CHALLENGE PLATE",
+      "entriesTitle": "THE LADIES\u2019 CHALLENGE PLATE",
       "format": "bye",
       "seededCrewNumbersHint": [],
       "generation": {
@@ -80,7 +80,7 @@
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "bridge",
@@ -90,9 +90,9 @@
       "timetableCodes": [
         "Bridge"
       ],
-      "headerCategory": "Intermediate men's eights",
+      "headerCategory": "Intermediate women's eights",
       "raceDayPreset": "pow",
-      "category": "intermediate-mens-eights",
+      "category": "intermediate-womens-eights",
       "entriesTitle": "THE BRIDGE CHALLENGE PLATE",
       "format": "bye",
       "seededCrewNumbersHint": [
@@ -106,11 +106,11 @@
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "thames",
@@ -165,9 +165,9 @@
       "timetableCodes": [
         "Wargrave"
       ],
-      "headerCategory": "Club men's coxless fours",
+      "headerCategory": "Club women's eights",
       "raceDayPreset": "pe",
-      "category": "club-mens-coxless-fours",
+      "category": "club-womens-eights",
       "entriesTitle": "THE WARGRA VE CHALLENGE CUP",
       "format": "standard",
       "seededCrewNumbersHint": [
@@ -383,7 +383,7 @@
       "headerCategory": "Premier men's coxless fours",
       "raceDayPreset": "pow",
       "category": "premier-mens-coxless-fours",
-      "entriesTitle": "THE STEWARDS’ CHALLENGE CUP",
+      "entriesTitle": "THE STEWARDS\u2019 CHALLENGE CUP",
       "format": "three_crew",
       "seededCrewNumbersHint": [],
       "generation": {
@@ -405,20 +405,20 @@
       "timetableCodes": [
         "Town"
       ],
-      "headerCategory": "Student men's coxless fours",
+      "headerCategory": "Premier women's coxless fours",
       "raceDayPreset": "pow",
-      "category": "student-mens-coxless-fours",
+      "category": "premier-womens-coxless-fours",
       "entriesTitle": "THE TOWN CHALLENGE CUP",
       "format": "bye",
       "seededCrewNumbersHint": [],
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "visitors",
@@ -431,7 +431,7 @@
       "headerCategory": "Intermediate men's coxless fours",
       "raceDayPreset": "pow",
       "category": "intermediate-mens-coxless-fours",
-      "entriesTitle": "THE VISITORS’ CHALLENGE CUP",
+      "entriesTitle": "THE VISITORS\u2019 CHALLENGE CUP",
       "format": "bye",
       "seededCrewNumbersHint": [
         352,
@@ -446,11 +446,11 @@
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "wyfold",
@@ -497,20 +497,20 @@
       "timetableCodes": [
         "Q Mother"
       ],
-      "headerCategory": "Senior women's coxless fours",
+      "headerCategory": "Premier men's quadruple sculls",
       "raceDayPreset": "pow",
-      "category": "senior-womens-coxless-fours",
+      "category": "premier-mens-quads",
       "entriesTitle": "THE QUEEN MOTHER CHALLENGE CUP",
       "format": "bye",
       "seededCrewNumbersHint": [],
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "princess-grace",
@@ -520,9 +520,9 @@
       "timetableCodes": [
         "P Grace"
       ],
-      "headerCategory": "Senior women's quadruple sculls",
+      "headerCategory": "Premier women's quadruple sculls",
       "raceDayPreset": "pow",
-      "category": "senior-womens-quads",
+      "category": "premier-womens-quads",
       "entriesTitle": "THE PRINCESS GRACE CHALLENGE CUP",
       "format": "final_only",
       "seededCrewNumbersHint": [],
@@ -544,9 +544,9 @@
       "timetableCodes": [
         "Pr Wales"
       ],
-      "headerCategory": "Intermediate quads",
+      "headerCategory": "Intermediate men's quadruple sculls",
       "raceDayPreset": "pow",
-      "category": "intermediate-quads",
+      "category": "intermediate-mens-quads",
       "entriesTitle": "THE PRINCE OF WALES CHALLENGE CUP",
       "format": "skip",
       "seededCrewNumbersHint": [
@@ -575,7 +575,7 @@
       "timetableCodes": [
         "P Wales"
       ],
-      "headerCategory": "Intermediate women's quads",
+      "headerCategory": "Intermediate women's quadruple sculls",
       "raceDayPreset": "pow",
       "category": "intermediate-womens-quads",
       "entriesTitle": "THE PRINCESS OF WALES CHALLENGE TROPHY",
@@ -607,9 +607,9 @@
       "timetableCodes": [
         "Danesfield"
       ],
-      "headerCategory": "Intermediate men's quads",
+      "headerCategory": "Club women's quadruple sculls",
       "raceDayPreset": "pow",
-      "category": "intermediate-mens-quads",
+      "category": "club-womens-quads",
       "entriesTitle": "THE DANESFIELD CHALLENGE CUP",
       "format": "standard",
       "seededCrewNumbersHint": [
@@ -643,9 +643,9 @@
       "timetableCodes": [
         "Q Victoria"
       ],
-      "headerCategory": "Intermediate women's quads",
+      "headerCategory": "Student women's quadruple sculls",
       "raceDayPreset": "pow",
-      "category": "intermediate-womens-quads",
+      "category": "student-womens-quads",
       "entriesTitle": "THE QUEEN VICTORIA CHALLENGE CUP",
       "format": "bye",
       "seededCrewNumbersHint": [
@@ -659,11 +659,11 @@
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "fawley",
@@ -761,9 +761,9 @@
       "timetableCodes": [
         "Britannia"
       ],
-      "headerCategory": "Club women's eights",
+      "headerCategory": "Club coxed fours",
       "raceDayPreset": "pe",
-      "category": "club-womens-eights",
+      "category": "club-coxed-fours",
       "entriesTitle": "THE BRITANNIA CHALLENGE CUP",
       "format": "standard",
       "seededCrewNumbersHint": [
@@ -836,7 +836,7 @@
       "headerCategory": "Premier men's coxless pairs",
       "raceDayPreset": "goblets",
       "category": "premier-mens-coxless-pairs",
-      "entriesTitle": "THE SILVER GOBLETS & NICKALLS’ CHALLENGE CUP",
+      "entriesTitle": "THE SILVER GOBLETS & NICKALLS\u2019 CHALLENGE CUP",
       "format": "skip",
       "seededCrewNumbersHint": [
         749,
@@ -1007,11 +1007,11 @@
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
     }
   ],
   "results": [
@@ -1047,7 +1047,7 @@
       "eventId": "bridge",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     },
@@ -1139,7 +1139,7 @@
       "eventId": "town",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     },
@@ -1147,7 +1147,7 @@
       "eventId": "visitors",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     },
@@ -1163,7 +1163,7 @@
       "eventId": "queen-mother",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     },
@@ -1214,7 +1214,7 @@
       "eventId": "queen-victoria",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     },
@@ -1326,7 +1326,7 @@
       "eventId": "princess-royal",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     }
