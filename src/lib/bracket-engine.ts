@@ -308,6 +308,14 @@ function findMatchForTimetableRace(
   return null;
 }
 
+function resultMatchesByRaceNumber(
+  match: BracketMatch,
+  result: HrrResult,
+): boolean {
+  if (!match.raceNumber || !result.number) return false;
+  return match.raceNumber.trim() === result.number.trim();
+}
+
 function tryApplyResult(
   rounds: BracketMatch[][],
   result: HrrResult,
@@ -355,6 +363,24 @@ function tryApplyResult(
             event,
             registry,
           );
+          return true;
+        }
+      }
+
+      if (
+        resultMatchesByRaceNumber(match, result) &&
+        match.berks &&
+        match.bucks
+      ) {
+        const berksName = getCrewName(match.berks);
+        const bucksName = getCrewName(match.bucks);
+        if (
+          berksName &&
+          bucksName &&
+          (matchHasBothCrews(match, result.winner.name, result.loser.name) ||
+            resultMatchesPair(result, berksName, bucksName))
+        ) {
+          rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
           return true;
         }
       }

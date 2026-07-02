@@ -3,6 +3,7 @@ import { EVENTS } from "@/config/events";
 import { buildBracket, collectUpcomingRaces } from "@/lib/bracket-engine";
 import { fetchEventResults, fetchEventTimetable } from "@/lib/hrr-api";
 import { validateRoundCounts } from "@/lib/bracket-layout";
+import { auditResultCompleteness } from "@/lib/result-audit";
 import type { BracketApiResponse } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +24,11 @@ export async function GET() {
       bracket.rounds,
       event.roundSizes,
     );
+    const resultAudit = auditResultCompleteness(
+      bracket.rounds,
+      results,
+      event,
+    );
 
     const response: BracketApiResponse = {
       bracket,
@@ -40,6 +46,7 @@ export async function GET() {
       upcomingRaces: collectUpcomingRaces(bracket.rounds),
       roundCounts,
       bracketWarnings,
+      resultAudit,
     };
 
     return NextResponse.json(response, {
