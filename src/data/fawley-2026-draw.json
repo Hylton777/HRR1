@@ -252,7 +252,11 @@
           "r1-6"
         ],
         "berks": null,
-        "bucks": null
+        "bucks": {
+          "name": "Hinksey Sculling School",
+          "shortName": "Hinksey Sculling Sch.",
+          "number": 556
+        }
       },
       {
         "id": "r2-7",
@@ -261,7 +265,11 @@
           "r1-7"
         ],
         "berks": null,
-        "bucks": null
+        "bucks": {
+          "name": "Tideway Scullers' School 'A'",
+          "shortName": "Tideway Scullers' Sch. 'A'",
+          "number": 598
+        }
       }
     ],
     [

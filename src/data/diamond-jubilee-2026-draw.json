@@ -212,296 +212,94 @@
           "number": 645
         },
         "bucks": null
-      }
-    ],
-    [
+      },
       {
-        "id": "r2-0",
-        "drawRace": 1,
+        "id": "r2-7",
+        "drawRace": 8,
         "feeders": [
-          "r1-0"
+          "r1-7"
         ],
         "berks": {
-          "name": "George Heriot's School",
-          "shortName": "George Heriot's Sch",
-          "number": 612
-        },
-        "bucks": {
-          "name": "Los Gatos Rowing Club, U.S.A.",
-          "shortName": "Los Gatos R.C., USA",
-          "number": 629
-        }
-      },
-      {
-        "id": "r2-1",
-        "drawRace": 2,
-        "feeders": [
-          "r1-1"
-        ],
-        "berks": null,
-        "bucks": {
-          "name": "Wycliffe College",
-          "shortName": "Wycliffe Coll.",
-          "number": 659
-        }
-      },
-      {
-        "id": "r2-2",
-        "drawRace": 3,
-        "feeders": [
-          "r1-2"
-        ],
-        "berks": null,
-        "bucks": {
-          "name": "Shrewsbury School",
-          "shortName": "Shrewsbury Sch.",
-          "number": 643
-        }
-      },
-      {
-        "id": "r2-3",
-        "drawRace": 4,
-        "feeders": [
-          "r1-3"
-        ],
-        "berks": null,
-        "bucks": {
-          "name": "Tideway Scullers' School 'A'",
-          "shortName": "Tideway Scullers' Sch. 'A'",
-          "number": 653
-        }
-      },
-      {
-        "id": "r2-4",
-        "drawRace": 5,
-        "feeders": [
-          "r1-4"
-        ],
-        "berks": {
-          "name": "Marlow Rowing Club 'A'",
-          "shortName": "Marlow R.C. 'A'",
-          "number": 632
-        },
-        "bucks": null
-      },
-      {
-        "id": "r2-5",
-        "drawRace": 6,
-        "feeders": [
-          "r1-5"
-        ],
-        "berks": {
-          "name": "Hartpury College 'A'",
-          "shortName": "Hartpury Coll. 'A'",
-          "number": 615
-        },
-        "bucks": null
-      },
-      {
-        "id": "r2-6",
-        "drawRace": 7,
-        "feeders": [
-          "r1-6"
-        ],
-        "berks": {
-          "name": "Sir William Perkins's School",
-          "shortName": "Sir William Perkins's Sch.",
-          "number": 645
+          "name": "Maidenhead Rowing Club 'A'",
+          "shortName": "Maidenhead R.C. 'A'",
+          "number": 630
         },
         "bucks": null
       }
     ],
     [
       {
-        "id": "r2-0",
+        "id": "qf-0",
         "drawRace": 1,
         "feeders": [
-          "r1-0"
+          "r2-0",
+          "r2-1"
         ],
-        "berks": {
-          "name": "George Heriot's School",
-          "shortName": "George Heriot's Sch",
-          "number": 612
-        },
-        "bucks": {
-          "name": "Los Gatos Rowing Club, U.S.A.",
-          "shortName": "Los Gatos R.C., USA",
-          "number": 629
-        }
+        "berks": null,
+        "bucks": null
       },
       {
-        "id": "r2-1",
+        "id": "qf-1",
         "drawRace": 2,
         "feeders": [
-          "r1-1"
+          "r2-2",
+          "r2-3"
         ],
         "berks": null,
-        "bucks": {
-          "name": "Wycliffe College",
-          "shortName": "Wycliffe Coll.",
-          "number": 659
-        }
+        "bucks": null
       },
       {
-        "id": "r2-2",
+        "id": "qf-2",
         "drawRace": 3,
         "feeders": [
-          "r1-2"
+          "r2-4",
+          "r2-5"
         ],
         "berks": null,
-        "bucks": {
-          "name": "Shrewsbury School",
-          "shortName": "Shrewsbury Sch.",
-          "number": 643
-        }
+        "bucks": null
       },
       {
-        "id": "r2-3",
+        "id": "qf-3",
         "drawRace": 4,
         "feeders": [
-          "r1-3"
+          "r2-6",
+          "r2-7"
         ],
         "berks": null,
-        "bucks": {
-          "name": "Tideway Scullers' School 'A'",
-          "shortName": "Tideway Scullers' Sch. 'A'",
-          "number": 653
-        }
-      },
-      {
-        "id": "r2-4",
-        "drawRace": 5,
-        "feeders": [
-          "r1-4"
-        ],
-        "berks": {
-          "name": "Marlow Rowing Club 'A'",
-          "shortName": "Marlow R.C. 'A'",
-          "number": 632
-        },
-        "bucks": null
-      },
-      {
-        "id": "r2-5",
-        "drawRace": 6,
-        "feeders": [
-          "r1-5"
-        ],
-        "berks": {
-          "name": "Hartpury College 'A'",
-          "shortName": "Hartpury Coll. 'A'",
-          "number": 615
-        },
-        "bucks": null
-      },
-      {
-        "id": "r2-6",
-        "drawRace": 7,
-        "feeders": [
-          "r1-6"
-        ],
-        "berks": {
-          "name": "Sir William Perkins's School",
-          "shortName": "Sir William Perkins's Sch.",
-          "number": 645
-        },
         "bucks": null
       }
     ],
     [
       {
-        "id": "r2-0",
+        "id": "sf-0",
         "drawRace": 1,
         "feeders": [
-          "r1-0"
+          "qf-0",
+          "qf-1"
         ],
-        "berks": {
-          "name": "George Heriot's School",
-          "shortName": "George Heriot's Sch",
-          "number": 612
-        },
-        "bucks": {
-          "name": "Los Gatos Rowing Club, U.S.A.",
-          "shortName": "Los Gatos R.C., USA",
-          "number": 629
-        }
+        "berks": null,
+        "bucks": null
       },
       {
-        "id": "r2-1",
+        "id": "sf-1",
         "drawRace": 2,
         "feeders": [
-          "r1-1"
+          "qf-2",
+          "qf-3"
         ],
         "berks": null,
-        "bucks": {
-          "name": "Wycliffe College",
-          "shortName": "Wycliffe Coll.",
-          "number": 659
-        }
-      },
-      {
-        "id": "r2-2",
-        "drawRace": 3,
-        "feeders": [
-          "r1-2"
-        ],
-        "berks": null,
-        "bucks": {
-          "name": "Shrewsbury School",
-          "shortName": "Shrewsbury Sch.",
-          "number": 643
-        }
-      },
-      {
-        "id": "r2-3",
-        "drawRace": 4,
-        "feeders": [
-          "r1-3"
-        ],
-        "berks": null,
-        "bucks": {
-          "name": "Tideway Scullers' School 'A'",
-          "shortName": "Tideway Scullers' Sch. 'A'",
-          "number": 653
-        }
-      },
-      {
-        "id": "r2-4",
-        "drawRace": 5,
-        "feeders": [
-          "r1-4"
-        ],
-        "berks": {
-          "name": "Marlow Rowing Club 'A'",
-          "shortName": "Marlow R.C. 'A'",
-          "number": 632
-        },
         "bucks": null
-      },
+      }
+    ],
+    [
       {
-        "id": "r2-5",
-        "drawRace": 6,
+        "id": "final-0",
+        "drawRace": 1,
         "feeders": [
-          "r1-5"
+          "sf-0",
+          "sf-1"
         ],
-        "berks": {
-          "name": "Hartpury College 'A'",
-          "shortName": "Hartpury Coll. 'A'",
-          "number": 615
-        },
-        "bucks": null
-      },
-      {
-        "id": "r2-6",
-        "drawRace": 7,
-        "feeders": [
-          "r1-6"
-        ],
-        "berks": {
-          "name": "Sir William Perkins's School",
-          "shortName": "Sir William Perkins's Sch.",
-          "number": 645
-        },
+        "berks": null,
         "bucks": null
       }
     ]

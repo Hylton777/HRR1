@@ -65,6 +65,7 @@ function auditAppliedResults(rounds: BracketMatch[][]): string[] {
 
 async function main(): Promise<void> {
   const allIssues: string[] = [];
+  const summary: string[] = [];
 
   for (const eventId of TARGET_EVENTS) {
     const event = EVENT_LIST.find((e) => e.id === eventId);
@@ -72,10 +73,20 @@ async function main(): Promise<void> {
 
     const { results } = await fetchEventResults(event);
     const bracket = buildBracket(event, results, { raceDay: null, races: [] });
+    const applied = bracket.rounds
+      .flat()
+      .filter((m) => m.status === "complete").length;
+    summary.push(
+      `${eventId}: ${results.length} results, ${applied} applied`,
+    );
     const issues = auditAppliedResults(bracket.rounds);
     if (issues.length) {
       allIssues.push(...issues.map((i) => `${eventId}: ${i}`));
     }
+  }
+
+  for (const line of summary) {
+    console.log(line);
   }
 
   if (allIssues.length) {

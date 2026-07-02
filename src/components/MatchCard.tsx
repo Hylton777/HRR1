@@ -16,6 +16,8 @@ import { useEvent } from "./EventContext";
 interface MatchCardProps {
   berks: Crew | null;
   bucks: Crew | null;
+  berksPlaceholder?: string;
+  bucksPlaceholder?: string;
   winner: Crew | null;
   loser?: Crew | null;
   status: "pending" | "scheduled" | "complete";
@@ -33,8 +35,9 @@ interface MatchCardProps {
 
 function displayName(
   crew: { name: string; shortName?: string } | null,
+  placeholder?: string,
 ): string {
-  if (!crew) return "TBD";
+  if (!crew) return placeholder ?? "TBD";
   return crew.shortName || crew.name;
 }
 
@@ -69,6 +72,7 @@ function CrewRow({
   showStation,
   compact,
   event,
+  placeholder,
 }: {
   crew: Crew | null;
   side: "berks" | "bucks";
@@ -77,6 +81,7 @@ function CrewRow({
   showStation: boolean;
   compact: boolean;
   event: ReturnType<typeof useEvent>;
+  placeholder?: string;
 }) {
   const stationLabel = side === "berks" ? "B" : "K";
   const stationColor =
@@ -108,7 +113,7 @@ function CrewRow({
         className={`min-w-0 truncate ${isSeededCrew(crew, event) ? "font-bold" : ""}`}
         title={crew?.name}
       >
-        {displayName(crew)}
+        {displayName(crew, placeholder)}
       </span>
     </div>
   );
@@ -117,6 +122,8 @@ function CrewRow({
 function CompactBracketBox({
   berks,
   bucks,
+  berksPlaceholder,
+  bucksPlaceholder,
   berksWon,
   bucksWon,
   status,
@@ -127,6 +134,8 @@ function CompactBracketBox({
 }: {
   berks: MatchCardProps["berks"];
   bucks: MatchCardProps["bucks"];
+  berksPlaceholder?: string;
+  bucksPlaceholder?: string;
   berksWon: boolean;
   bucksWon: boolean;
   status: MatchCardProps["status"];
@@ -197,7 +206,7 @@ function CompactBracketBox({
             className={`truncate w-full ${isSeededCrew(berks, event) ? "font-bold" : ""}`}
             title={berks?.name}
           >
-            {displayName(berks)}
+            {displayName(berks, berksPlaceholder)}
           </span>
         </div>
         <div
@@ -208,7 +217,7 @@ function CompactBracketBox({
             className={`truncate w-full ${isSeededCrew(bucks, event) ? "font-bold" : ""}`}
             title={bucks?.name}
           >
-            {displayName(bucks)}
+            {displayName(bucks, bucksPlaceholder)}
           </span>
         </div>
       </div>
@@ -226,6 +235,8 @@ export default function MatchCard(props: MatchCardProps) {
   const {
     berks,
     bucks,
+    berksPlaceholder,
+    bucksPlaceholder,
     winner,
     status,
     verdict,
@@ -254,6 +265,8 @@ export default function MatchCard(props: MatchCardProps) {
         <CompactBracketBox
           berks={berks}
           bucks={bucks}
+          berksPlaceholder={berksPlaceholder}
+          bucksPlaceholder={bucksPlaceholder}
           berksWon={berksWon}
           bucksWon={bucksWon}
           status={status}
@@ -318,6 +331,7 @@ export default function MatchCard(props: MatchCardProps) {
             showStation={showStations}
             compact={false}
             event={event}
+            placeholder={berksPlaceholder}
           />
           <div className="text-center text-[10px] text-[var(--muted)] py-0.5">
             vs
@@ -330,6 +344,7 @@ export default function MatchCard(props: MatchCardProps) {
             showStation={showStations}
             compact={false}
             event={event}
+            placeholder={bucksPlaceholder}
           />
         </div>
         {status === "complete" && verdict && (

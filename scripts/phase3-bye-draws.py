@@ -128,8 +128,8 @@ def repair_fawley() -> None:
         {"id": "r2-3", "drawRace": 4, "feeders": ["r1-3"], "berks": None, "bucks": crew(565, entries, "Leander Club")},
         {"id": "r2-4", "drawRace": 5, "feeders": ["r1-4"], "berks": crew(553, entries, "Hartpury Coll. 'A'"), "bucks": None},
         {"id": "r2-5", "drawRace": 6, "feeders": ["r1-5"], "berks": None, "bucks": crew(570, entries, "Marlow R.C. 'A'")},
-        {"id": "r2-6", "drawRace": 7, "feeders": ["r1-6"], "berks": None, "bucks": None},
-        {"id": "r2-7", "drawRace": 8, "feeders": ["r1-7"], "berks": None, "bucks": None},
+        {"id": "r2-6", "drawRace": 7, "feeders": ["r1-6"], "berks": None, "bucks": crew(556, entries, "Hinksey Sculling Sch.")},
+        {"id": "r2-7", "drawRace": 8, "feeders": ["r1-7"], "berks": None, "bucks": crew(598, entries, "Tideway Scullers' Sch. 'A'")},
     ]
 
     qf = draw["rounds"][2]
@@ -142,9 +142,10 @@ def repair_fawley() -> None:
 
 def repair_diamond_jubilee() -> None:
     entries = load_entries("THE DIAMOND JUBILEE CHALLENGE CUP")
-    draw = json.loads((DATA / "diamond-jubilee-2026-draw.json").read_text())
-
-    draw["rounds"][0][3]["berks"] = crew(648, entries, "Sydney R.C., AUS")
+    draw_path = DATA / "diamond-jubilee-2026-draw.json"
+    draw = json.loads(draw_path.read_text())
+    r1 = draw["rounds"][0]
+    r1[3]["berks"] = crew(648, entries, "Sydney R.C., AUS")
 
     r2 = [
         {"id": "r2-0", "drawRace": 1, "feeders": ["r1-0"], "berks": crew(612, entries, "George Heriot's Sch"), "bucks": crew(629, entries, "Los Gatos R.C., USA")},
@@ -154,12 +155,24 @@ def repair_diamond_jubilee() -> None:
         {"id": "r2-4", "drawRace": 5, "feeders": ["r1-4"], "berks": crew(632, entries, "Marlow R.C. 'A'"), "bucks": None},
         {"id": "r2-5", "drawRace": 6, "feeders": ["r1-5"], "berks": crew(615, entries, "Hartpury Coll. 'A'"), "bucks": None},
         {"id": "r2-6", "drawRace": 7, "feeders": ["r1-6"], "berks": crew(645, entries, "Sir William Perkins's Sch."), "bucks": None},
+        {"id": "r2-7", "drawRace": 8, "feeders": ["r1-7"], "berks": crew(630, entries, "Maidenhead R.C. 'A'"), "bucks": None},
     ]
 
-    qf = draw["rounds"][1]
-    sf = draw["rounds"][2]
-    final = draw["rounds"][3]
-    draw["rounds"] = [draw["rounds"][0], r2, qf, sf, final]
+    qf = [
+        {"id": "qf-0", "drawRace": 1, "feeders": ["r2-0", "r2-1"], "berks": None, "bucks": None},
+        {"id": "qf-1", "drawRace": 2, "feeders": ["r2-2", "r2-3"], "berks": None, "bucks": None},
+        {"id": "qf-2", "drawRace": 3, "feeders": ["r2-4", "r2-5"], "berks": None, "bucks": None},
+        {"id": "qf-3", "drawRace": 4, "feeders": ["r2-6", "r2-7"], "berks": None, "bucks": None},
+    ]
+    sf = [
+        {"id": "sf-0", "drawRace": 1, "feeders": ["qf-0", "qf-1"], "berks": None, "bucks": None},
+        {"id": "sf-1", "drawRace": 2, "feeders": ["qf-2", "qf-3"], "berks": None, "bucks": None},
+    ]
+    final = [
+        {"id": "final-0", "drawRace": 1, "feeders": ["sf-0", "sf-1"], "berks": None, "bucks": None},
+    ]
+
+    draw["rounds"] = [r1, r2, qf, sf, final]
     draw["source"] = "Henley Royal Regatta 2026 Draw (Phase 3: bye-aware last-16)"
     write_draw("diamond-jubilee", draw)
 

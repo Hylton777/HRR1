@@ -488,7 +488,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     crewCount: 16,
     draw: diamond_jubileeDraw as DrawData,
     raceDays: PE_RACE_DAYS,
-    roundSizes: [8, 7, 4, 2, 1],
+    roundSizes: [8, 8, 4, 2, 1],
     roundLabels: ["1st Round", "Last 16", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [609, 612, 615, 617, 629, 630, 632, 637, 641, 643, 644, 645, 648, 653, 655, 659],
     seededCrewNames: [],
