@@ -67,22 +67,7 @@ python3 scripts/phase4-bye-draws.py   # runs phase2 + phase3 repair scripts
 **Optional deep check** (all events: `roundSizes` vs draw, 0 unmatched results):
 
 ```bash
-npx tsx -e "
-import { EVENT_LIST } from './src/config/events';
-import { buildBracket } from './src/lib/bracket-engine';
-import { fetchEventResults } from './src/lib/hrr-api';
-for (const event of EVENT_LIST) {
-  const { results } = await fetchEventResults(event);
-  const bracket = buildBracket(event, results, { raceDay: null, races: [] });
-  const applied = bracket.rounds.flat().filter(m => m.status === 'complete').length;
-  if (applied !== results.length) throw new Error(event.id + ': ' + applied + '/' + results.length);
-  for (let i = 0; i < event.roundSizes.length; i++) {
-    if ((event.draw.rounds[i]?.length ?? 0) !== event.roundSizes[i])
-      throw new Error(event.id + ' round ' + (i+1) + ' size mismatch');
-  }
-}
-console.log('Deep check PASS');
-"
+npx tsx scripts/test-deep-check.ts
 ```
 
 ---
