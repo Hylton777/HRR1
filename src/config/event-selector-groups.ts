@@ -37,6 +37,24 @@ const BOAT_CLASS_ORDER: Record<string, number> = {
   "womens-sculls": 14,
 };
 
+const BOAT_CLASS_LABELS: Record<string, string> = {
+  "mens-eights": "Men's Eight",
+  "womens-eights": "Women's Eight",
+  "mens-quads": "Men's Quadruple Scull",
+  "womens-quads": "Women's Quadruple Scull",
+  "mens-coxless-fours": "Men's Coxless Four",
+  "womens-coxless-fours": "Women's Coxless Four",
+  "coxless-fours": "Men's Coxless Four",
+  "coxed-fours": "Coxed Four",
+  "mens-coxed-fours": "Men's Coxed Four",
+  "mens-doubles": "Men's Double Scull",
+  "womens-doubles": "Women's Double Scull",
+  "mens-coxless-pairs": "Men's Coxless Pair",
+  "womens-coxless-pairs": "Women's Coxless Pair",
+  "mens-sculls": "Men's Single Scull",
+  "womens-sculls": "Women's Single Scull",
+};
+
 export function getEventTier(category: string): EventTier | "other" {
   for (const tier of EVENT_TIER_ORDER) {
     if (category.startsWith(`${tier}-`)) {
@@ -51,6 +69,13 @@ export function getEventBoatClassRank(category: string): number {
   const suffix =
     tier === "other" ? category : category.slice(tier.length + 1);
   return BOAT_CLASS_ORDER[suffix] ?? 99;
+}
+
+export function getEventBoatClassLabel(category: string): string {
+  const tier = getEventTier(category);
+  const suffix =
+    tier === "other" ? category : category.slice(tier.length + 1);
+  return BOAT_CLASS_LABELS[suffix] ?? suffix.replace(/-/g, " ");
 }
 
 export function compareEventsForSelector(a: EventConfig, b: EventConfig): number {

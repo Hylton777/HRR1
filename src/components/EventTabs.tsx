@@ -1,7 +1,10 @@
 "use client";
 
 import type { EventConfig } from "@/config/events";
-import { groupEventsForSelector } from "@/config/event-selector-groups";
+import {
+  getEventBoatClassLabel,
+  groupEventsForSelector,
+} from "@/config/event-selector-groups";
 
 interface EventTabsProps {
   events: EventConfig[];
@@ -9,13 +12,8 @@ interface EventTabsProps {
   onChange: (id: string) => void;
 }
 
-function subtitleForEvent(event: EventConfig): string {
-  if (event.id === "lp") return "Challenge Plate";
-  return event.displayName
-    .replace(" Challenge Cup", "")
-    .replace(" Challenge Plate", "")
-    .replace(" Challenge Trophy", "")
-    .replace(" Challenge Sculls", "");
+function optionLabel(event: EventConfig): string {
+  return `${event.shortLabel} · ${getEventBoatClassLabel(event.category)}`;
 }
 
 export default function EventTabs({
@@ -48,7 +46,7 @@ export default function EventTabs({
                 value={event.id}
                 className="text-[var(--hrr-navy)]"
               >
-                {event.shortLabel} · {subtitleForEvent(event)}
+                {optionLabel(event)}
               </option>
             ))}
           </optgroup>
