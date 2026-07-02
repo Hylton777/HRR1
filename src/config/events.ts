@@ -230,7 +230,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     year: 2026,
     displayName: "Island Challenge Cup",
     shortLabel: "Island",
-    headerSubtitle: "Live knockout bracket \u00b7 16 crews \u00b7 Women's eights",
+    headerSubtitle: "Live knockout bracket \u00b7 16 crews \u00b7 Student women's eights",
     crewCount: 16,
     draw: islandDraw as DrawData,
     raceDays: PE_RACE_DAYS,
@@ -239,7 +239,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     seededCrewNumbers: [203, 208, 211, 215, 216, 219, 221, 224, 226, 228, 245, 246, 249, 252],
     seededCrewNames: [],
     noRacingNote: "Island races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
-    category: "womens-eights",
+    category: "student-womens-eights",
   },
   "pe": {
     id: "pe",

@@ -31,7 +31,6 @@ const CATEGORY_LABELS: Record<string, string> = {
   "club-coxed-fours": "Club — Coxed fours",
   "club-coxless-fours": "Club — Coxless fours",
   "club-womens-quads": "Club — Women's quads",
-  "womens-eights": "Women's eights",
   "student-mens-eights": "Student — Men's eights",
   "student-womens-eights": "Student — Women's eights",
   "student-mens-coxed-fours": "Student — Men's fours",
