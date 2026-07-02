@@ -107,7 +107,7 @@ export default function Dashboard({ eventId }: DashboardProps) {
           </div>
 
           <p className="text-xs text-[var(--muted)] text-center pt-4 border-t border-[var(--card-border)]">
-            Auto-refreshes every 30 seconds. Produced by Hylton Harvey.
+            Auto-refreshes every 30 seconds. Produced by Hylton.
           </p>
         </div>
       </ClientErrorBoundary>
