@@ -59,13 +59,16 @@ npx tsx scripts/audit-all-events.ts
 # 3. Cross-surface display consistency (bracket vs next races, results, leaderboard)
 npx tsx scripts/audit-display-consistency.ts
 
-# 4. Ten-crew bye draw feeder wiring (Ladies/Bridge/Q Victoria pattern)
+# 4. Recent Results panel ↔ bracket (all 30 events, bidirectional)
+npx tsx scripts/audit-recent-results-bracket.ts
+
+# 5. Ten-crew bye draw feeder wiring (Ladies/Bridge/Q Victoria pattern)
 npx tsx scripts/validate-bye-draws.ts
 
-# 5. Timetable vs results day ordering
+# 6. Timetable vs results day ordering
 npx tsx scripts/audit-timing.ts
 
-# 6. Production build (types + lint)
+# 7. Production build (types + lint)
 npm run build
 ```
 
@@ -76,7 +79,7 @@ With the dev server running (`npm run dev`):
 python3 scripts/audit-event-results.py http://localhost:3000
 ```
 
-**Pass criteria:** `verify-phase1-engine.ts` prints `PASS`; `audit-all-events.ts` ends with `ISSUES: 0 errors, 0 warnings`; `audit-display-consistency.ts` prints `PASS` (enrichment drift warnings are acceptable — see §4); `validate-bye-draws.ts` prints `PASS`; `npm run build` succeeds. **Draw-sheet:** every event in §2 per-event table verified against the [official draw PDF](https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf) — no round built from race-time order alone.
+**Pass criteria:** `verify-phase1-engine.ts` prints `PASS`; `audit-all-events.ts` ends with `ISSUES: 0 errors, 0 warnings`; `audit-display-consistency.ts` prints `PASS` (enrichment drift warnings are acceptable — see §4); `audit-recent-results-bracket.ts` prints `PASS` for all 30 events (see §4 — **Recent Results must match the bracket exactly**); `validate-bye-draws.ts` prints `PASS`; `npm run build` succeeds. **Draw-sheet:** every event in §2 per-event table verified against the [official draw PDF](https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf) — no round built from race-time order alone.
 
 After draw JSON changes for bye-format events:
 
@@ -209,7 +212,7 @@ The draw, HRR results, and timetable can all supply crew names. Once `buildBrack
 
 - [ ] **Next races ↔ bracket** — `upcomingRaces` is built from `collectUpcomingRaces(bracket.rounds)`; each entry's `id`, `berks`, and `bucks` must match the corresponding scheduled `BracketMatch`. Automated: `auditDisplayConsistency()` category `next_races`.
 
-- [ ] **Recent results ↔ bracket** — `RaceResultCard.tsx` calls `resolveResultDisplayCrews()` so the list shows the same names as clicking the completed match on the bracket. Manual: pick a completed race (e.g. PE King's Coll. Sch. vs Deerfield) and compare bracket card, recent-results row, and race detail modal.
+- [ ] **Recent results ↔ bracket (requirement)** — The **Recent Results** sidebar must show the **exact same races** as the knockout bracket, with the **same winner and loser names** users see on completed `MatchCard`s. Ordering: newest `raceDateTime` first (same as `/api/bracket/{eventId}` → `results`). Implementation: `RaceResultCard.tsx` → `resolveResultDisplayCrews()` → `findBracketMatchForResult()` (race number **and** regatta day when HRR reuses numbers). Automated: `npx tsx scripts/audit-recent-results-bracket.ts` — verifies for every event that (1) each HRR result maps to exactly one complete bracket slot, (2) displayed winner/loser labels match the bracket, (3) `results.length === complete` count, and (4) no duplicate mappings. Also covered by `audit-display-consistency.ts` category `recent_results`. Manual: pick a completed race (e.g. PE King's Coll. Sch. vs Deerfield) and compare bracket card, recent-results row, and race detail modal.
 
 - [ ] **Fastest crews ↔ bracket** — `buildFastestCrewsLeaderboard()` reads `match.winner` from completed matches in the active round; each leaderboard row must map to a bracket winner with the same crew `number`. Automated: `auditDisplayConsistency()` category `leaderboard`.
 
@@ -329,7 +332,8 @@ Priority events for bye/progression QA (covered by `verify-phase1-engine.ts`):
 |-------|--------|
 | `verify-phase1-engine.ts` | **PASS** (10/10 target events, all results applied) |
 | `audit-all-events.ts` | **PASS** — 0 errors, 0 warnings (30 events) |
-| `audit-display-consistency.ts` | **PASS** — 0 cross-surface mismatches (31 enrichment drift warnings) |
+| `audit-display-consistency.ts` | **PASS** — 0 cross-surface mismatches (18 enrichment drift warnings) |
+| `audit-recent-results-bracket.ts` | **PASS** — 30/30 events; Recent Results matches bracket (0 failures) |
 | `audit-timing.ts` | **PASS** — 0 missing / 0 premature |
 | `test-deep-check.ts` | **PASS** — 232/232 results applied, all `roundSizes` match draw |
 | `npm run build` | **PASS** |
