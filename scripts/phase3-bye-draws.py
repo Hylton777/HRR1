@@ -222,18 +222,19 @@ def repair_temple() -> None:
         },
     }
 
-    # Henley draw pairs day-1 races 13+14 into R2 race 7 and 15+16 into R2 race 8.
+    # Henley pairs day-1 races 13+15 into R2 race 7 and 14+16 into R2 race 8
+    # (cross-pairing: Wesleyan/Laga and Njord/Washington on Thursday).
     rounds[1][6] = {
         "id": "r2-6",
         "drawRace": 7,
-        "feeders": ["r1-12", "r1-13"],
+        "feeders": ["r1-12", "r1-14"],
         "berks": None,
         "bucks": None,
     }
     rounds[1][7] = {
         "id": "r2-7",
         "drawRace": 8,
-        "feeders": ["r1-14", "r1-15"],
+        "feeders": ["r1-13", "r1-15"],
         "berks": None,
         "bucks": None,
     }

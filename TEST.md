@@ -127,7 +127,7 @@ npx tsx scripts/test-deep-check.ts
 
 - [ ] **`roundSizes` matches draw JSON length** — For each event, `draw.rounds[i].length === roundSizes[i]`. Automated: `validateRoundCounts()` in `src/lib/bracket-layout.ts` (surfaced as `bracketWarnings` on `/api/bracket/{eventId}`). API check: `roundCounts` array in JSON response.
 
-- [ ] **Temple day-1 feeder pairing** — Wednesday heats 13+14 feed `r2-6` (day-2 race 7) and heats 15+16 feed `r2-7` (day-2 race 8). Automated repair: `scripts/phase3-bye-draws.py` `repair_temple()`. Confirm bracket connectors align and results apply for `temple`.
+- [ ] **Temple day-1 feeder pairing** — Wednesday heats 13+15 feed `r2-6` (day-2 race 7) and heats 14+16 feed `r2-7` (day-2 race 8) via Henley cross-pairing (not adjacent 13+14 / 15+16). Automated repair: `scripts/phase3-bye-draws.py` `repair_temple()`. Confirm bracket connectors align and all 24 Temple results apply.
 
 - [ ] **Regatta day per round** — `raceDays` in `events.ts` drives which rounds are expected on which day (`getScheduledRegattaDayForRound()` in `src/lib/regatta-days.ts`). Manual: on Wednesday, Wednesday-round matches may show times; Friday rounds should not show stale times from timetable bleed (`stripUnpublishedScheduleTimes` in `bracket-engine.ts`).
 
@@ -291,7 +291,7 @@ Priority events for bye/progression QA (covered by `verify-phase1-engine.ts`):
 
 | Event | Pending match(es) | Notes |
 |-------|-------------------|-------|
-| `temple` | `r2-5` Syracuse vs Oxford Brookes 'D' | 7/8 R2 complete; 0 unmatched HRR results |
+| `temple` | `r2-5` Syracuse vs Oxford Brookes 'D' | 8/8 R2 complete; 24/24 HRR results applied |
 | `fawley` | `r2-6`, `r2-7` | Thursday last-16 not yet rowed |
 | `island` | `qf-7` Nereus vs London | QF not yet rowed |
 | `lp` | `r1-1` | Thursday heat pending |
