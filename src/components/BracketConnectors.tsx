@@ -51,8 +51,27 @@ function measureRelative(el: HTMLElement, root: HTMLElement): MeasuredBox {
   };
 }
 
+function measureCrewAnchor(
+  root: HTMLElement,
+  matchId: string,
+  anchor: "berks" | "bucks",
+): number | null {
+  const el = root.querySelector(
+    `[data-match-id="${matchId}"] [data-connector-anchor="${anchor}"]`,
+  ) as HTMLElement | null;
+  if (!el) return null;
+  return measureRelative(el, root).centerY;
+}
+
+function inferFeederAnchor(match: BracketMatch): "berks" | "bucks" {
+  if (match.berks && !match.bucks) return "bucks";
+  if (match.bucks && !match.berks) return "berks";
+  return "bucks";
+}
+
 function buildConnectorPaths(
   rounds: BracketMatch[][],
+  root: HTMLElement,
   measureMatch: (id: string) => MeasuredBox | null,
   isDimmed: (match: BracketMatch, roundIndex: number) => boolean,
 ): ConnectorPath[] {
@@ -62,7 +81,26 @@ function buildConnectorPaths(
     const round = rounds[ri];
 
     for (const match of round) {
-      if (!match.feeders || match.feeders.length !== 2) continue;
+      if (!match.feeders?.length) continue;
+
+      if (match.feeders.length === 1) {
+        const f0 = measureMatch(match.feeders[0]);
+        const child = measureMatch(match.id);
+        if (!f0 || !child) continue;
+
+        const anchor = inferFeederAnchor(match);
+        const targetY =
+          measureCrewAnchor(root, match.id, anchor) ?? child.centerY;
+        const dimmed = isDimmed(match, ri);
+
+        paths.push({
+          d: `M ${f0.right} ${f0.centerY} H ${(f0.right + child.left) / 2} V ${targetY} H ${child.left}`,
+          dimmed,
+        });
+        continue;
+      }
+
+      if (match.feeders.length !== 2) continue;
 
       const [f0, f1] = match.feeders;
       const p0 = measureMatch(f0);
@@ -132,7 +170,7 @@ export default function BracketConnectors({
         });
       };
 
-      const paths = buildConnectorPaths(rounds, measureMatch, isDimmed);
+      const paths = buildConnectorPaths(rounds, root, measureMatch, isDimmed);
       setLayout({
         width: root.scrollWidth,
         height: root.scrollHeight,

@@ -84,6 +84,7 @@ function CrewRow({
 
   return (
     <div
+      data-connector-anchor={side}
       className={`flex items-center gap-1 rounded transition-colors ${
         compact ? "px-2 py-2 sm:py-1.5 text-sm" : "px-2 py-2 sm:py-1.5 text-sm"
       } ${
@@ -186,6 +187,7 @@ function CompactBracketBox({
       <div className="flex flex-col flex-1 min-h-0">
         <div
           className={`flex-1 flex items-center px-1.5 min-h-0 border-b border-[var(--card-border)] text-[9px] leading-tight ${rowClass(berksWon, status === "complete" && !berksWon && !!berks, !!berks)}`}
+          data-connector-anchor="berks"
         >
           <span
             className={`truncate w-full ${isSeededCrew(berks, event) ? "font-bold" : ""}`}
@@ -196,6 +198,7 @@ function CompactBracketBox({
         </div>
         <div
           className={`flex-1 flex items-center px-1.5 min-h-0 text-[9px] leading-tight ${rowClass(bucksWon, status === "complete" && !bucksWon && !!bucks, !!bucks)}`}
+          data-connector-anchor="bucks"
         >
           <span
             className={`truncate w-full ${isSeededCrew(bucks, event) ? "font-bold" : ""}`}

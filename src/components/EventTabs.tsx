@@ -38,10 +38,12 @@ export default function EventTabs({
             <span className="hidden sm:inline text-current/70 font-normal">
               {" "}
               ·{" "}
-              {event.displayName
-                .replace(" Challenge Cup", "")
-                .replace(" Challenge Plate", "")
-                .replace(" Challenge Trophy", "")}
+              {event.id === "lp"
+                ? "Challenge Plate"
+                : event.displayName
+                    .replace(" Challenge Cup", "")
+                    .replace(" Challenge Plate", "")
+                    .replace(" Challenge Trophy", "")}
             </span>
           </button>
         );

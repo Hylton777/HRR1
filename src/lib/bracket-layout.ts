@@ -11,6 +11,17 @@ export const DESKTOP_MATCH_GAP = 8;
 /** Expected knockout sizes for PE (32 crew draw) */
 export const EXPECTED_ROUND_SIZES = [16, 8, 4, 2, 1] as const;
 
+/** Vertical centre of the bucks crew row within a match card (layout coords). */
+export const BUCKS_SLOT_CENTER_RATIO = 0.72;
+/** Vertical centre of the berks crew row within a match card (layout coords). */
+export const BERKS_SLOT_CENTER_RATIO = 0.28;
+
+function inferFeederAnchor(match: BracketMatch): "berks" | "bucks" {
+  if (match.berks && !match.bucks) return "bucks";
+  if (match.bucks && !match.berks) return "berks";
+  return "bucks";
+}
+
 function matchCenter(top: number, matchHeight: number): number {
   return top + matchHeight / 2;
 }
@@ -33,6 +44,17 @@ function idealOffsetForMatch(
       const center =
         (matchCenter(y0, matchHeight) + matchCenter(y1, matchHeight)) / 2;
       return topFromCenter(center, matchHeight);
+    }
+  }
+
+  if (match.feeders?.length === 1) {
+    const feederTop = offsets.get(match.feeders[0]);
+    if (feederTop !== undefined) {
+      const feederCenter = matchCenter(feederTop, matchHeight);
+      const anchor = inferFeederAnchor(match);
+      const ratio =
+        anchor === "bucks" ? BUCKS_SLOT_CENTER_RATIO : BERKS_SLOT_CENTER_RATIO;
+      return feederCenter - matchHeight * ratio;
     }
   }
 

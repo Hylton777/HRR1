@@ -194,7 +194,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     timetableCodes: ["Ladies'"],
     year: 2026,
     displayName: "Ladies' Challenge Plate",
-    shortLabel: "LP",
+    shortLabel: "Ladies'",
     headerSubtitle: "Live knockout bracket · 10 crews · 2 Thursday heats, 6 byes to Friday",
     crewCount: 10,
     draw: lpDraw as DrawData,
@@ -209,7 +209,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
       "Cambridge University and Harvard University, U.S.A.",
     ],
     noRacingNote:
-      "LP races Thu–Sun — times publish around 9pm BST the evening before.",
+      "Ladies' races Thu–Sun — times publish around 9pm BST the evening before.",
   },
   wyfold: {
     id: "wyfold",
