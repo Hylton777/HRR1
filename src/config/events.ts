@@ -3,10 +3,11 @@ import powDraw from "@/data/pow-2026-draw.json";
 import lpDraw from "@/data/lp-2026-draw.json";
 import wyfoldDraw from "@/data/wyfold-2026-draw.json";
 import gobletsDraw from "@/data/goblets-2026-draw.json";
+import diamondDraw from "@/data/diamond-2026-draw.json";
 import type { DrawData } from "@/lib/types";
 import type { RegattaDay } from "@/lib/regatta-days";
 
-export type EventId = "pe" | "pow" | "lp" | "wyfold" | "goblets";
+export type EventId = "pe" | "pow" | "lp" | "wyfold" | "goblets" | "diamond";
 
 export interface EventConfig {
   id: EventId;
@@ -300,6 +301,34 @@ export const EVENTS: Record<EventId, EventConfig> = {
     noRacingNote:
       "Goblets races Fri–Sun — times publish around 9pm BST the evening before.",
   },
+  diamond: {
+    id: "diamond",
+    trophySlug: "the-diamond-challenge-sculls",
+    timetableCodes: ["Diamonds"],
+    year: 2026,
+    displayName: "Diamond Challenge Sculls",
+    shortLabel: "Diamond",
+    headerSubtitle:
+      "Live knockout bracket · 16 crews · Premier men's single sculls",
+    crewCount: 16,
+    draw: diamondDraw as DrawData,
+    raceDays: POW_RACE_DAYS,
+    roundSizes: [8, 4, 2, 1],
+    roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
+    seededCrewNumbers: [813, 818, 819, 820, 830, 831, 832, 840],
+    seededCrewNames: [
+      "C. Baxter, Rowing South Africa, South Africa",
+      "D.M.V. Gonçalves, Real Club Fluvial Portuense, Portugal",
+      "T. Gränitz, Berliner Ruderclub, Germany",
+      "K. Hultsch, Ruderverein Wiking Linz, Austria",
+      "M.Q. Oddershede, Bagsværd Roklub, Denmark",
+      "B.C.D. Parsonage, Clydesdale Amateur Rowing Club",
+      "J.R. Poulsen, Bagsværd Roklub, Denmark",
+      "O. Zeidler, Frankfurter Rudergesellschaft Germania 1869 e.V., Germany",
+    ],
+    noRacingNote:
+      "Diamond races Thu–Sun — times publish around 9pm BST the evening before.",
+  },
 };
 
 export const EVENT_LIST: EventConfig[] = [
@@ -308,6 +337,7 @@ export const EVENT_LIST: EventConfig[] = [
   EVENTS.lp,
   EVENTS.wyfold,
   EVENTS.goblets,
+  EVENTS.diamond,
 ];
 
 export function getEventConfig(id: string): EventConfig | null {

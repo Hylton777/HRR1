@@ -129,6 +129,7 @@ Live knockout bracket · {crewCount} crews · {event category}
 | Ladies | `Live knockout bracket · 10 crews · Intermediate men's eights` |
 | Wyfold | `Live knockout bracket · 32 crews · Club coxless fours` |
 | Goblets | `Live knockout bracket · 8 crews · Premier men's coxless pairs` |
+| Diamond | `Live knockout bracket · 16 crews · Premier men's single sculls` |
 
 Rules:
 
@@ -146,6 +147,8 @@ Rules:
 | **POW** | 16 | `[8, 4, 2, 1]` | Thu–Sun; intermediate **quads** |
 | **Ladies** | 10 | `[2, 4, 2, 1]` | Thu–Sun; **2 heats + 6 byes** |
 | **Wyfold** | 32 | `[16, 8, 4, 2, 1]` | Tue–Wed heats; knockouts Fri–Sun |
+| **Goblets** | 8 | `[4, 2, 1]` | Fri–Sun; QF onward (premier pairs) |
+| **Diamond** | 16 | `[8, 4, 2, 1]` | Thu–Sun; same tree as POW (premier sculls) |
 
 ### Standard full draw (PE, Wyfold)
 
