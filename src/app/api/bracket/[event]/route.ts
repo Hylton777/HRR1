@@ -3,6 +3,7 @@ import { getEventConfig, isEventId } from "@/config/events";
 import { buildBracket, collectUpcomingRaces } from "@/lib/bracket-engine";
 import { fetchEventResults, fetchEventTimetable } from "@/lib/hrr-api";
 import { validateRoundCounts } from "@/lib/bracket-layout";
+import { auditDisplayConsistency } from "@/lib/display-consistency";
 import { auditResultCompleteness } from "@/lib/result-audit";
 import type { BracketApiResponse } from "@/lib/types";
 
@@ -27,6 +28,7 @@ export async function GET(
     ]);
 
     const bracket = buildBracket(event, results, timetable);
+    const upcomingRaces = collectUpcomingRaces(bracket.rounds);
     const roundCounts = bracket.rounds.map((r) => r.length);
     const bracketWarnings = validateRoundCounts(
       bracket.rounds,
@@ -35,6 +37,12 @@ export async function GET(
     const resultAudit = auditResultCompleteness(
       bracket.rounds,
       results,
+      event,
+    );
+    const displayAudit = auditDisplayConsistency(
+      bracket.rounds,
+      results,
+      upcomingRaces,
       event,
     );
 
@@ -51,10 +59,11 @@ export async function GET(
       timetableDay: timetable.raceDay,
       timetableRaceCount: timetable.races.length,
       eventId: event.id,
-      upcomingRaces: collectUpcomingRaces(bracket.rounds),
+      upcomingRaces,
       roundCounts,
       bracketWarnings,
       resultAudit,
+      displayAudit,
     };
 
     return NextResponse.json(response, {

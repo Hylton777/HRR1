@@ -16,10 +16,11 @@ Manual and automated checks for verifying the live bracket site. This document r
 | Timetable scrape | `src/lib/hrr-api.ts` → `fetchEventTimetable()` | `https://www.hrr.co.uk/compete/race-timetable/` |
 | Bracket engine | `src/lib/bracket-engine.ts` → `buildBracket()` | Applies results, propagates feeders, sets `status` |
 | Crew matching | `src/lib/crew-match.ts` | `crewsMatch()`, `crewResultMatchesDraw()` |
+| Display consistency | `src/lib/display-consistency.ts` | Canonical crew resolution + cross-surface audit |
 | Seeding | `src/lib/crew-seeds.ts` → `isSeededCrew()` | Maps `seededCrewNumbers` → `crew.seeded` |
 | UI tree | `src/components/BracketTreeCore.tsx` → `MatchCard.tsx` | Renders rounds, connectors, match cards |
 | Client fetch | `src/components/Dashboard.tsx` | SWR on `/api/bracket/{eventId}`, 30s refresh |
-| API route | `src/app/api/bracket/[event]/route.ts` | `Cache-Control: no-store`; returns `resultAudit`, `bracketWarnings` |
+| API route | `src/app/api/bracket/[event]/route.ts` | `Cache-Control: no-store`; returns `resultAudit`, `displayAudit`, `bracketWarnings` |
 | Draw repair | `scripts/phase2-bye-draws.py`, `phase3-bye-draws.py`, `phase4-bye-draws.py` | Bye-format draw JSON regeneration |
 | Entries PDF | `scripts/generate-all-events.py`, `repair-draw-from-results.py` | `HRR-List-of-Entries-2026.pdf` on CloudFront |
 
@@ -28,6 +29,18 @@ Manual and automated checks for verifying the live bracket site. This document r
 **Bye-format events** (single `feeders` entry, one side pre-placed): `lp`, `bridge`, `town`, `queen-mother`, `visitors`, `princess-royal`, `queen-victoria` (see `BYE_FORMAT_IDS` in `scripts/generate-all-events.py`), plus manually repaired draws: `wargrave`, `prince-philip`, `island`, `prince-albert`, `fawley`, `diamond-jubilee`, `temple`.
 
 **Seeding display convention (important):** On the official Henley draw chart, seeded crews are printed in *italics*. **This app uses `font-bold` for seeded crews** (`isSeededCrew()` in `src/lib/crew-seeds.ts`, applied in `MatchCard.tsx`, `NextRacesPanel.tsx`, `RaceResultCard.tsx`). *Italic* in the UI means an **empty slot** (`TBD` or a feeder placeholder from `feederPlaceholderLabel()` in `src/lib/feeder-label.ts`), not seeding.
+
+**Display sources of truth (important):** Crew names can arrive from three places — the static **draw JSON**, live **HRR results**, and the scraped **timetable**. The bracket engine merges these when applying results. For anything the user reads, the **built bracket** is canonical once a race is `complete`:
+
+| UI surface | Component | Crew name source |
+|------------|-----------|------------------|
+| Knockout bracket | `MatchCard.tsx` | `BracketMatch.berks` / `bucks` / `winner` / `loser` from `buildBracket()` |
+| Next races | `NextRacesPanel.tsx` | `upcomingRaces[]` — same `BracketMatch` crews via `collectUpcomingRaces()` |
+| Recent results | `RaceResultCard.tsx` | `resolveResultDisplayCrews()` → bracket match when applied, else enriched draw |
+| Fastest crews | `FastestCrewsModal.tsx` | `buildFastestCrewsLeaderboard()` → `match.winner` from bracket |
+| Race detail modal | `RaceResultModal.tsx` | `raceResultFromMatch()` when opened from bracket; `resolveRaceResultDetail()` from recent results |
+
+Cross-surface consistency is audited by `auditDisplayConsistency()` in `src/lib/display-consistency.ts` and exposed on the API as `displayAudit`. A rose `DisplayConsistencyBanner` appears when user-visible surfaces disagree.
 
 ---
 
@@ -42,10 +55,13 @@ npx tsx scripts/verify-phase1-engine.ts
 # 2. Full 30-event audit: progression, feeders, name drift, timing
 npx tsx scripts/audit-all-events.ts
 
-# 3. Timetable vs results day ordering
+# 3. Cross-surface display consistency (bracket vs next races, results, leaderboard)
+npx tsx scripts/audit-display-consistency.ts
+
+# 4. Timetable vs results day ordering
 npx tsx scripts/audit-timing.ts
 
-# 4. Production build (types + lint)
+# 5. Production build (types + lint)
 npm run build
 ```
 
@@ -56,7 +72,7 @@ With the dev server running (`npm run dev`):
 python3 scripts/audit-event-results.py http://localhost:3000
 ```
 
-**Pass criteria:** `verify-phase1-engine.ts` prints `PASS`; `audit-all-events.ts` ends with `ISSUES: 0 errors, 0 warnings`; `npm run build` succeeds.
+**Pass criteria:** `verify-phase1-engine.ts` prints `PASS`; `audit-all-events.ts` ends with `ISSUES: 0 errors, 0 warnings`; `audit-display-consistency.ts` prints `PASS` (enrichment drift warnings are acceptable — see §4); `npm run build` succeeds.
 
 After draw JSON changes for bye-format events:
 
@@ -124,13 +140,36 @@ npx tsx scripts/test-deep-check.ts
 
 - [ ] **Italic means empty, not seeded** — Slots without a `Crew` object should show italic `TBD` or `Winner of …` placeholder (`MatchCard.tsx` line ~102: `text-[var(--muted)] italic`). Confirm no seeded crew name appears in italic.
 
-- [ ] **Seeding consistent across UI surfaces** — `NextRacesPanel.tsx`, `RaceResultCard.tsx`, `RaceResultModal.tsx`, and champion card in `BracketTreeCore.tsx` all use `isSeededCrew()` for bold styling. Spot-check the same crew in bracket, next races, and result modal.
+- [ ] **Seeding consistent across UI surfaces** — `NextRacesPanel.tsx`, `RaceResultCard.tsx`, `RaceResultModal.tsx`, `FastestCrewsModal.tsx`, and champion card in `BracketTreeCore.tsx` all use `isSeededCrew()` for bold styling. Spot-check the same crew in bracket, next races, recent results, and fastest-crews modal.
 
 - [ ] **Winner/loser styling does not fake seeding** — Winners get `font-medium` or `font-bold` (if seeded); losers get line-through. Seeding bold should only come from `isSeededCrew()`, not from win state alone.
 
 ---
 
-## 4. Data consistency
+## 4. Cross-surface display consistency
+
+The draw, HRR results, and timetable can all supply crew names. Once `buildBracket()` has applied a result, every UI surface must show the same crews for that race.
+
+- [ ] **Bracket is canonical for completed races** — `resolveResultDisplayCrews()` and `resolveRaceResultDetail()` in `src/lib/display-consistency.ts` look up the matching `BracketMatch` (by race number, then crew pair) and return `match.winner` / `match.loser` with draw `number` and `shortName`. Automated: `audit-display-consistency.ts` verifies the canonical recent-results path matches the bracket.
+
+- [ ] **Next races ↔ bracket** — `upcomingRaces` is built from `collectUpcomingRaces(bracket.rounds)`; each entry's `id`, `berks`, and `bucks` must match the corresponding scheduled `BracketMatch`. Automated: `auditDisplayConsistency()` category `next_races`.
+
+- [ ] **Recent results ↔ bracket** — `RaceResultCard.tsx` calls `resolveResultDisplayCrews()` so the list shows the same names as clicking the completed match on the bracket. Manual: pick a completed race (e.g. PE King's Coll. Sch. vs Deerfield) and compare bracket card, recent-results row, and race detail modal.
+
+- [ ] **Fastest crews ↔ bracket** — `buildFastestCrewsLeaderboard()` reads `match.winner` from completed matches in the active round; each leaderboard row must map to a bracket winner with the same crew `number`. Automated: `auditDisplayConsistency()` category `leaderboard`.
+
+- [ ] **API `displayAudit.isConsistent`** — `GET /api/bracket/{eventId}` → `displayAudit`. When `isConsistent === false`, rose `DisplayConsistencyBanner` lists mismatches. When `enrichmentDriftCount > 0` only, raw `enrichCrewFromEvent()` would have shown different names but the UI is still correct because the bracket path is used.
+
+- [ ] **Enrichment drift monitoring** — `displayAudit.enrichmentDrift` records cases where raw enrichment would disagree with the bracket (e.g. similar school names, squad letters, composite clubs). These are warnings, not user-visible bugs, as long as `isConsistent === true`. Investigate drift entries when improving `crew-match.ts`.
+
+- [ ] **Similar-name regression cases** — After crew-matching changes, manually verify:
+  - PE: King's Coll. Sch. (#273) ≠ King's Sch., Worcester (#295) ≠ King's Sch., Chester (#293)
+  - Events with multiple squads: `wargrave` Thames/Molesey/London A vs B, `temple` Nereus 'A'/'B', `fawley` Belen 'A'/'B'
+  - Composite clubs: `Leander Club` vs `Leander Club & Leeds`
+
+---
+
+## 5. Data consistency (draw & results)
 
 - [ ] **Crew `number` stable across rounds** — When a crew progresses, `enrichCrew()` / `CrewRegistry` (`src/lib/crew-seeds.ts`) should preserve `number` from the draw. Automated: `audit-all-events.ts` category `name_drift` when feeder winner `#` ≠ slot `#`.
 
@@ -150,7 +189,7 @@ npx tsx scripts/test-deep-check.ts
 
 ---
 
-## 5. Live update behavior
+## 6. Live update behavior
 
 - [ ] **API returns fresh data** — `src/app/api/bracket/[event]/route.ts` sets `export const dynamic = 'force-dynamic'` and `Cache-Control: no-store, max-age=0`. Manual: curl `/api/bracket/pe` twice after a new result; `lastUpdated` timestamp should change; `hrrGenerated` reflects HRR API `generated` field.
 
@@ -166,7 +205,7 @@ npx tsx scripts/test-deep-check.ts
 
 ---
 
-## 6. UI/UX and responsiveness
+## 7. UI/UX and responsiveness
 
 - [ ] **Desktop bracket layout** — `Bracket.tsx` → `BracketTreeCore` with `compact={false}`. Columns 220px wide; connectors via `BracketConnectors.tsx`. No overlapping match cards at 1280px+ width.
 
@@ -190,7 +229,7 @@ npx tsx scripts/test-deep-check.ts
 
 ---
 
-## 7. Edge cases
+## 8. Edge cases
 
 - [ ] **Incomplete round (mixed statuses)** — Some matches `complete`, others `scheduled` or `pending` in the same round. UI should show winners/losers only on complete cards; pending cards show crews or placeholders without verdict. Engine: `updateStatuses()` in `bracket-engine.ts`.
 
@@ -235,6 +274,7 @@ Priority events for bye/progression QA (covered by `verify-phase1-engine.ts`):
 |-------|--------|
 | `verify-phase1-engine.ts` | **PASS** (10/10 target events, all results applied) |
 | `audit-all-events.ts` | **PASS** — 0 errors, 0 warnings (30 events) |
+| `audit-display-consistency.ts` | **PASS** — 0 cross-surface mismatches (31 enrichment drift warnings) |
 | `audit-timing.ts` | **PASS** — 0 missing / 0 premature |
 | `test-deep-check.ts` | **PASS** — 232/232 results applied, all `roundSizes` match draw |
 | `npm run build` | **PASS** |

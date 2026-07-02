@@ -103,6 +103,7 @@ export interface BracketApiResponse {
   roundCounts?: number[];
   bracketWarnings?: string[];
   resultAudit?: ResultAudit;
+  displayAudit?: DisplayAudit;
 }
 
 export interface MissingResultMatch {
@@ -139,6 +140,30 @@ export interface ResultAudit {
     complete: number;
     missing: number;
   }[];
+  warnings: string[];
+}
+
+export type DisplaySurface =
+  | "recent_results"
+  | "next_races"
+  | "leaderboard"
+  | "enrichment_drift";
+
+export interface DisplayInconsistency {
+  area: DisplaySurface;
+  matchId?: string;
+  raceNumber?: string | null;
+  message: string;
+  bracketLabel?: string;
+  otherLabel?: string;
+}
+
+export interface DisplayAudit {
+  isConsistent: boolean;
+  inconsistencyCount: number;
+  inconsistencies: DisplayInconsistency[];
+  enrichmentDriftCount: number;
+  enrichmentDrift: DisplayInconsistency[];
   warnings: string[];
 }
 

@@ -3,6 +3,7 @@
 import useSWR from "swr";
 import Bracket from "@/components/Bracket";
 import ClientErrorBoundary from "@/components/ClientErrorBoundary";
+import DisplayConsistencyBanner from "@/components/DisplayConsistencyBanner";
 import { EventProvider } from "@/components/EventContext";
 import LiveIndicator from "@/components/LiveIndicator";
 import NextRacesPanel from "@/components/NextRacesPanel";
@@ -114,6 +115,7 @@ export default function Dashboard({ eventId }: DashboardProps) {
           </div>
 
           <ResultAuditBanner audit={data.resultAudit} />
+          <DisplayConsistencyBanner audit={data.displayAudit} />
 
           <p className="text-xs text-[var(--muted)] text-center pt-4 border-t border-[var(--card-border)]">
             Auto-refreshes every 30 seconds. Produced by Hylton.
