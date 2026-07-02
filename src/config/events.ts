@@ -438,7 +438,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     raceDays: WED_FRI_SAT_SUN_4ROUND_DAYS,
     roundSizes: [2, 4, 2, 1],
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
-    seededCrewNumbers: [512, 514, 516, 526, 527, 531],
+    seededCrewNumbers: [512, 514, 526, 531],
     seededCrewNames: [],
     noRacingNote: "Heats Wed; QF Fri; no Thursday; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "student-womens-quads",
