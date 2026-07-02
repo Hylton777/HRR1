@@ -38,7 +38,7 @@ export default function RecentResultsPanel({
           </p>
         ) : (
           visible.map((result) => (
-            <RaceResultCard key={result.id} result={result} />
+            <RaceResultCard key={result.id} result={result} rounds={rounds} />
           ))
         )}
       </div>
