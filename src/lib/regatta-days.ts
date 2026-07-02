@@ -52,6 +52,29 @@ export function getCurrentRaceDayIndex(raceDays: RegattaDay[]): number {
   return raceDays.length - 1;
 }
 
+export function resolveRegattaDayIso(
+  raceDay: string | null,
+  raceDays: RegattaDay[],
+): string | null {
+  return parseRaceDayIso(raceDay, raceDays);
+}
+
+/** Regatta day a bracket round is scheduled on (from the event schedule). */
+export function getScheduledRegattaDayForRound(
+  roundIndex: number,
+  raceDays: RegattaDay[],
+): RegattaDay | undefined {
+  return raceDays.find((d) => d.primaryRoundIndex === roundIndex);
+}
+
+export function isRoundOnRegattaDay(
+  roundIndex: number,
+  dayIso: string,
+  raceDays: RegattaDay[],
+): boolean {
+  return getScheduledRegattaDayForRound(roundIndex, raceDays)?.isoDate === dayIso;
+}
+
 function parseRaceDayIso(
   raceDay: string | null,
   raceDays: RegattaDay[],

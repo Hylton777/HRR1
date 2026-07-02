@@ -17,6 +17,7 @@ import BracketConnectors from "./BracketConnectors";
 import MatchCard from "./MatchCard";
 import { useEvent } from "./EventContext";
 import { isSeededCrew } from "@/lib/crew-seeds";
+import { feederPlaceholderLabel } from "@/lib/feeder-label";
 
 export interface BracketTreeCoreProps {
   bracket: BracketState;
@@ -70,6 +71,7 @@ export default function BracketTreeCore({
   const columnWidth = compact ? COMPACT_MATCH_WIDTH : 220;
   const offsets = computeMatchOffsets(bracket.rounds, matchHeight, gap);
   const allMatches = bracket.rounds.flat();
+  const matchById = new Map(allMatches.map((match) => [match.id, match]));
 
   return (
     <div ref={rootRef} className="relative min-w-max" data-bracket-root>
@@ -144,6 +146,8 @@ export default function BracketTreeCore({
                         matchId={match.id}
                         berks={match.berks}
                         bucks={match.bucks}
+                        berksPlaceholder={feederPlaceholderLabel(match, "berks", matchById)}
+                        bucksPlaceholder={feederPlaceholderLabel(match, "bucks", matchById)}
                         winner={match.winner}
                         loser={match.loser}
                         status={match.status}
@@ -189,6 +193,8 @@ export default function BracketTreeCore({
                         matchId={match.id}
                         berks={match.berks}
                         bucks={match.bucks}
+                        berksPlaceholder={feederPlaceholderLabel(match, "berks", matchById)}
+                        bucksPlaceholder={feederPlaceholderLabel(match, "bucks", matchById)}
                         winner={match.winner}
                         loser={match.loser}
                         status={match.status}

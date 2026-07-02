@@ -1,7 +1,7 @@
 {
   "event": "The Prince Philip Challenge Trophy",
   "year": 2026,
-  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "source": "Henley Royal Regatta 2026 Draw (Phase 2: bye-format quarter-finals)",
   "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
   "rounds": [
     [
@@ -123,40 +123,104 @@
         "id": "qf-0",
         "drawRace": 1,
         "feeders": [
-          "r1-0",
-          "r1-1"
+          "r1-0"
         ],
-        "berks": null,
+        "berks": {
+          "name": "St. Edward's School",
+          "shortName": "St. Edward's School",
+          "number": 328
+        },
         "bucks": null
       },
       {
         "id": "qf-1",
         "drawRace": 2,
         "feeders": [
-          "r1-2",
-          "r1-3"
+          "r1-1"
         ],
-        "berks": null,
+        "berks": {
+          "name": "Shiplake College",
+          "shortName": "Shiplake College",
+          "number": 324
+        },
         "bucks": null
       },
       {
         "id": "qf-2",
         "drawRace": 3,
         "feeders": [
-          "r1-4",
-          "r1-5"
+          "r1-2"
         ],
-        "berks": null,
+        "berks": {
+          "name": "The Lady Eleanor Holles School",
+          "shortName": "The Lady Eleanor Holles School",
+          "number": 334
+        },
         "bucks": null
       },
       {
         "id": "qf-3",
         "drawRace": 4,
         "feeders": [
-          "r1-6",
+          "r1-3"
+        ],
+        "berks": {
+          "name": "Chicago Rowing Foundation, U.S.A.",
+          "shortName": "Chicago Rowing Foundation, U.S.A.",
+          "number": 306
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-4",
+        "drawRace": 5,
+        "feeders": [
+          "r1-4"
+        ],
+        "berks": {
+          "name": "Headington School",
+          "shortName": "Headington School",
+          "number": 314
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-5",
+        "drawRace": 6,
+        "feeders": [
+          "r1-5"
+        ],
+        "berks": {
+          "name": "Latymer Upper School",
+          "shortName": "Latymer Upper School",
+          "number": 318
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-6",
+        "drawRace": 7,
+        "feeders": [
+          "r1-6"
+        ],
+        "berks": {
+          "name": "RowAmerica Rye, U.S.A.",
+          "shortName": "RowAmerica Rye, U.S.A.",
+          "number": 323
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-7",
+        "drawRace": 8,
+        "feeders": [
           "r1-7"
         ],
-        "berks": null,
+        "berks": {
+          "name": "Sir William Perkins's School",
+          "shortName": "Sir William Perkins's School",
+          "number": 327
+        },
         "bucks": null
       }
     ],
@@ -180,6 +244,48 @@
         ],
         "berks": null,
         "bucks": null
+      },
+      {
+        "id": "sf-2",
+        "drawRace": 3,
+        "feeders": [
+          "qf-4",
+          "qf-5"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-3",
+        "drawRace": 4,
+        "feeders": [
+          "qf-6",
+          "qf-7"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf-4",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-5",
+        "drawRace": 2,
+        "feeders": [
+          "sf-2",
+          "sf-3"
+        ],
+        "berks": null,
+        "bucks": null
       }
     ],
     [
@@ -187,8 +293,8 @@
         "id": "final-0",
         "drawRace": 1,
         "feeders": [
-          "sf-0",
-          "sf-1"
+          "sf-4",
+          "sf-5"
         ],
         "berks": null,
         "bucks": null

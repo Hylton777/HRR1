@@ -1,7 +1,7 @@
 {
   "event": "The Wargrave Challenge Cup",
   "year": 2026,
-  "source": "Henley Royal Regatta 2026 Draw (repaired from HRR results + entries)",
+  "source": "Henley Royal Regatta 2026 Draw (Phase 2: bye-aware last-16 pairings)",
   "sourceUrl": "https://www.hrr.co.uk/wp-json/hrr/v1/results",
   "rounds": [
     [
@@ -171,81 +171,105 @@
         "id": "r2-0",
         "drawRace": 1,
         "feeders": [
-          "r1-0",
-          "r1-1"
+          "r1-0"
         ],
-        "berks": null,
+        "berks": {
+          "name": "Sydney Rowing Club, Australia",
+          "shortName": "Sydney Rowing Club, Australia",
+          "number": 102
+        },
         "bucks": null
       },
       {
         "id": "r2-1",
         "drawRace": 2,
         "feeders": [
-          "r1-2",
-          "r1-3"
+          "r1-1"
         ],
-        "berks": null,
+        "berks": {
+          "name": "Molesey Boat Club 'A'",
+          "shortName": "Molesey Boat Club 'A'",
+          "number": 94
+        },
         "bucks": null
       },
       {
         "id": "r2-2",
         "drawRace": 3,
         "feeders": [
-          "r1-4",
-          "r1-5"
+          "r1-2"
         ],
-        "berks": null,
+        "berks": {
+          "name": "Tyne Amateur Rowing Club",
+          "shortName": "Tyne Amateur Rowing Club",
+          "number": 109
+        },
         "bucks": null
       },
       {
         "id": "r2-3",
         "drawRace": 4,
         "feeders": [
-          "r1-6",
-          "r1-7"
+          "r1-3"
         ],
-        "berks": null,
+        "berks": {
+          "name": "London Rowing Club 'A'",
+          "shortName": "London Rowing Club 'A'",
+          "number": 89
+        },
         "bucks": null
       },
       {
         "id": "r2-4",
         "drawRace": 5,
         "feeders": [
-          "r1-8",
-          "r1-9"
+          "r1-4"
         ],
         "berks": null,
-        "bucks": null
+        "bucks": {
+          "name": "Thames Rowing Club 'A'",
+          "shortName": "Thames Rowing Club 'A'",
+          "number": 103
+        }
       },
       {
         "id": "r2-5",
         "drawRace": 6,
         "feeders": [
-          "r1-10",
-          "r1-11"
+          "r1-5"
         ],
         "berks": null,
-        "bucks": null
+        "bucks": {
+          "name": "Leander Club",
+          "shortName": "Leander Club",
+          "number": 87
+        }
       },
       {
         "id": "r2-6",
         "drawRace": 7,
         "feeders": [
-          "r1-12",
-          "r1-13"
+          "r1-6"
         ],
         "berks": null,
-        "bucks": null
+        "bucks": {
+          "name": "Avon Rowing Club, New Zealand",
+          "shortName": "Avon Rowing Club, New Zealand",
+          "number": 76
+        }
       },
       {
         "id": "r2-7",
         "drawRace": 8,
         "feeders": [
-          "r1-14",
-          "r1-15"
+          "r1-7"
         ],
         "berks": null,
-        "bucks": null
+        "bucks": {
+          "name": "Mercantile Rowing Club, Australia",
+          "shortName": "Mercantile Rowing Club, Australia",
+          "number": 93
+        }
       }
     ],
     [

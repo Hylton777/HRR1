@@ -1,7 +1,7 @@
 {
   "event": "The Island Challenge Cup",
   "year": 2026,
-  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "source": "Henley Royal Regatta 2026 Draw (Phase 2: bye-format quarter-finals)",
   "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
   "rounds": [
     [
@@ -122,40 +122,112 @@
         "id": "qf-0",
         "drawRace": 1,
         "feeders": [
-          "r1-0",
-          "r1-1"
+          "r1-3"
         ],
-        "berks": null,
+        "berks": {
+          "name": "University of Washington 'A', U.S.A.",
+          "shortName": "University of Washington 'A', U.S.A.",
+          "number": 249
+        },
         "bucks": null
       },
       {
         "id": "qf-1",
         "drawRace": 2,
         "feeders": [
-          "r1-2",
-          "r1-3"
+          "r1-2"
         ],
-        "berks": null,
-        "bucks": null
+        "berks": {
+          "name": "Cambridge University 'A'",
+          "shortName": "Cambridge University 'A'",
+          "number": 211
+        },
+        "bucks": {
+          "name": "University of Miami, U.S.A.",
+          "shortName": "University of Miami, U.S.A.",
+          "number": 246
+        }
       },
       {
         "id": "qf-2",
         "drawRace": 3,
         "feeders": [
-          "r1-4",
-          "r1-5"
+          "r1-1"
         ],
-        "berks": null,
+        "berks": {
+          "name": "Durham University 'A'",
+          "shortName": "Durham University 'A'",
+          "number": 216
+        },
         "bucks": null
       },
       {
         "id": "qf-3",
         "drawRace": 4,
         "feeders": [
-          "r1-6",
+          "r1-0"
+        ],
+        "berks": {
+          "name": "Groninger Studenten Roeivereniging Aegir, Netherlands",
+          "shortName": "Groninger Studenten Roeivereniging Aegir, Netherlands",
+          "number": 221
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-4",
+        "drawRace": 5,
+        "feeders": [
+          "r1-4"
+        ],
+        "berks": {
+          "name": "Cambridge University 'B'",
+          "shortName": "Cambridge University 'B'",
+          "number": 212
+        },
+        "bucks": {
+          "name": "Yale University 'A', U.S.A.",
+          "shortName": "Yale University 'A', U.S.A.",
+          "number": 252
+        }
+      },
+      {
+        "id": "qf-5",
+        "drawRace": 6,
+        "feeders": [
+          "r1-5"
+        ],
+        "berks": {
+          "name": "Oxford Brookes University 'A'",
+          "shortName": "Oxford Brookes University 'A'",
+          "number": 228
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-6",
+        "drawRace": 7,
+        "feeders": [
+          "r1-6"
+        ],
+        "berks": {
+          "name": "Brown University 'A', U.S.A.",
+          "shortName": "Brown Univ., USA 'A'",
+          "number": 208
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-7",
+        "drawRace": 8,
+        "feeders": [
           "r1-7"
         ],
-        "berks": null,
+        "berks": {
+          "name": "Amsterdamsche Studenten Roeivereeniging Nereus, Netherlands",
+          "shortName": "A.S.R. Nereus, NED",
+          "number": 203
+        },
         "bucks": null
       }
     ],
@@ -179,6 +251,48 @@
         ],
         "berks": null,
         "bucks": null
+      },
+      {
+        "id": "sf-2",
+        "drawRace": 3,
+        "feeders": [
+          "qf-4",
+          "qf-5"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-3",
+        "drawRace": 4,
+        "feeders": [
+          "qf-6",
+          "qf-7"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf4-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf4-1",
+        "drawRace": 2,
+        "feeders": [
+          "sf-2",
+          "sf-3"
+        ],
+        "berks": null,
+        "bucks": null
       }
     ],
     [
@@ -186,8 +300,8 @@
         "id": "final-0",
         "drawRace": 1,
         "feeders": [
-          "sf-0",
-          "sf-1"
+          "sf4-0",
+          "sf4-1"
         ],
         "berks": null,
         "bucks": null
