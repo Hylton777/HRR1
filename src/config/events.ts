@@ -2,10 +2,11 @@ import peDraw from "@/data/pe-2026-draw.json";
 import powDraw from "@/data/pow-2026-draw.json";
 import lpDraw from "@/data/lp-2026-draw.json";
 import wyfoldDraw from "@/data/wyfold-2026-draw.json";
+import gobletsDraw from "@/data/goblets-2026-draw.json";
 import type { DrawData } from "@/lib/types";
 import type { RegattaDay } from "@/lib/regatta-days";
 
-export type EventId = "pe" | "pow" | "lp" | "wyfold";
+export type EventId = "pe" | "pow" | "lp" | "wyfold" | "goblets";
 
 export interface EventConfig {
   id: EventId;
@@ -91,6 +92,30 @@ const POW_RACE_DAYS: RegattaDay[] = [
     shortLabel: "Sun",
     isoDate: "2026-07-05",
     primaryRoundIndex: 3,
+  },
+];
+
+const GOBLETS_RACE_DAYS: RegattaDay[] = [
+  {
+    id: "fri",
+    label: "Friday 3 July",
+    shortLabel: "Fri",
+    isoDate: "2026-07-03",
+    primaryRoundIndex: 0,
+  },
+  {
+    id: "sat",
+    label: "Saturday 4 July",
+    shortLabel: "Sat",
+    isoDate: "2026-07-04",
+    primaryRoundIndex: 1,
+  },
+  {
+    id: "sun",
+    label: "Sunday 5 July",
+    shortLabel: "Sun",
+    isoDate: "2026-07-05",
+    primaryRoundIndex: 2,
   },
 ];
 
@@ -252,6 +277,31 @@ export const EVENTS: Record<EventId, EventConfig> = {
     noRacingNote:
       "Heats run Tue–Wed; knockout continues Fri–Sun — times publish around 9pm BST the evening before.",
   },
+  goblets: {
+    id: "goblets",
+    trophySlug: "the-silver-goblets-and-nickalls-challenge-cup",
+    timetableCodes: ["Goblets"],
+    year: 2026,
+    displayName: "Silver Goblets & Nickalls' Challenge Cup",
+    shortLabel: "Goblets",
+    headerSubtitle:
+      "Live knockout bracket · 8 pairs · Premier men's coxless pairs",
+    crewCount: 8,
+    draw: gobletsDraw as DrawData,
+    raceDays: GOBLETS_RACE_DAYS,
+    roundSizes: [4, 2, 1],
+    roundLabels: ["Quarter-Final", "Semi-Final", "Final"],
+    seededCrewNumbers: [749, 751, 753, 759, 761],
+    seededCrewNames: [
+      "K. Borković & B. Cesarec, H.V.K. Gusar Split, Croatia",
+      "R. Corrigan & N. Timoney, Portora Boat Club, Ireland",
+      "O.P.F. Donaghy & L.G.J. Nares, Taurus Boat Club",
+      "P.H.R. Martin & S. Achterfeld, Kettwiger Rudergesellschaft e.V. and Renn-Ruder Gemeinschaft Mülheim/Ruhr, Germany",
+      "J.N. Wincomb & T.W.K. Digby, Marlow Rowing Club and Leander Club",
+    ],
+    noRacingNote:
+      "Goblets races Fri–Sun — times publish around 9pm BST the evening before.",
+  },
 };
 
 export const EVENT_LIST: EventConfig[] = [
@@ -259,6 +309,7 @@ export const EVENT_LIST: EventConfig[] = [
   EVENTS.pow,
   EVENTS.lp,
   EVENTS.wyfold,
+  EVENTS.goblets,
 ];
 
 export function getEventConfig(id: string): EventConfig | null {
