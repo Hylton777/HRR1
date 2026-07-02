@@ -51,15 +51,16 @@
       {
         "id": "qf-1",
         "drawRace": 2,
-        "feeders": [
-          "r1-1"
-        ],
         "berks": {
           "name": "University of Birmingham 'A'",
           "shortName": "Univ. of Birmingham",
           "number": 531
         },
-        "bucks": null
+        "bucks": {
+          "name": "Delftsche Studenten Roeivereeniging Proteus-Eretes, Netherlands",
+          "shortName": "D.S.R. Proteus-Eretes, NED",
+          "number": 516
+        }
       },
       {
         "id": "qf-2",
@@ -78,16 +79,15 @@
       {
         "id": "qf-3",
         "drawRace": 4,
+        "feeders": [
+          "r1-1"
+        ],
         "berks": {
           "name": "Reading University 'A'",
           "shortName": "Reading Univ. 'A'",
           "number": 526
         },
-        "bucks": {
-          "name": "Delftsche Studenten Roeivereeniging Proteus-Eretes, Netherlands",
-          "shortName": "D.S.R. Proteus-Eretes, NED",
-          "number": 516
-        }
+        "bucks": null
       }
     ],
     [
