@@ -110,8 +110,61 @@ def build_rounds_from_r1(r1_matches: list[dict]) -> list[list[dict]]:
     return rounds
 
 
+def normalize_pairing_key(name: str) -> str:
+    return gae["normalize_name_key"](gae["normalize_apostrophes"](name))
+
+
+def pairing_matches_keys(berks: dict, bucks: dict, key_a: str, key_b: str) -> bool:
+    names = [normalize_pairing_key(berks["name"]), normalize_pairing_key(bucks["name"])]
+    return any(key_a in name for name in names) and any(key_b in name for name in names)
+
+
+def order_r1_pairings(
+    pairings: list[tuple[dict, dict]],
+    keys: list[tuple[str, str]],
+    event_label: str,
+) -> list[tuple[dict, dict]]:
+    ordered: list[tuple[dict, dict]] = []
+    remaining = list(pairings)
+    for key_a, key_b in keys:
+        for idx, (berks, bucks) in enumerate(remaining):
+            if pairing_matches_keys(berks, bucks, key_a, key_b):
+                ordered.append((berks, bucks))
+                remaining.pop(idx)
+                break
+        else:
+            raise ValueError(f"{event_label} R1 pairing not found for {key_a!r} vs {key_b!r}")
+    if remaining:
+        raise ValueError(f"Unmatched {event_label} R1 pairings remain: {len(remaining)}")
+    return ordered
+
+
+FAWLEY_OFFICIAL_R1_KEYS: list[tuple[str, str]] = [
+    ("george watson", "los gatos"),
+    ("paul", "lea"),
+    ("tauranga", "belen"),
+    ("wallingford", "tiffin"),
+    ("aramoho", "hereford"),
+    ("ridley", "norwich"),
+    ("kingston", "cambridge"),
+    ("claires", "los gatos"),
+]
+
+
+def apply_fawley_squad_short_names(berks: dict, bucks: dict) -> None:
+    for slot in (berks, bucks):
+        name = slot.get("name", "")
+        if "Los Gatos" in name:
+            if "'B'" in name or slot.get("number") == 567:
+                slot["shortName"] = "Los Gatos R.C. 'B'"
+            else:
+                slot["shortName"] = "Los Gatos R.C. 'A'"
+        if "Belen Jesuit" in name and "'B'" in name:
+            slot["shortName"] = "Belen Jesuit Prep. Sch. 'B'"
+
+
 def repair_fawley() -> None:
-    """Tuesday R1 from repair script + Thursday last-16 bye pairings."""
+    """Tuesday R1 in draw-sheet order + Thursday last-16 bye pairings."""
     import subprocess
 
     subprocess.run(
@@ -121,22 +174,52 @@ def repair_fawley() -> None:
     entries = load_entries("THE FAWLEY CHALLENGE CUP")
     draw = json.loads((DATA / "fawley-2026-draw.json").read_text())
 
+    pairings: list[tuple[dict, dict]] = []
+    for match in draw["rounds"][0]:
+        if match.get("berks") and match.get("bucks"):
+            berks, bucks = match["berks"], match["bucks"]
+            apply_fawley_squad_short_names(berks, bucks)
+            pairings.append((berks, bucks))
+
+    ordered = order_r1_pairings(pairings, FAWLEY_OFFICIAL_R1_KEYS, "Fawley")
+
+    r1: list[dict] = []
+    for idx, (berks, bucks) in enumerate(ordered):
+        r1.append(
+            {
+                "id": f"r1-{idx}",
+                "drawRace": idx + 1,
+                "berks": berks,
+                "bucks": bucks,
+            }
+        )
+    for idx in range(len(ordered), 16):
+        r1.append(
+            {
+                "id": f"r1-{idx}",
+                "drawRace": idx + 1,
+                "berks": None,
+                "bucks": None,
+            }
+        )
+
     r2 = [
-        {"id": "r2-0", "drawRace": 1, "feeders": ["r1-1"], "berks": None, "bucks": crew(586, entries, "Sir William Borlase's G.S.")},
-        {"id": "r2-1", "drawRace": 2, "feeders": ["r1-0"], "berks": None, "bucks": crew(597, entries, "The Windsor Boys' Sch.")},
+        {"id": "r2-0", "drawRace": 1, "feeders": ["r1-0"], "berks": None, "bucks": crew(586, entries, "Sir William Borlase's G.S.")},
+        {"id": "r2-1", "drawRace": 2, "feeders": ["r1-1"], "berks": None, "bucks": crew(597, entries, "The Windsor Boys' Sch.")},
         {"id": "r2-2", "drawRace": 3, "feeders": ["r1-2"], "berks": None, "bucks": crew(541, entries, "Belen Jesuit Prep. Sch. 'A'")},
         {"id": "r2-3", "drawRace": 4, "feeders": ["r1-3"], "berks": None, "bucks": crew(565, entries, "Leander Club")},
         {"id": "r2-4", "drawRace": 5, "feeders": ["r1-4"], "berks": crew(553, entries, "Hartpury Coll. 'A'"), "bucks": None},
         {"id": "r2-5", "drawRace": 6, "feeders": ["r1-5"], "berks": None, "bucks": crew(570, entries, "Marlow R.C. 'A'")},
-        {"id": "r2-6", "drawRace": 7, "feeders": ["r1-6"], "berks": None, "bucks": crew(556, entries, "Hinksey Sculling Sch.")},
-        {"id": "r2-7", "drawRace": 8, "feeders": ["r1-7"], "berks": None, "bucks": crew(598, entries, "Tideway Scullers' Sch. 'A'")},
+        {"id": "r2-6", "drawRace": 7, "feeders": ["r1-6"], "berks": None, "bucks": crew(598, entries, "Tideway Scullers' Sch. 'A'")},
+        {"id": "r2-7", "drawRace": 8, "feeders": ["r1-7"], "berks": None, "bucks": crew(556, entries, "Hinksey Sculling Sch.")},
     ]
 
     qf = draw["rounds"][2]
     sf = draw["rounds"][3]
     final = draw["rounds"][4]
-    draw["rounds"] = [draw["rounds"][0], r2, qf, sf, final]
-    draw["source"] = "Henley Royal Regatta 2026 Draw (Phase 3: R1 + bye-aware R2)"
+    draw["rounds"] = [r1, r2, qf, sf, final]
+    draw["source"] = "Henley Royal Regatta 2026 Draw (official order + bye-aware R2)"
+    draw["sourceUrl"] = "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf"
     write_draw("fawley", draw)
 
 
@@ -198,29 +281,8 @@ TEMPLE_OFFICIAL_R1_KEYS: list[tuple[str, str]] = [
 ]
 
 
-def normalize_pairing_key(name: str) -> str:
-    return gae["normalize_name_key"](gae["normalize_apostrophes"](name))
-
-
-def pairing_matches_keys(berks: dict, bucks: dict, key_a: str, key_b: str) -> bool:
-    names = [normalize_pairing_key(berks["name"]), normalize_pairing_key(bucks["name"])]
-    return any(key_a in name for name in names) and any(key_b in name for name in names)
-
-
 def order_temple_r1_pairings(pairings: list[tuple[dict, dict]]) -> list[tuple[dict, dict]]:
-    ordered: list[tuple[dict, dict]] = []
-    remaining = list(pairings)
-    for key_a, key_b in TEMPLE_OFFICIAL_R1_KEYS:
-        for idx, (berks, bucks) in enumerate(remaining):
-            if pairing_matches_keys(berks, bucks, key_a, key_b):
-                ordered.append((berks, bucks))
-                remaining.pop(idx)
-                break
-        else:
-            raise ValueError(f"Temple R1 pairing not found for {key_a!r} vs {key_b!r}")
-    if remaining:
-        raise ValueError(f"Unmatched Temple R1 pairings remain: {len(remaining)}")
-    return ordered
+    return order_r1_pairings(pairings, TEMPLE_OFFICIAL_R1_KEYS, "Temple")
 
 
 def apply_nereus_short_names(slot: dict) -> None:

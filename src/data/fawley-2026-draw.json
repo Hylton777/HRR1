@@ -1,13 +1,27 @@
 {
   "event": "The Fawley Challenge Cup",
   "year": 2026,
-  "source": "Henley Royal Regatta 2026 Draw (Phase 3: R1 + bye-aware R2)",
-  "sourceUrl": "https://www.hrr.co.uk/wp-json/hrr/v1/results",
+  "source": "Henley Royal Regatta 2026 Draw (official order + bye-aware R2)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
   "rounds": [
     [
       {
         "id": "r1-0",
         "drawRace": 1,
+        "berks": {
+          "name": "George Watson’s College",
+          "shortName": "George Watson's Coll.",
+          "number": 552
+        },
+        "bucks": {
+          "name": "Los Gatos Rowing Club ‘A’, U.S.A.",
+          "shortName": "Los Gatos R.C. 'A'",
+          "number": 566
+        }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
         "berks": {
           "name": "St. Paul’s School ‘A’",
           "shortName": "St. Paul's Sch.",
@@ -17,20 +31,6 @@
           "name": "Lea Rowing Club ‘A’",
           "shortName": "Lea R.C.",
           "number": 563
-        }
-      },
-      {
-        "id": "r1-1",
-        "drawRace": 2,
-        "berks": {
-          "name": "George Watson’s College",
-          "shortName": "George Watson's Coll.",
-          "number": 552
-        },
-        "bucks": {
-          "name": "Los Gatos Rowing Club ‘A’, U.S.A.",
-          "shortName": "Los Gatos R.C.",
-          "number": 566
         }
       },
       {
@@ -108,7 +108,7 @@
         "drawRace": 8,
         "berks": {
           "name": "Los Gatos Rowing Club ‘B’, U.S.A.",
-          "shortName": "Los Gatos R.C.",
+          "shortName": "Los Gatos R.C. 'B'",
           "number": 567
         },
         "bucks": {
@@ -171,7 +171,7 @@
         "id": "r2-0",
         "drawRace": 1,
         "feeders": [
-          "r1-1"
+          "r1-0"
         ],
         "berks": null,
         "bucks": {
@@ -184,7 +184,7 @@
         "id": "r2-1",
         "drawRace": 2,
         "feeders": [
-          "r1-0"
+          "r1-1"
         ],
         "berks": null,
         "bucks": {
@@ -253,9 +253,9 @@
         ],
         "berks": null,
         "bucks": {
-          "name": "Hinksey Sculling School",
-          "shortName": "Hinksey Sculling Sch.",
-          "number": 556
+          "name": "Tideway Scullers' School 'A'",
+          "shortName": "Tideway Scullers' Sch. 'A'",
+          "number": 598
         }
       },
       {
@@ -266,9 +266,9 @@
         ],
         "berks": null,
         "bucks": {
-          "name": "Tideway Scullers' School 'A'",
-          "shortName": "Tideway Scullers' Sch. 'A'",
-          "number": 598
+          "name": "Hinksey Sculling School",
+          "shortName": "Hinksey Sculling Sch.",
+          "number": 556
         }
       }
     ],
