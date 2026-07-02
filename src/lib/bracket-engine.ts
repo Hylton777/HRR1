@@ -1,11 +1,19 @@
 import type { EventConfig } from "@/config/events";
+import { crewResultMatchesDraw } from "./crew-match";
 import {
   crewsMatch,
   parseTimetableCrew,
   parseTimetableCrewNumber,
+  resultMatchesDrawPair,
   resultMatchesPair,
 } from "./hrr-api";
-import { enrichCrew, withSeededFlag } from "./crew-seeds";
+import {
+  enrichCrew,
+  getRegistryFromDraw,
+  resolveResultForMatch,
+  withSeededFlag,
+  type CrewRegistry,
+} from "./crew-seeds";
 import type { RegattaDay } from "./regatta-days";
 import {
   getScheduledRegattaDayForRound,
@@ -31,42 +39,39 @@ function getCrewName(crew: Crew | null | undefined): string | null {
   return crew?.name ?? null;
 }
 
-function buildCrewRegistry(
-  draw: DrawData,
-  event: EventConfig,
-): Map<string, Crew> {
-  const registry = new Map<string, Crew>();
+function buildCrewRegistry(draw: DrawData, event: EventConfig): CrewRegistry {
+  return getRegistryFromDraw(draw, event);
+}
 
-  const register = (crew: Crew | null) => {
-    if (!crew?.name) return;
-    const enriched = withSeededFlag(crew, event);
-    registry.set(enriched.name.toLowerCase(), enriched);
-    if (enriched.shortName) {
-      registry.set(enriched.shortName.toLowerCase(), enriched);
-    }
+function resolveCrew(raw: string, registry: CrewRegistry): Crew {
+  const parsed = parseTimetableCrew(raw);
+  const number = parseTimetableCrewNumber(raw);
+
+  if (number != null) {
+    const byNumber = registry.byNumber.get(number);
+    if (byNumber) return byNumber;
+  }
+
+  const pseudo: Crew = {
+    name: parsed,
+    shortName: parsed,
+    number: number ?? undefined,
+    seeded: false,
   };
 
-  for (const round of draw.rounds) {
-    for (const match of round) {
-      register(match.berks);
-      register(match.bucks);
+  for (const entry of registry.entries) {
+    if (crewResultMatchesDraw(entry, pseudo)) {
+      return entry;
     }
   }
 
-  return registry;
-}
-
-function resolveCrew(raw: string, registry: Map<string, Crew>): Crew {
-  const parsed = parseTimetableCrew(raw);
-  const lower = parsed.toLowerCase();
-
-  for (const [key, crew] of registry) {
-    if (crewsMatch(key, lower) || crewsMatch(crew.name, parsed)) {
+  for (const [key, crew] of registry.byKey) {
+    if (crewsMatch(key, parsed) || crewsMatch(crew.name, parsed)) {
       return crew;
     }
   }
 
-  return { name: parsed, shortName: parsed, seeded: false };
+  return pseudo;
 }
 
 function createEmptyMatch(
@@ -106,13 +111,23 @@ function applyResultToMatch(
   match: BracketMatch,
   result: HrrResult,
   event: EventConfig,
-  registry: Map<string, Crew>,
+  registry: CrewRegistry,
 ): BracketMatch {
+  const resolved = resolveResultForMatch(match, result, event);
+  const winner =
+    resolved?.winner ??
+    enrichCrew(result.winner, event, registry) ??
+    result.winner;
+  const loser =
+    resolved?.loser ??
+    enrichCrew(result.loser, event, registry) ??
+    result.loser;
+
   return {
     ...match,
     status: "complete",
-    winner: enrichCrew(result.winner, event, registry) ?? result.winner,
-    loser: enrichCrew(result.loser, event, registry) ?? result.loser,
+    winner,
+    loser,
     verdict: result.verdict,
     raceNumber: result.number,
     raceTime: result.raceTime,
@@ -145,9 +160,15 @@ function crewMatchesSlot(
   ) {
     return true;
   }
-  if (crewsMatch(crew.name, timetableName)) return true;
-  if (crew.shortName && crewsMatch(crew.shortName, timetableName)) return true;
-  return false;
+
+  const parsed = parseTimetableCrew(timetableName);
+  const pseudo: Crew = {
+    name: parsed,
+    shortName: parsed,
+    number: timetableNumber ?? undefined,
+    seeded: false,
+  };
+  return crewResultMatchesDraw(crew, pseudo);
 }
 
 function matchHasBothCrews(
@@ -168,7 +189,15 @@ function matchHasBothCrews(
   );
 }
 
-function matchHasResultCrews(match: BracketMatch, result: HrrResult): boolean {
+function matchHasResultCrews(
+  match: BracketMatch,
+  result: HrrResult,
+  event: EventConfig,
+): boolean {
+  if (resolveResultForMatch(match, result, event)) {
+    return true;
+  }
+
   const winnerNames = [result.winner.name, result.winner.shortName].filter(
     Boolean,
   ) as string[];
@@ -224,7 +253,7 @@ function getFeederWinner(
 function propagateFeederWinners(
   rounds: BracketMatch[][],
   event: EventConfig,
-  registry: Map<string, Crew>,
+  registry: CrewRegistry,
   matchById: Map<string, BracketMatch>,
 ): boolean {
   let changed = false;
@@ -353,7 +382,7 @@ function tryApplyResult(
   rounds: BracketMatch[][],
   result: HrrResult,
   event: EventConfig,
-  registry: Map<string, Crew>,
+  registry: CrewRegistry,
   matchById: Map<string, BracketMatch>,
 ): boolean {
   for (let ri = 0; ri < rounds.length; ri++) {
@@ -361,14 +390,19 @@ function tryApplyResult(
       const match = rounds[ri][mi];
       if (match.status === "complete") continue;
 
-      if (matchHasResultCrews(match, result)) {
+      if (matchHasResultCrews(match, result, event)) {
         rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
         return true;
       }
 
-      const berks = getCrewName(match.berks);
-      const bucks = getCrewName(match.bucks);
-      if (berks && bucks && resultMatchesPair(result, berks, bucks)) {
+      const berks = match.berks;
+      const bucks = match.bucks;
+      if (
+        berks &&
+        bucks &&
+        (resultMatchesDrawPair(result, berks, bucks) ||
+          resultMatchesPair(result, berks.name, bucks.name))
+      ) {
         rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
         return true;
       }
@@ -403,13 +437,14 @@ function tryApplyResult(
         match.berks &&
         match.bucks
       ) {
-        const berksName = getCrewName(match.berks);
-        const bucksName = getCrewName(match.bucks);
         if (
-          berksName &&
-          bucksName &&
-          (matchHasResultCrews(match, result) ||
-            resultMatchesPair(result, berksName, bucksName))
+          matchHasResultCrews(match, result, event) ||
+          resultMatchesDrawPair(result, match.berks, match.bucks) ||
+          resultMatchesPair(
+            result,
+            match.berks.name,
+            match.bucks.name,
+          )
         ) {
           rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
           return true;
@@ -424,7 +459,7 @@ function tryApplyResultByRaceNumber(
   rounds: BracketMatch[][],
   result: HrrResult,
   event: EventConfig,
-  registry: Map<string, Crew>,
+  registry: CrewRegistry,
 ): boolean {
   if (!result.number) return false;
 
@@ -437,13 +472,10 @@ function tryApplyResultByRaceNumber(
       if (!resultMatchesByRaceNumber(match, result)) continue;
       if (!match.berks || !match.bucks) continue;
 
-      const berksName = getCrewName(match.berks);
-      const bucksName = getCrewName(match.bucks);
       if (
-        berksName &&
-        bucksName &&
-        (matchHasResultCrews(match, result) ||
-            resultMatchesPair(result, berksName, bucksName))
+        matchHasResultCrews(match, result, event) ||
+        resultMatchesDrawPair(result, match.berks, match.bucks) ||
+        resultMatchesPair(result, match.berks.name, match.bucks.name)
       ) {
         candidates.push({ ri, mi, match });
       }
@@ -505,7 +537,7 @@ function stripUnpublishedScheduleTimes(
 function mergeTimetable(
   rounds: BracketMatch[][],
   timetable: TimetableData,
-  registry: Map<string, Crew>,
+  registry: CrewRegistry,
   raceDays: RegattaDay[],
 ): void {
   const { races, raceDay } = timetable;

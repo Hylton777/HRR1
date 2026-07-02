@@ -1,3 +1,5 @@
+import type { Crew } from "./types";
+
 const STOP_TOKENS = new Set([
   "the",
   "and",
@@ -31,8 +33,31 @@ const STOP_TOKENS = new Set([
 
 const SQUAD_SUFFIX_RE = /^['']?([a-d])['']?$/i;
 
+export interface CrewMatchOptions {
+  numberA?: number | null;
+  numberB?: number | null;
+}
+
+/** Decode HTML entities from HRR API / timetable strings before matching. */
+export function decodeHtmlEntities(raw: string): string {
+  let s = raw;
+  s = s.replace(/&#x([0-9a-f]+);/gi, (_, hex: string) =>
+    String.fromCharCode(parseInt(hex, 16)),
+  );
+  s = s.replace(/&#(\d+);/g, (_, dec: string) =>
+    String.fromCharCode(parseInt(dec, 10)),
+  );
+  s = s.replace(/&quot;/gi, '"');
+  s = s.replace(/&apos;/gi, "'");
+  s = s.replace(/&#39;/g, "'");
+  s = s.replace(/&lt;/gi, "<");
+  s = s.replace(/&gt;/gi, ">");
+  s = s.replace(/&amp;/gi, "&");
+  return s;
+}
+
 export function normalizeCrewName(name: string): string {
-  let s = name
+  let s = decodeHtmlEntities(name)
     .toLowerCase()
     .replace(/['']/g, "'")
     .replace(/\s*\.\s*/g, ".")
@@ -43,7 +68,7 @@ export function normalizeCrewName(name: string): string {
     .replace(/\binst\b/g, "institute")
     .replace(/\btech\b/g, "technology")
     .replace(/\bk\.?s\.?r\.?v\.?\b/gi, "koninklijke studenten roeivereeniging")
-    .replace(/\ba\.?l\.?s\.?r\.?v\.?\b/gi, "algemene leidse studenten roeivereniging")
+    .replace(/\ba\.?l\.?s\.?r\.?v\.?\b/gi, "algemene leidse studenten roeivereeniging")
     .replace(/\bd\.?s\.?r\.?v\.?\b/gi, "delftsche studenten roeivereeniging")
     .replace(/\bg\.?s\.?r\.?\b/gi, "groninger studenten roeivereniging")
     .replace(/\ba\.?u\.?s\.?r\.?\b/gi, "amsterdamsche universiteits studenten roeivereniging")
@@ -157,6 +182,34 @@ function distinctiveTokens(name: string): string[] {
     .filter((token) => token.length >= 4 && !STOP_TOKENS.has(token));
 }
 
+const GENERIC_CLUB_TOKENS = new Set([
+  "city",
+  "london",
+  "college",
+  "university",
+  "imperial",
+  "royal",
+  "greater",
+  "northern",
+  "southern",
+  "eastern",
+  "western",
+]);
+
+/** Reject club matches that only overlap on vague tokens (e.g. York City vs City of Bristol). */
+function onlySharesGenericTokens(a: string, b: string): boolean {
+  const na = normalizeCrewName(a);
+  const nb = normalizeCrewName(b);
+  if (na === nb) return false;
+  if (safePrefixIncludes(na, nb) || safePrefixIncludes(nb, na)) return false;
+
+  const tokensA = distinctiveTokens(a);
+  const tokensB = distinctiveTokens(b);
+  const shared = tokensA.filter((token) => tokensB.includes(token));
+  if (shared.length === 0) return false;
+  return shared.every((token) => GENERIC_CLUB_TOKENS.has(token));
+}
+
 function sharesDistinctiveToken(a: string, b: string): boolean {
   if (isDistinctCrewVariant(normalizeCrewName(a), normalizeCrewName(b))) {
     return false;
@@ -168,18 +221,66 @@ function sharesDistinctiveToken(a: string, b: string): boolean {
 
   for (const token of tokensA) {
     if (tokensB.includes(token)) return true;
-    if (token.length >= 6) {
-      for (const other of tokensB) {
-        if (other.length >= 6 && (other.includes(token) || token.includes(other))) {
-          return true;
-        }
-      }
-    }
   }
   return false;
 }
 
-export function crewsMatch(a: string, b: string): boolean {
+function isScullerOrPairName(name: string): boolean {
+  const decoded = decodeHtmlEntities(name);
+  if (/\s&\s|\s+and\s+/i.test(decoded)) return true;
+  if (/[A-Z]\.[A-Z]?\.?\s/.test(decoded)) return true;
+  if (/\([A-Z][a-z]/.test(decoded)) return true;
+  return false;
+}
+
+/** Surnames / pair keys for sculling events where the API uses athlete names. */
+export function extractScullerKeys(name: string): string[] {
+  if (!isScullerOrPairName(name)) return [];
+
+  const decoded = decodeHtmlEntities(name);
+  const beforeClub = decoded.split("(")[0]?.split(",")[0]?.trim() ?? decoded;
+  const keys = new Set<string>();
+
+  const pairParts = beforeClub.split(/\s*(?:&| and )\s*/i);
+  for (const part of pairParts) {
+    const tokens = part
+      .replace(/['']/g, "")
+      .replace(/\./g, " ")
+      .split(/\s+/)
+      .map((t) => t.trim().toLowerCase())
+      .filter((t) => t.length >= 3 && !STOP_TOKENS.has(t));
+
+    if (tokens.length === 0) continue;
+
+    const last = tokens[tokens.length - 1]!;
+    keys.add(last);
+    if (tokens.length >= 2) {
+      keys.add(`${tokens[tokens.length - 2]}-${last}`);
+    }
+  }
+
+  return [...keys];
+}
+
+function nameVariants(crew: Pick<Crew, "name" | "shortName">): string[] {
+  const names = [crew.name];
+  if (crew.shortName && crew.shortName !== crew.name) {
+    names.push(crew.shortName);
+  }
+  return names.map(decodeHtmlEntities);
+}
+
+export function crewsMatch(
+  a: string,
+  b: string,
+  options?: CrewMatchOptions,
+): boolean {
+  const numberA = options?.numberA;
+  const numberB = options?.numberB;
+  if (numberA != null && numberB != null) {
+    return numberA === numberB;
+  }
+
   const na = normalizeCrewName(a);
   const nb = normalizeCrewName(b);
   if (!na || !nb) return false;
@@ -218,4 +319,42 @@ export function crewsMatch(a: string, b: string): boolean {
   }
 
   return sharesDistinctiveToken(a, b);
+}
+
+/** Match an HRR result crew to a specific draw slot (berks/bucks). */
+export function crewResultMatchesDraw(
+  drawCrew: Crew,
+  resultCrew: Crew,
+): boolean {
+  if (drawCrew.number != null && resultCrew.number != null) {
+    return drawCrew.number === resultCrew.number;
+  }
+
+  for (const drawName of nameVariants(drawCrew)) {
+    for (const resultName of nameVariants(resultCrew)) {
+      if (onlySharesGenericTokens(drawName, resultName)) continue;
+      if (
+        crewsMatch(drawName, resultName, {
+          numberA: drawCrew.number,
+          numberB: resultCrew.number,
+        })
+      ) {
+        return true;
+      }
+    }
+  }
+
+  const drawKeys = extractScullerKeys(drawCrew.name);
+  const resultKeys = extractScullerKeys(resultCrew.name);
+  if (drawKeys.length > 0 && resultKeys.length > 0) {
+    for (const drawKey of drawKeys) {
+      for (const resultKey of resultKeys) {
+        if (drawKey === resultKey) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
 }

@@ -1,7 +1,8 @@
 import * as cheerio from "cheerio";
 import type { EventConfig } from "@/config/events";
-import { crewsMatch } from "./crew-match";
+import { crewResultMatchesDraw, crewsMatch } from "./crew-match";
 import type {
+  Crew,
   HrrResult,
   HrrResultsResponse,
   TimetableData,
@@ -162,4 +163,17 @@ export function resultMatchesPair(
     }
   }
   return false;
+}
+
+export function resultMatchesDrawPair(
+  result: HrrResult,
+  berks: Crew,
+  bucks: Crew,
+): boolean {
+  return (
+    (crewResultMatchesDraw(berks, result.winner) &&
+      crewResultMatchesDraw(bucks, result.loser)) ||
+    (crewResultMatchesDraw(bucks, result.winner) &&
+      crewResultMatchesDraw(berks, result.loser))
+  );
 }
