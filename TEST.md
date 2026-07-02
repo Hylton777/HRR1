@@ -58,10 +58,13 @@ npx tsx scripts/audit-all-events.ts
 # 3. Cross-surface display consistency (bracket vs next races, results, leaderboard)
 npx tsx scripts/audit-display-consistency.ts
 
-# 4. Timetable vs results day ordering
+# 4. Ten-crew bye draw feeder wiring (Ladies/Bridge/Q Victoria pattern)
+npx tsx scripts/validate-bye-draws.ts
+
+# 5. Timetable vs results day ordering
 npx tsx scripts/audit-timing.ts
 
-# 5. Production build (types + lint)
+# 6. Production build (types + lint)
 npm run build
 ```
 
@@ -72,7 +75,7 @@ With the dev server running (`npm run dev`):
 python3 scripts/audit-event-results.py http://localhost:3000
 ```
 
-**Pass criteria:** `verify-phase1-engine.ts` prints `PASS`; `audit-all-events.ts` ends with `ISSUES: 0 errors, 0 warnings`; `audit-display-consistency.ts` prints `PASS` (enrichment drift warnings are acceptable — see §4); `npm run build` succeeds.
+**Pass criteria:** `verify-phase1-engine.ts` prints `PASS`; `audit-all-events.ts` ends with `ISSUES: 0 errors, 0 warnings`; `audit-display-consistency.ts` prints `PASS` (enrichment drift warnings are acceptable — see §4); `validate-bye-draws.ts` prints `PASS`; `npm run build` succeeds.
 
 After draw JSON changes for bye-format events:
 
@@ -99,6 +102,8 @@ npx tsx scripts/test-deep-check.ts
 - [ ] **Losers do not progress** — A crew in `feeder.loser` must not appear in downstream `berks`/`bucks` unless it is the same crew number under a false-positive name match. Automated: `audit-all-events.ts` message `only winner should progress`. Manual: pick a completed R1 heat and confirm the defeated crew is absent from the linked QF/R2 slot.
 
 - [ ] **Bye crews advance without a fabricated result** — For single-feeder matches (`feeders.length === 1`, one of `berks`/`bucks` null in draw JSON), the pre-placed bye crew should appear on the draw immediately; the feeder winner fills the empty side via `propagateFeederWinners()` — no `status: 'complete'` until an actual HRR result exists. Manual: check `visitors` QF (`src/data/visitors-2026-draw.json` `qf-0`…`qf-3`) or `lp` QF before and after R1 completes. Empty side should show `Winner of {roundLabel} {drawRace}` (from `feederPlaceholderLabel()`), not a fake score.
+
+- [ ] **Ten-crew bye feeder wiring** — Events with `roundSizes: [2, 4, 2, 1]` (`lp`, `bridge`, `queen-victoria`): first heat (`r1-0`) feeds **qf-0** (Q1), second heat (`r1-1`) feeds **qf-3** (Q4). `qf-1` and `qf-2` are straight bye races with no feeders. Automated: `npx tsx scripts/validate-bye-draws.ts`. Common mistake: both heat winners feeding the top two quarter-finals (fixed for `bridge` 2026, `queen-victoria` 2026).
 
 - [ ] **Dual-feeder matches wait for both parents** — Matches with `feeders: ['r1-0', 'r1-1']` should not show `complete` until both feeders have `winner` set and a result matches the pair. Engine: `tryApplyResult()` in `bracket-engine.ts`.
 
