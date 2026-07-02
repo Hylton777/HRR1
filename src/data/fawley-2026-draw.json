@@ -1,7 +1,7 @@
 {
   "event": "The Fawley Challenge Cup",
   "year": 2026,
-  "source": "Henley Royal Regatta 2026 Draw (repaired from HRR results + entries)",
+  "source": "Henley Royal Regatta 2026 Draw (Phase 3: R1 + bye-aware R2)",
   "sourceUrl": "https://www.hrr.co.uk/wp-json/hrr/v1/results",
   "rounds": [
     [
@@ -171,68 +171,85 @@
         "id": "r2-0",
         "drawRace": 1,
         "feeders": [
-          "r1-0",
           "r1-1"
         ],
         "berks": null,
-        "bucks": null
+        "bucks": {
+          "name": "Sir William Borlase's Grammar School 'A'",
+          "shortName": "Sir William Borlase's G.S.",
+          "number": 586
+        }
       },
       {
         "id": "r2-1",
         "drawRace": 2,
         "feeders": [
-          "r1-2",
-          "r1-3"
+          "r1-0"
         ],
         "berks": null,
-        "bucks": null
+        "bucks": {
+          "name": "The Windsor Boys' School",
+          "shortName": "The Windsor Boys' Sch.",
+          "number": 597
+        }
       },
       {
         "id": "r2-2",
         "drawRace": 3,
         "feeders": [
-          "r1-4",
-          "r1-5"
+          "r1-2"
         ],
         "berks": null,
-        "bucks": null
+        "bucks": {
+          "name": "Belen Jesuit Preparatory School 'A', U.S.A.",
+          "shortName": "Belen Jesuit Prep. Sch. 'A'",
+          "number": 541
+        }
       },
       {
         "id": "r2-3",
         "drawRace": 4,
         "feeders": [
-          "r1-6",
-          "r1-7"
+          "r1-3"
         ],
         "berks": null,
-        "bucks": null
+        "bucks": {
+          "name": "Leander Club",
+          "shortName": "Leander Club",
+          "number": 565
+        }
       },
       {
         "id": "r2-4",
         "drawRace": 5,
         "feeders": [
-          "r1-8",
-          "r1-9"
+          "r1-4"
         ],
-        "berks": null,
+        "berks": {
+          "name": "Hartpury College 'A'",
+          "shortName": "Hartpury Coll. 'A'",
+          "number": 553
+        },
         "bucks": null
       },
       {
         "id": "r2-5",
         "drawRace": 6,
         "feeders": [
-          "r1-10",
-          "r1-11"
+          "r1-5"
         ],
         "berks": null,
-        "bucks": null
+        "bucks": {
+          "name": "Marlow Rowing Club 'A'",
+          "shortName": "Marlow R.C. 'A'",
+          "number": 570
+        }
       },
       {
         "id": "r2-6",
         "drawRace": 7,
         "feeders": [
-          "r1-12",
-          "r1-13"
+          "r1-6"
         ],
         "berks": null,
         "bucks": null
@@ -241,8 +258,7 @@
         "id": "r2-7",
         "drawRace": 8,
         "feeders": [
-          "r1-14",
-          "r1-15"
+          "r1-7"
         ],
         "berks": null,
         "bucks": null

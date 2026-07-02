@@ -203,6 +203,32 @@
           "number": 228
         },
         "bucks": null
+      },
+      {
+        "id": "qf-6",
+        "drawRace": 7,
+        "feeders": [
+          "r1-6"
+        ],
+        "berks": {
+          "name": "Brown University 'A', U.S.A.",
+          "shortName": "Brown Univ., USA 'A'",
+          "number": 208
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-7",
+        "drawRace": 8,
+        "feeders": [
+          "r1-7"
+        ],
+        "berks": {
+          "name": "Amsterdamsche Studenten Roeivereeniging Nereus, Netherlands",
+          "shortName": "A.S.R. Nereus, NED",
+          "number": 203
+        },
+        "bucks": null
       }
     ],
     [
@@ -235,6 +261,38 @@
         ],
         "berks": null,
         "bucks": null
+      },
+      {
+        "id": "sf-3",
+        "drawRace": 4,
+        "feeders": [
+          "qf-6",
+          "qf-7"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf4-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf4-1",
+        "drawRace": 2,
+        "feeders": [
+          "sf-2",
+          "sf-3"
+        ],
+        "berks": null,
+        "bucks": null
       }
     ],
     [
@@ -242,8 +300,8 @@
         "id": "final-0",
         "drawRace": 1,
         "feeders": [
-          "sf-0",
-          "sf-1"
+          "sf4-0",
+          "sf4-1"
         ],
         "berks": null,
         "bucks": null

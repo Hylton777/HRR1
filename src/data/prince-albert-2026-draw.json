@@ -1,7 +1,7 @@
 {
   "event": "The Prince Albert Challenge Cup",
   "year": 2026,
-  "source": "Henley Royal Regatta 2026 Draw (Phase 2: corrected qf-1 pairing)",
+  "source": "Henley Royal Regatta 2026 Draw (Phase 2: 20-crew bye-format)",
   "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
   "rounds": [
     [
@@ -9,8 +9,9 @@
         "id": "qf-0",
         "drawRace": 1,
         "berks": {
-          "name": "Massachusetts Inst . T ech ., USA",
-          "shortName": "Massachusetts Inst . T ech ., USA"
+          "name": "Massachusetts Institute of Technology, U.S.A.",
+          "shortName": "Massachusetts Inst . T ech ., USA",
+          "number": 725
         },
         "bucks": {
           "name": "Oxford University 'B'",
@@ -66,18 +67,174 @@
         "id": "sf-0",
         "drawRace": 1,
         "feeders": [
-          "qf-0",
-          "qf-1"
+          "qf-3"
         ],
-        "berks": null,
+        "berks": {
+          "name": "Oxford Brookes University 'A'",
+          "shortName": "Oxford Brookes Univ . 'A'",
+          "number": 728
+        },
         "bucks": null
       },
       {
         "id": "sf-1",
         "drawRace": 2,
+        "feeders": [],
+        "berks": {
+          "name": "Newcastle University",
+          "shortName": "Newcastle Univ.",
+          "number": 727
+        },
+        "bucks": {
+          "name": "Durham University",
+          "shortName": "Durham Univ .",
+          "number": 712
+        }
+      },
+      {
+        "id": "sf-2",
+        "drawRace": 3,
+        "feeders": [],
+        "berks": {
+          "name": "Oxford University 'A'",
+          "shortName": "Oxford Univ . 'A'",
+          "number": 730
+        },
+        "bucks": {
+          "name": "Oxford Brookes University 'B'",
+          "shortName": "Oxford Brookes Univ . 'B'",
+          "number": 729
+        }
+      },
+      {
+        "id": "sf-3",
+        "drawRace": 4,
         "feeders": [
-          "qf-2",
-          "qf-3"
+          "qf-2"
+        ],
+        "berks": {
+          "name": "Harvard University, U.S.A.",
+          "shortName": "Harvard Univ., USA",
+          "number": 716
+        },
+        "bucks": null
+      },
+      {
+        "id": "sf-4",
+        "drawRace": 5,
+        "feeders": [],
+        "berks": {
+          "name": "University of Birmingham",
+          "shortName": "Univ . of Birmingham",
+          "number": 737
+        },
+        "bucks": {
+          "name": "Imperial College London",
+          "shortName": "Imperial Coll. London",
+          "number": 717
+        }
+      },
+      {
+        "id": "sf-5",
+        "drawRace": 6,
+        "feeders": [
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": {
+          "name": "Koninklijke Studenten Roeivereeniging Njord, Netherlands",
+          "shortName": "K.S.R.V . Njord, NED",
+          "number": 721
+        }
+      },
+      {
+        "id": "sf-6",
+        "drawRace": 7,
+        "feeders": [],
+        "berks": {
+          "name": "Drexel University, U.S.A.",
+          "shortName": "Drexel Univ ., USA",
+          "number": 710
+        },
+        "bucks": {
+          "name": "Utrechtsche Studenten Roeivereeniging Triton, Netherlands",
+          "shortName": "U.S.R. Triton, NED",
+          "number": 744
+        }
+      },
+      {
+        "id": "sf-7",
+        "drawRace": 8,
+        "feeders": [
+          "qf-0"
+        ],
+        "berks": null,
+        "bucks": {
+          "name": "Maastrichtse Studenten Roeivereniging Saurus, Netherlands",
+          "shortName": "M.S.R.V . Saurus, NED",
+          "number": 724
+        }
+      }
+    ],
+    [
+      {
+        "id": "qf2-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf2-1",
+        "drawRace": 2,
+        "feeders": [
+          "sf-2",
+          "sf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf2-2",
+        "drawRace": 3,
+        "feeders": [
+          "sf-4",
+          "sf-5"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf2-3",
+        "drawRace": 4,
+        "feeders": [
+          "sf-6",
+          "sf-7"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf2-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf2-0",
+          "qf2-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf2-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf2-2",
+          "qf2-3"
         ],
         "berks": null,
         "bucks": null
@@ -88,8 +245,8 @@
         "id": "final-0",
         "drawRace": 1,
         "feeders": [
-          "sf-0",
-          "sf-1"
+          "sf2-0",
+          "sf2-1"
         ],
         "berks": null,
         "bucks": null

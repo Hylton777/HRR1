@@ -13,9 +13,10 @@ DATA = ROOT / "src" / "data"
 gae = runpy.run_path(str(ROOT / "scripts" / "generate-all-events.py"))
 
 
-def crew(num: int, entries: list[tuple[int, str]]) -> dict:
+def crew(num: int, entries: list[tuple[int, str]], short: str | None = None) -> dict:
     name = next(full for n, full in entries if n == num)
-    return {"name": name, "shortName": name, "number": num}
+    obj = {"name": name, "shortName": short or name, "number": num}
+    return obj
 
 
 def load_entries(title: str) -> list[tuple[int, str]]:
@@ -136,30 +137,100 @@ def repair_island() -> None:
             "bucks": crew(252, entries),
         },
         {"id": "qf-5", "drawRace": 6, "feeders": ["r1-5"], "berks": crew(228, entries), "bucks": None},
+        {"id": "qf-6", "drawRace": 7, "feeders": ["r1-6"], "berks": crew(208, entries, "Brown Univ., USA 'A'"), "bucks": None},
+        {"id": "qf-7", "drawRace": 8, "feeders": ["r1-7"], "berks": crew(203, entries, "A.S.R. Nereus, NED"), "bucks": None},
     ]
 
     sf = [
         {"id": "sf-0", "drawRace": 1, "feeders": ["qf-0", "qf-1"], "berks": None, "bucks": None},
         {"id": "sf-1", "drawRace": 2, "feeders": ["qf-2", "qf-3"], "berks": None, "bucks": None},
         {"id": "sf-2", "drawRace": 3, "feeders": ["qf-4", "qf-5"], "berks": None, "bucks": None},
+        {"id": "sf-3", "drawRace": 4, "feeders": ["qf-6", "qf-7"], "berks": None, "bucks": None},
+    ]
+    penultimate = [
+        {"id": "sf4-0", "drawRace": 1, "feeders": ["sf-0", "sf-1"], "berks": None, "bucks": None},
+        {"id": "sf4-1", "drawRace": 2, "feeders": ["sf-2", "sf-3"], "berks": None, "bucks": None},
     ]
     final = [
-        {"id": "final-0", "drawRace": 1, "feeders": ["sf-0", "sf-1"], "berks": None, "bucks": None},
+        {"id": "final-0", "drawRace": 1, "feeders": ["sf4-0", "sf4-1"], "berks": None, "bucks": None},
     ]
 
-    draw["rounds"] = [draw["rounds"][0], qf, sf, final]
+    draw["rounds"] = [draw["rounds"][0], qf, sf, penultimate, final]
     draw["source"] = "Henley Royal Regatta 2026 Draw (Phase 2: bye-format quarter-finals)"
     write_draw("island", draw)
 
 
 def repair_prince_albert() -> None:
-    draw = json.loads((DATA / "prince-albert-2026-draw.json").read_text())
     entries = load_entries("THE PRINCE ALBERT CHALLENGE CUP")
 
-    # Fix corrupted qf-1 berks slot (PDF parse merged wrong names).
-    draw["rounds"][0][1]["berks"] = crew(704, entries)  # A.U.S.R. Orca, NED
-    draw["rounds"][0][1]["berks"]["shortName"] = "A .U .S .R . Orca, NED"
-    draw["source"] = "Henley Royal Regatta 2026 Draw (Phase 2: corrected qf-1 pairing)"
+    def c(num: int, short: str | None = None) -> dict:
+        obj = crew(num, entries)
+        if short:
+            obj["shortName"] = short
+        return obj
+
+    # Wednesday quarter-finals (4 races).
+    qf = [
+        {
+            "id": "qf-0",
+            "drawRace": 1,
+            "berks": c(725, "Massachusetts Inst . T ech ., USA"),
+            "bucks": c(731, "Oxford Univ . 'B'"),
+        },
+        {
+            "id": "qf-1",
+            "drawRace": 2,
+            "berks": c(704, "A .U .S .R . Orca, NED"),
+            "bucks": c(709, "Cambridge Univ"),
+        },
+        {
+            "id": "qf-2",
+            "drawRace": 3,
+            "berks": c(726, "Melbourne Univ ., AUS"),
+            "bucks": c(738, "Univ . of London"),
+        },
+        {
+            "id": "qf-3",
+            "drawRace": 4,
+            "berks": c(713, "Edinburgh Univ"),
+            "bucks": c(736, "Univ . Coll ., Dublin, IRL"),
+        },
+    ]
+
+    # Thursday last-16: pre-qualified / bye crews vs Wednesday QF winners (or direct qualifiers).
+    sf = [
+        {"id": "sf-0", "drawRace": 1, "feeders": ["qf-3"], "berks": c(728, "Oxford Brookes Univ . 'A'"), "bucks": None},
+        {"id": "sf-1", "drawRace": 2, "feeders": [], "berks": c(727, "Newcastle Univ."), "bucks": c(712, "Durham Univ .")},
+        {"id": "sf-2", "drawRace": 3, "feeders": [], "berks": c(730, "Oxford Univ . 'A'"), "bucks": c(729, "Oxford Brookes Univ . 'B'")},
+        {"id": "sf-3", "drawRace": 4, "feeders": ["qf-2"], "berks": c(716, "Harvard Univ., USA"), "bucks": None},
+        {"id": "sf-4", "drawRace": 5, "feeders": [], "berks": c(737, "Univ . of Birmingham"), "bucks": c(717, "Imperial Coll. London")},
+        {"id": "sf-5", "drawRace": 6, "feeders": ["qf-1"], "berks": None, "bucks": c(721, "K.S.R.V . Njord, NED")},
+        {"id": "sf-6", "drawRace": 7, "feeders": [], "berks": c(710, "Drexel Univ ., USA"), "bucks": c(744, "U.S.R. Triton, NED")},
+        {"id": "sf-7", "drawRace": 8, "feeders": ["qf-0"], "berks": None, "bucks": c(724, "M.S.R.V . Saurus, NED")},
+    ]
+
+    # Downstream knockout tree for 8 last-16 winners.
+    qf2 = [
+        {"id": "qf2-0", "drawRace": 1, "feeders": ["sf-0", "sf-1"], "berks": None, "bucks": None},
+        {"id": "qf2-1", "drawRace": 2, "feeders": ["sf-2", "sf-3"], "berks": None, "bucks": None},
+        {"id": "qf2-2", "drawRace": 3, "feeders": ["sf-4", "sf-5"], "berks": None, "bucks": None},
+        {"id": "qf2-3", "drawRace": 4, "feeders": ["sf-6", "sf-7"], "berks": None, "bucks": None},
+    ]
+    sf2 = [
+        {"id": "sf2-0", "drawRace": 1, "feeders": ["qf2-0", "qf2-1"], "berks": None, "bucks": None},
+        {"id": "sf2-1", "drawRace": 2, "feeders": ["qf2-2", "qf2-3"], "berks": None, "bucks": None},
+    ]
+    final = [
+        {"id": "final-0", "drawRace": 1, "feeders": ["sf2-0", "sf2-1"], "berks": None, "bucks": None},
+    ]
+
+    draw = {
+        "event": "The Prince Albert Challenge Cup",
+        "year": 2026,
+        "source": "Henley Royal Regatta 2026 Draw (Phase 2: 20-crew bye-format)",
+        "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+        "rounds": [qf, sf, qf2, sf2, final],
+    }
     write_draw("prince-albert", draw)
 
 
