@@ -1,5 +1,6 @@
 import type { DrawData } from "@/lib/types";
 import type { RegattaDay } from "@/lib/regatta-days";
+import { compareEventsForSelector } from "@/config/event-selector-groups";
 import grandDraw from "@/data/grand-2026-draw.json";
 import remenhamDraw from "@/data/remenham-2026-draw.json";
 import lpDraw from "@/data/lp-2026-draw.json";
@@ -639,38 +640,40 @@ export const EVENTS: Record<EventId, EventConfig> = {
   },
 };
 
-export const EVENT_LIST: EventConfig[] = [
-  EVENTS["grand"],
-  EVENTS["remenham"],
-  EVENTS["lp"],
-  EVENTS["bridge"],
-  EVENTS["thames"],
-  EVENTS["wargrave"],
-  EVENTS["temple"],
-  EVENTS["island"],
-  EVENTS["pe"],
-  EVENTS["prince-philip"],
-  EVENTS["stewards"],
-  EVENTS["town"],
-  EVENTS["visitors"],
-  EVENTS["wyfold"],
-  EVENTS["queen-mother"],
-  EVENTS["princess-grace"],
-  EVENTS["pow"],
-  EVENTS["princess-of-wales"],
-  EVENTS["danesfield"],
-  EVENTS["queen-victoria"],
-  EVENTS["fawley"],
-  EVENTS["diamond-jubilee"],
-  EVENTS["britannia"],
-  EVENTS["prince-albert"],
-  EVENTS["goblets"],
-  EVENTS["hambleden-pairs"],
-  EVENTS["double-sculls"],
-  EVENTS["stonor"],
-  EVENTS["diamond"],
-  EVENTS["princess-royal"],
-];
+export const EVENT_LIST: EventConfig[] = (
+  [
+    EVENTS["grand"],
+    EVENTS["remenham"],
+    EVENTS["lp"],
+    EVENTS["bridge"],
+    EVENTS["thames"],
+    EVENTS["wargrave"],
+    EVENTS["temple"],
+    EVENTS["island"],
+    EVENTS["pe"],
+    EVENTS["prince-philip"],
+    EVENTS["stewards"],
+    EVENTS["town"],
+    EVENTS["visitors"],
+    EVENTS["wyfold"],
+    EVENTS["queen-mother"],
+    EVENTS["princess-grace"],
+    EVENTS["pow"],
+    EVENTS["princess-of-wales"],
+    EVENTS["danesfield"],
+    EVENTS["queen-victoria"],
+    EVENTS["fawley"],
+    EVENTS["diamond-jubilee"],
+    EVENTS["britannia"],
+    EVENTS["prince-albert"],
+    EVENTS["goblets"],
+    EVENTS["hambleden-pairs"],
+    EVENTS["double-sculls"],
+    EVENTS["stonor"],
+    EVENTS["diamond"],
+    EVENTS["princess-royal"],
+  ] as EventConfig[]
+).sort(compareEventsForSelector);
 
 export function getEventConfig(id: string): EventConfig | null {
   if (id in EVENTS) return EVENTS[id as EventId];
