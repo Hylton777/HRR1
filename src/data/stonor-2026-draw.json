@@ -1,0 +1,100 @@
+{
+  "event": "The Stonor Challenge Trophy",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "O.E.I. Joyce & M.A. Lack (Warwick Boat Club)",
+          "shortName": "Joyce & Lack",
+          "number": 803
+        },
+        "bucks": {
+          "name": "A.R. Troup & A.E.W. Mills (Oxford University)",
+          "shortName": "Troup & Mills",
+          "number": 808
+        }
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "E.S. Dabinett & O.A. Cuffe (University of Iowa, U.S.A.)",
+          "shortName": "Dabinett & Cuffe, USA",
+          "number": 800
+        },
+        "bucks": {
+          "name": "B.C. Francis & L.J. Spoors (Waiariki Rowing Club, New Zealand)",
+          "shortName": "Francis & Spoors, NZL",
+          "number": 801
+        }
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "H.A.G. Marshall & N.B.M. Phillips (University of St. Andrews)",
+          "shortName": "Marshall & Phillips",
+          "number": 805
+        },
+        "bucks": {
+          "name": "C.E. Armstrong & H.L. Wake (City of Oxford Rowing Club)",
+          "shortName": "Armstrong & Wake",
+          "number": 797
+        }
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "I.M. Maxwell & J.L. Titterington (Vesta Rowing Club and Newark Rowing Club)",
+          "shortName": "Titterington & Maxwell",
+          "number": 806
+        },
+        "bucks": {
+          "name": "H.M. Lucani & F.C. Gammond (Upper Thames Rowing Club)",
+          "shortName": "Lucani & Gammond",
+          "number": 804
+        }
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

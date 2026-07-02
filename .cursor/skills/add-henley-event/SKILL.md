@@ -1,8 +1,61 @@
 # Add a Henley Royal Regatta Event
 
-Use this skill when adding a new knockout event tab to the HRR bracket app (alongside PE, POW, Ladies, Wyfold).
+Use this skill when adding a new knockout event tab to the HRR bracket app. The site supports **all 30 HRR 2026 events** via an event selector dropdown.
 
-The app is multi-event: draw JSON + `events.ts` config drive everything else (`/api/bracket/[event]`, tabs, mobile 2-day view, seeding, connectors). Most bugs come from **wrong draw structure** or **wrong feeder mapping**, not from missing UI wiring.
+The app is multi-event: draw JSON + `events.ts` config drive everything else (`/api/bracket/[event]`, event selector, mobile 2-day view, seeding, connectors). Most bugs come from **wrong draw structure** or **wrong feeder mapping**, not from missing UI wiring.
+
+---
+
+## All 30 events (2026)
+
+Source: [HRR List of Entries 2026](https://dftgz7dbeqc0e.cloudfront.net/2026/06/HRR-List-of-Entries-2026.pdf), [Draw PDF](https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf), [Open Events trophies](https://www.hrr.co.uk/about/trophiesandprizegivers/open-events-trophies/).
+
+| ID | Event |
+|----|-------|
+| `grand` | Grand Challenge Cup |
+| `remenham` | Remenham Challenge Cup |
+| `stewards` | Stewards' Challenge Cup |
+| `town` | Town Challenge Cup |
+| `queen-mother` | Queen Mother Challenge Cup |
+| `princess-grace` | Princess Grace Challenge Cup |
+| `goblets` | Silver Goblets & Nickalls' Challenge Cup |
+| `hambleden-pairs` | Hambleden Pairs Challenge Cup |
+| `double-sculls` | Double Sculls Challenge Cup |
+| `stonor` | Stonor Challenge Trophy |
+| `diamond` | Diamond Challenge Sculls |
+| `princess-royal` | Princess Royal Challenge Cup |
+| `lp` | Ladies' Challenge Plate |
+| `bridge` | Bridge Challenge Plate |
+| `pow` | Prince of Wales Challenge Cup |
+| `visitors` | Visitors' Challenge Cup |
+| `thames` | Thames Challenge Cup |
+| `princess-of-wales` | Princess of Wales Challenge Trophy |
+| `wargrave` | Wargrave Challenge Cup |
+| `wyfold` | Wyfold Challenge Cup |
+| `britannia` | Britannia Challenge Cup |
+| `danesfield` | Danesfield Challenge Cup |
+| `temple` | Temple Challenge Cup |
+| `island` | Island Challenge Cup |
+| `prince-albert` | Prince Albert Challenge Cup |
+| `queen-victoria` | Queen Victoria Challenge Cup |
+| `pe` | Princess Elizabeth Challenge Cup |
+| `prince-philip` | Prince Philip Challenge Trophy |
+| `fawley` | Fawley Challenge Cup |
+| `diamond-jubilee` | Diamond Jubilee Challenge Cup |
+
+### Bulk generation scripts
+
+For new years or batch updates:
+
+```bash
+python3 scripts/generate-all-events.py   # draw JSON from Entries + Draw PDFs
+python3 scripts/generate-events-ts.py    # regenerate src/config/events.ts
+npm run build
+```
+
+- **Standard knockouts** — auto-generated with binary-tree `feeders`.
+- **Bye formats** (`lp`, `bridge`, `town`, `visitors`, `queen-mother`, `queen-victoria`, `princess-royal`) — **manual draw JSON required**; use `lp-2026-draw.json` as template.
+- Manifest: `scripts/generated-events-manifest.json`
 
 ---
 
@@ -18,7 +71,7 @@ The app is multi-event: draw JSON + `events.ts` config drive everything else (`/
 8. **Build and hit API** — `npm run build`, `curl /api/bracket/<event-id>`.
 9. **Smoke-test UI** — tab label, 2-day mobile view, bold seeds, no phantom future-round crews.
 
-No UI changes are needed unless the tab label needs a special case (see Ladies).
+No UI changes are needed unless the tab label needs a special case (see Ladies). With 30 events, the header uses an **event selector dropdown** grouped by category (`EventTabs.tsx`).
 
 ---
 

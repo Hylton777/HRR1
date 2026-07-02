@@ -1,0 +1,1334 @@
+{
+  "year": 2026,
+  "entriesUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/06/HRR-List-of-Entries-2026.pdf",
+  "drawUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "generatedAt": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "summary": {
+    "totalEvents": 30,
+    "success": 18,
+    "failed": 0,
+    "skipped": 6,
+    "manualRequired": 6
+  },
+  "events": [
+    {
+      "id": "grand",
+      "shortLabel": "Grand",
+      "displayName": "Grand Challenge Cup",
+      "trophySlug": "the-grand-challenge-cup",
+      "timetableCodes": [
+        "Grand"
+      ],
+      "headerCategory": "Premier men's eights",
+      "raceDayPreset": "pow",
+      "category": "premier-mens-eights",
+      "entriesTitle": "THE GRAND CHALLENGE CUP",
+      "format": "final_only",
+      "seededCrewNumbersHint": [],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/grand-2026-draw.json",
+        "message": null,
+        "crewCount": 2,
+        "roundSizes": [
+          1
+        ]
+      }
+    },
+    {
+      "id": "remenham",
+      "shortLabel": "Remenham",
+      "displayName": "Remenham Challenge Cup",
+      "trophySlug": "the-remenham-challenge-cup",
+      "timetableCodes": [
+        "Remenham"
+      ],
+      "headerCategory": "Premier women's eights",
+      "raceDayPreset": "pow",
+      "category": "premier-womens-eights",
+      "entriesTitle": "THE REMENHAM CHALLENGE CUP",
+      "format": "final_only",
+      "seededCrewNumbersHint": [],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/remenham-2026-draw.json",
+        "message": null,
+        "crewCount": 2,
+        "roundSizes": [
+          1
+        ]
+      }
+    },
+    {
+      "id": "lp",
+      "shortLabel": "Ladies",
+      "displayName": "Ladies' Challenge Plate",
+      "trophySlug": "the-ladies-challenge-plate",
+      "timetableCodes": [
+        "Ladies'"
+      ],
+      "headerCategory": "Intermediate men's eights",
+      "raceDayPreset": "lp",
+      "category": "intermediate-mens-eights",
+      "entriesTitle": "THE LADIES’ CHALLENGE PLATE",
+      "format": "bye",
+      "seededCrewNumbersHint": [],
+      "generation": {
+        "status": "skipped",
+        "outputPath": null,
+        "message": "existing manual draw JSON",
+        "crewCount": null,
+        "roundSizes": []
+      },
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+    },
+    {
+      "id": "bridge",
+      "shortLabel": "Bridge",
+      "displayName": "Bridge Challenge Plate",
+      "trophySlug": "the-bridge-challenge-plate",
+      "timetableCodes": [
+        "Bridge"
+      ],
+      "headerCategory": "Intermediate men's eights",
+      "raceDayPreset": "pow",
+      "category": "intermediate-mens-eights",
+      "entriesTitle": "THE BRIDGE CHALLENGE PLATE",
+      "format": "bye",
+      "seededCrewNumbersHint": [
+        15,
+        17,
+        20,
+        21,
+        24,
+        26
+      ],
+      "generation": {
+        "status": "manual_required",
+        "outputPath": null,
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "crewCount": null,
+        "roundSizes": []
+      },
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+    },
+    {
+      "id": "thames",
+      "shortLabel": "Thames",
+      "displayName": "Thames Challenge Cup",
+      "trophySlug": "the-thames-challenge-cup",
+      "timetableCodes": [
+        "Thames"
+      ],
+      "headerCategory": "Club men's eights",
+      "raceDayPreset": "pe",
+      "category": "club-mens-eights",
+      "entriesTitle": "THE THAMES CHALLENGE CUP",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        27,
+        31,
+        33,
+        39,
+        41,
+        42,
+        44,
+        45,
+        48,
+        50,
+        59,
+        61,
+        62,
+        63,
+        67,
+        70
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/thames-2026-draw.json",
+        "message": "14 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 32,
+        "roundSizes": [
+          16,
+          8,
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "wargrave",
+      "shortLabel": "Wargrave",
+      "displayName": "Wargrave Challenge Cup",
+      "trophySlug": "the-wargrave-challenge-cup",
+      "timetableCodes": [
+        "Wargrave"
+      ],
+      "headerCategory": "Club men's coxless fours",
+      "raceDayPreset": "pe",
+      "category": "club-mens-coxless-fours",
+      "entriesTitle": "THE WARGRA VE CHALLENGE CUP",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        76,
+        79,
+        87,
+        89,
+        93,
+        94,
+        95,
+        102,
+        103,
+        104,
+        109
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/wargrave-2026-draw.json",
+        "message": "26 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 32,
+        "roundSizes": [
+          16,
+          8,
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "temple",
+      "shortLabel": "Temple",
+      "displayName": "Temple Challenge Cup",
+      "trophySlug": "the-temple-challenge-cup",
+      "timetableCodes": [
+        "Temple"
+      ],
+      "headerCategory": "Student men's eights",
+      "raceDayPreset": "pe",
+      "category": "student-mens-eights",
+      "entriesTitle": "THE TEMPLE CHALLENGE CUP",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        117,
+        118,
+        119,
+        127,
+        130,
+        136,
+        144,
+        149,
+        152,
+        155,
+        162,
+        184,
+        189,
+        191,
+        195,
+        199,
+        200,
+        201
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/temple-2026-draw.json",
+        "message": "15 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 32,
+        "roundSizes": [
+          16,
+          8,
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "island",
+      "shortLabel": "Island",
+      "displayName": "Island Challenge Cup",
+      "trophySlug": "the-island-challenge-cup",
+      "timetableCodes": [
+        "Island"
+      ],
+      "headerCategory": "Student women's eights",
+      "raceDayPreset": "pe",
+      "category": "student-womens-eights",
+      "entriesTitle": "THE ISLAND CHALLENGE CUP",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        203,
+        208,
+        211,
+        215,
+        216,
+        219,
+        221,
+        224,
+        226,
+        228,
+        245,
+        246,
+        249,
+        252
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/island-2026-draw.json",
+        "message": "1 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 16,
+        "roundSizes": [
+          8,
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "pe",
+      "shortLabel": "PE",
+      "displayName": "Princess Elizabeth Challenge Cup",
+      "trophySlug": "the-princess-elizabeth-challenge-cup",
+      "timetableCodes": [
+        "PE",
+        "P Elizabeth"
+      ],
+      "headerCategory": "Junior men's eights",
+      "raceDayPreset": "pe",
+      "category": "junior-mens-eights",
+      "entriesTitle": "THE PRINCESS ELIZABETH CHALLENGE CUP",
+      "format": "skip",
+      "seededCrewNumbersHint": [
+        254,
+        256,
+        263,
+        264,
+        266,
+        267,
+        270,
+        272,
+        273,
+        274,
+        276,
+        278,
+        280,
+        281,
+        282,
+        283,
+        284,
+        286,
+        288,
+        290,
+        300
+      ],
+      "generation": {
+        "status": "skipped",
+        "outputPath": null,
+        "message": "existing manual draw JSON",
+        "crewCount": null,
+        "roundSizes": []
+      }
+    },
+    {
+      "id": "prince-philip",
+      "shortLabel": "P Philip",
+      "displayName": "Prince Philip Challenge Trophy",
+      "trophySlug": "the-prince-philip-challenge-trophy",
+      "timetableCodes": [
+        "P Philip"
+      ],
+      "headerCategory": "Junior women's eights",
+      "raceDayPreset": "pe",
+      "category": "junior-womens-eights",
+      "entriesTitle": "THE PRINCE PHILIP CHALLENGE TROPHY",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        306,
+        307,
+        308,
+        309,
+        311,
+        313,
+        314,
+        315,
+        318,
+        323,
+        324,
+        327,
+        328,
+        329,
+        334,
+        339
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/prince-philip-2026-draw.json",
+        "message": null,
+        "crewCount": 2,
+        "roundSizes": [
+          1
+        ]
+      }
+    },
+    {
+      "id": "stewards",
+      "shortLabel": "Stewards",
+      "displayName": "Stewards' Challenge Cup",
+      "trophySlug": "the-stewards-challenge-cup",
+      "timetableCodes": [
+        "Stewards"
+      ],
+      "headerCategory": "Premier men's coxless fours",
+      "raceDayPreset": "pow",
+      "category": "premier-mens-coxless-fours",
+      "entriesTitle": "THE STEWARDS’ CHALLENGE CUP",
+      "format": "three_crew",
+      "seededCrewNumbersHint": [],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/stewards-2026-draw.json",
+        "message": "1 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 3,
+        "roundSizes": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "id": "town",
+      "shortLabel": "Town",
+      "displayName": "Town Challenge Cup",
+      "trophySlug": "the-town-challenge-cup",
+      "timetableCodes": [
+        "Town"
+      ],
+      "headerCategory": "Student men's coxless fours",
+      "raceDayPreset": "pow",
+      "category": "student-mens-coxless-fours",
+      "entriesTitle": "THE TOWN CHALLENGE CUP",
+      "format": "bye",
+      "seededCrewNumbersHint": [],
+      "generation": {
+        "status": "manual_required",
+        "outputPath": null,
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "crewCount": null,
+        "roundSizes": []
+      },
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+    },
+    {
+      "id": "visitors",
+      "shortLabel": "Visitors",
+      "displayName": "Visitors' Challenge Cup",
+      "trophySlug": "the-visitors-challenge-cup",
+      "timetableCodes": [
+        "Visitors'"
+      ],
+      "headerCategory": "Intermediate men's coxless fours",
+      "raceDayPreset": "pow",
+      "category": "intermediate-mens-coxless-fours",
+      "entriesTitle": "THE VISITORS’ CHALLENGE CUP",
+      "format": "bye",
+      "seededCrewNumbersHint": [
+        352,
+        355,
+        356,
+        358,
+        359,
+        362,
+        364,
+        367
+      ],
+      "generation": {
+        "status": "manual_required",
+        "outputPath": null,
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "crewCount": null,
+        "roundSizes": []
+      },
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+    },
+    {
+      "id": "wyfold",
+      "shortLabel": "Wyfold",
+      "displayName": "Wyfold Challenge Cup",
+      "trophySlug": "the-wyfold-challenge-cup",
+      "timetableCodes": [
+        "Wyfold"
+      ],
+      "headerCategory": "Club coxless fours",
+      "raceDayPreset": "pe",
+      "category": "club-coxless-fours",
+      "entriesTitle": "THE WYFOLD CHALLENGE CUP",
+      "format": "skip",
+      "seededCrewNumbersHint": [
+        383,
+        388,
+        392,
+        393,
+        395,
+        397,
+        400,
+        401,
+        405,
+        409,
+        413,
+        415,
+        416,
+        420
+      ],
+      "generation": {
+        "status": "skipped",
+        "outputPath": null,
+        "message": "existing manual draw JSON",
+        "crewCount": null,
+        "roundSizes": []
+      }
+    },
+    {
+      "id": "queen-mother",
+      "shortLabel": "Q Mother",
+      "displayName": "Queen Mother Challenge Cup",
+      "trophySlug": "the-queen-mother-challenge-cup",
+      "timetableCodes": [
+        "Q Mother"
+      ],
+      "headerCategory": "Senior women's coxless fours",
+      "raceDayPreset": "pow",
+      "category": "senior-womens-coxless-fours",
+      "entriesTitle": "THE QUEEN MOTHER CHALLENGE CUP",
+      "format": "bye",
+      "seededCrewNumbersHint": [],
+      "generation": {
+        "status": "manual_required",
+        "outputPath": null,
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "crewCount": null,
+        "roundSizes": []
+      },
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+    },
+    {
+      "id": "princess-grace",
+      "shortLabel": "P Grace",
+      "displayName": "Princess Grace Challenge Cup",
+      "trophySlug": "the-princess-grace-challenge-cup",
+      "timetableCodes": [
+        "P Grace"
+      ],
+      "headerCategory": "Senior women's quadruple sculls",
+      "raceDayPreset": "pow",
+      "category": "senior-womens-quads",
+      "entriesTitle": "THE PRINCESS GRACE CHALLENGE CUP",
+      "format": "final_only",
+      "seededCrewNumbersHint": [],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/princess-grace-2026-draw.json",
+        "message": "1 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 2,
+        "roundSizes": [
+          1
+        ]
+      }
+    },
+    {
+      "id": "pow",
+      "shortLabel": "POW",
+      "displayName": "Prince of Wales Challenge Cup",
+      "trophySlug": "the-prince-of-wales-challenge-cup",
+      "timetableCodes": [
+        "Pr Wales"
+      ],
+      "headerCategory": "Intermediate quads",
+      "raceDayPreset": "pow",
+      "category": "intermediate-quads",
+      "entriesTitle": "THE PRINCE OF WALES CHALLENGE CUP",
+      "format": "skip",
+      "seededCrewNumbersHint": [
+        434,
+        436,
+        443,
+        444,
+        446,
+        448,
+        450,
+        457
+      ],
+      "generation": {
+        "status": "skipped",
+        "outputPath": null,
+        "message": "existing manual draw JSON",
+        "crewCount": null,
+        "roundSizes": []
+      }
+    },
+    {
+      "id": "princess-of-wales",
+      "shortLabel": "P Wales",
+      "displayName": "Princess of Wales Challenge Trophy",
+      "trophySlug": "the-princess-of-wales-challenge-trophy",
+      "timetableCodes": [
+        "P Wales"
+      ],
+      "headerCategory": "Intermediate women's quads",
+      "raceDayPreset": "pow",
+      "category": "intermediate-womens-quads",
+      "entriesTitle": "THE PRINCESS OF WALES CHALLENGE TROPHY",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        462,
+        463,
+        464,
+        465,
+        471
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/princess-of-wales-2026-draw.json",
+        "message": "1 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 8,
+        "roundSizes": [
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "danesfield",
+      "shortLabel": "Danesfield",
+      "displayName": "Danesfield Challenge Cup",
+      "trophySlug": "the-danesfield-challenge-cup",
+      "timetableCodes": [
+        "Danesfield"
+      ],
+      "headerCategory": "Intermediate men's quads",
+      "raceDayPreset": "pow",
+      "category": "intermediate-mens-quads",
+      "entriesTitle": "THE DANESFIELD CHALLENGE CUP",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        481,
+        485,
+        486,
+        489,
+        491,
+        500,
+        501,
+        502
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/danesfield-2026-draw.json",
+        "message": "6 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 16,
+        "roundSizes": [
+          8,
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "queen-victoria",
+      "shortLabel": "Q Victoria",
+      "displayName": "Queen Victoria Challenge Cup",
+      "trophySlug": "the-queen-victoria-challenge-cup",
+      "timetableCodes": [
+        "Q Victoria"
+      ],
+      "headerCategory": "Intermediate women's quads",
+      "raceDayPreset": "pow",
+      "category": "intermediate-womens-quads",
+      "entriesTitle": "THE QUEEN VICTORIA CHALLENGE CUP",
+      "format": "bye",
+      "seededCrewNumbersHint": [
+        512,
+        514,
+        516,
+        526,
+        527,
+        531
+      ],
+      "generation": {
+        "status": "manual_required",
+        "outputPath": null,
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "crewCount": null,
+        "roundSizes": []
+      },
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+    },
+    {
+      "id": "fawley",
+      "shortLabel": "Fawley",
+      "displayName": "Fawley Challenge Cup",
+      "trophySlug": "the-fawley-challenge-cup",
+      "timetableCodes": [
+        "Fawley"
+      ],
+      "headerCategory": "Junior men's quadruple sculls",
+      "raceDayPreset": "pe",
+      "category": "junior-mens-quads",
+      "entriesTitle": "THE FAWLEY CHALLENGE CUP",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        538,
+        541,
+        546,
+        552,
+        553,
+        556,
+        565,
+        570,
+        579,
+        582,
+        586,
+        591,
+        597,
+        598,
+        600
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/fawley-2026-draw.json",
+        "message": "20 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 32,
+        "roundSizes": [
+          16,
+          8,
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "diamond-jubilee",
+      "shortLabel": "D Jubilee",
+      "displayName": "Diamond Jubilee Challenge Cup",
+      "trophySlug": "the-diamond-jubilee-challenge-cup",
+      "timetableCodes": [
+        "D Jubilee"
+      ],
+      "headerCategory": "Junior women's quadruple sculls",
+      "raceDayPreset": "pe",
+      "category": "junior-womens-quads",
+      "entriesTitle": "THE DIAMOND JUBILEE CHALLENGE CUP",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        609,
+        612,
+        615,
+        617,
+        629,
+        630,
+        632,
+        637,
+        641,
+        643,
+        644,
+        645,
+        648,
+        653,
+        655,
+        659
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/diamond-jubilee-2026-draw.json",
+        "message": "2 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 16,
+        "roundSizes": [
+          8,
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "britannia",
+      "shortLabel": "Britannia",
+      "displayName": "Britannia Challenge Cup",
+      "trophySlug": "the-britannia-challenge-cup",
+      "timetableCodes": [
+        "Britannia"
+      ],
+      "headerCategory": "Club women's eights",
+      "raceDayPreset": "pe",
+      "category": "club-womens-eights",
+      "entriesTitle": "THE BRITANNIA CHALLENGE CUP",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        677,
+        679,
+        682,
+        683,
+        688,
+        693
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/britannia-2026-draw.json",
+        "message": "16 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 16,
+        "roundSizes": [
+          8,
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "prince-albert",
+      "shortLabel": "P Albert",
+      "displayName": "Prince Albert Challenge Cup",
+      "trophySlug": "the-prince-albert-challenge-cup",
+      "timetableCodes": [
+        "P Albert"
+      ],
+      "headerCategory": "Student men's coxed fours",
+      "raceDayPreset": "pe",
+      "category": "student-mens-coxed-fours",
+      "entriesTitle": "THE PRINCE ALBERT CHALLENGE CUP",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        704,
+        709,
+        716,
+        717,
+        721,
+        724,
+        727,
+        728,
+        730,
+        736,
+        744
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/prince-albert-2026-draw.json",
+        "message": "1 crew slot(s) could not be matched to entry numbers",
+        "crewCount": 8,
+        "roundSizes": [
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "goblets",
+      "shortLabel": "Goblets",
+      "displayName": "Silver Goblets & Nickalls' Challenge Cup",
+      "trophySlug": "the-silver-goblets-and-nickalls-challenge-cup",
+      "timetableCodes": [
+        "Goblets"
+      ],
+      "headerCategory": "Premier men's coxless pairs",
+      "raceDayPreset": "goblets",
+      "category": "premier-mens-coxless-pairs",
+      "entriesTitle": "THE SILVER GOBLETS & NICKALLS’ CHALLENGE CUP",
+      "format": "skip",
+      "seededCrewNumbersHint": [
+        749,
+        751,
+        753,
+        759,
+        761
+      ],
+      "generation": {
+        "status": "skipped",
+        "outputPath": null,
+        "message": "existing manual draw JSON",
+        "crewCount": null,
+        "roundSizes": []
+      }
+    },
+    {
+      "id": "hambleden-pairs",
+      "shortLabel": "Hambleden",
+      "displayName": "Hambleden Pairs Challenge Cup",
+      "trophySlug": "the-hambleden-pairs-challenge-cup",
+      "timetableCodes": [
+        "Hambleden"
+      ],
+      "headerCategory": "Premier women's coxless pairs",
+      "raceDayPreset": "goblets",
+      "category": "premier-womens-coxless-pairs",
+      "entriesTitle": "THE HAMBLEDEN PAIRS CHALLENGE CUP",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        765,
+        767,
+        769,
+        770,
+        772,
+        774
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/hambleden-pairs-2026-draw.json",
+        "message": null,
+        "crewCount": 8,
+        "roundSizes": [
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "double-sculls",
+      "shortLabel": "Doubles",
+      "displayName": "Double Sculls Challenge Cup",
+      "trophySlug": "the-double-sculls-challenge-cup",
+      "timetableCodes": [
+        "Doubles"
+      ],
+      "headerCategory": "Premier men's double sculls",
+      "raceDayPreset": "goblets",
+      "category": "premier-mens-doubles",
+      "entriesTitle": "THE DOUBLE SCULLS CHALLENGE CUP",
+      "format": "standard",
+      "seededCrewNumbersHint": [
+        777,
+        780,
+        781,
+        782,
+        783,
+        784,
+        787,
+        789,
+        790
+      ],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/double-sculls-2026-draw.json",
+        "message": null,
+        "crewCount": 8,
+        "roundSizes": [
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "stonor",
+      "shortLabel": "Stonor",
+      "displayName": "Stonor Challenge Trophy",
+      "trophySlug": "the-stonor-challenge-trophy",
+      "timetableCodes": [
+        "Stonor"
+      ],
+      "headerCategory": "Premier women's double sculls",
+      "raceDayPreset": "goblets",
+      "category": "premier-womens-doubles",
+      "entriesTitle": "THE STONOR CHALLENGE TROPHY",
+      "format": "standard",
+      "seededCrewNumbersHint": [],
+      "generation": {
+        "status": "success",
+        "outputPath": "src/data/stonor-2026-draw.json",
+        "message": null,
+        "crewCount": 8,
+        "roundSizes": [
+          4,
+          2,
+          1
+        ]
+      }
+    },
+    {
+      "id": "diamond",
+      "shortLabel": "Diamond",
+      "displayName": "Diamond Challenge Sculls",
+      "trophySlug": "the-diamond-challenge-sculls",
+      "timetableCodes": [
+        "Diamonds",
+        "D Sculls"
+      ],
+      "headerCategory": "Premier men's single sculls",
+      "raceDayPreset": "pow",
+      "category": "premier-mens-sculls",
+      "entriesTitle": "THE DIAMOND CHALLENGE SCULLS",
+      "format": "skip",
+      "seededCrewNumbersHint": [
+        813,
+        818,
+        819,
+        820,
+        830,
+        831,
+        832,
+        840
+      ],
+      "generation": {
+        "status": "skipped",
+        "outputPath": null,
+        "message": "existing manual draw JSON",
+        "crewCount": null,
+        "roundSizes": []
+      }
+    },
+    {
+      "id": "princess-royal",
+      "shortLabel": "P Royal",
+      "displayName": "Princess Royal Challenge Cup",
+      "trophySlug": "the-princess-royal-challenge-cup",
+      "timetableCodes": [
+        "P Royal"
+      ],
+      "headerCategory": "Premier women's single sculls",
+      "raceDayPreset": "goblets",
+      "category": "premier-womens-sculls",
+      "entriesTitle": "THE PRINCESS ROYAL CHALLENGE CUP",
+      "format": "bye",
+      "seededCrewNumbersHint": [
+        842,
+        848,
+        849,
+        850,
+        852,
+        853,
+        854,
+        856,
+        859
+      ],
+      "generation": {
+        "status": "manual_required",
+        "outputPath": null,
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+        "crewCount": null,
+        "roundSizes": []
+      },
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
+    }
+  ],
+  "results": [
+    {
+      "eventId": "grand",
+      "status": "success",
+      "outputPath": "src/data/grand-2026-draw.json",
+      "message": null,
+      "crewCount": 2,
+      "roundSizes": [
+        1
+      ]
+    },
+    {
+      "eventId": "remenham",
+      "status": "success",
+      "outputPath": "src/data/remenham-2026-draw.json",
+      "message": null,
+      "crewCount": 2,
+      "roundSizes": [
+        1
+      ]
+    },
+    {
+      "eventId": "lp",
+      "status": "skipped",
+      "outputPath": null,
+      "message": "existing manual draw JSON",
+      "crewCount": null,
+      "roundSizes": []
+    },
+    {
+      "eventId": "bridge",
+      "status": "manual_required",
+      "outputPath": null,
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "crewCount": null,
+      "roundSizes": []
+    },
+    {
+      "eventId": "thames",
+      "status": "success",
+      "outputPath": "src/data/thames-2026-draw.json",
+      "message": "14 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 32,
+      "roundSizes": [
+        16,
+        8,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "wargrave",
+      "status": "success",
+      "outputPath": "src/data/wargrave-2026-draw.json",
+      "message": "26 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 32,
+      "roundSizes": [
+        16,
+        8,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "temple",
+      "status": "success",
+      "outputPath": "src/data/temple-2026-draw.json",
+      "message": "15 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 32,
+      "roundSizes": [
+        16,
+        8,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "island",
+      "status": "success",
+      "outputPath": "src/data/island-2026-draw.json",
+      "message": "1 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 16,
+      "roundSizes": [
+        8,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "pe",
+      "status": "skipped",
+      "outputPath": null,
+      "message": "existing manual draw JSON",
+      "crewCount": null,
+      "roundSizes": []
+    },
+    {
+      "eventId": "prince-philip",
+      "status": "success",
+      "outputPath": "src/data/prince-philip-2026-draw.json",
+      "message": null,
+      "crewCount": 2,
+      "roundSizes": [
+        1
+      ]
+    },
+    {
+      "eventId": "stewards",
+      "status": "success",
+      "outputPath": "src/data/stewards-2026-draw.json",
+      "message": "1 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 3,
+      "roundSizes": [
+        1,
+        1
+      ]
+    },
+    {
+      "eventId": "town",
+      "status": "manual_required",
+      "outputPath": null,
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "crewCount": null,
+      "roundSizes": []
+    },
+    {
+      "eventId": "visitors",
+      "status": "manual_required",
+      "outputPath": null,
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "crewCount": null,
+      "roundSizes": []
+    },
+    {
+      "eventId": "wyfold",
+      "status": "skipped",
+      "outputPath": null,
+      "message": "existing manual draw JSON",
+      "crewCount": null,
+      "roundSizes": []
+    },
+    {
+      "eventId": "queen-mother",
+      "status": "manual_required",
+      "outputPath": null,
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "crewCount": null,
+      "roundSizes": []
+    },
+    {
+      "eventId": "princess-grace",
+      "status": "success",
+      "outputPath": "src/data/princess-grace-2026-draw.json",
+      "message": "1 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 2,
+      "roundSizes": [
+        1
+      ]
+    },
+    {
+      "eventId": "pow",
+      "status": "skipped",
+      "outputPath": null,
+      "message": "existing manual draw JSON",
+      "crewCount": null,
+      "roundSizes": []
+    },
+    {
+      "eventId": "princess-of-wales",
+      "status": "success",
+      "outputPath": "src/data/princess-of-wales-2026-draw.json",
+      "message": "1 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 8,
+      "roundSizes": [
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "danesfield",
+      "status": "success",
+      "outputPath": "src/data/danesfield-2026-draw.json",
+      "message": "6 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 16,
+      "roundSizes": [
+        8,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "queen-victoria",
+      "status": "manual_required",
+      "outputPath": null,
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "crewCount": null,
+      "roundSizes": []
+    },
+    {
+      "eventId": "fawley",
+      "status": "success",
+      "outputPath": "src/data/fawley-2026-draw.json",
+      "message": "20 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 32,
+      "roundSizes": [
+        16,
+        8,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "diamond-jubilee",
+      "status": "success",
+      "outputPath": "src/data/diamond-jubilee-2026-draw.json",
+      "message": "2 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 16,
+      "roundSizes": [
+        8,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "britannia",
+      "status": "success",
+      "outputPath": "src/data/britannia-2026-draw.json",
+      "message": "16 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 16,
+      "roundSizes": [
+        8,
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "prince-albert",
+      "status": "success",
+      "outputPath": "src/data/prince-albert-2026-draw.json",
+      "message": "1 crew slot(s) could not be matched to entry numbers",
+      "crewCount": 8,
+      "roundSizes": [
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "goblets",
+      "status": "skipped",
+      "outputPath": null,
+      "message": "existing manual draw JSON",
+      "crewCount": null,
+      "roundSizes": []
+    },
+    {
+      "eventId": "hambleden-pairs",
+      "status": "success",
+      "outputPath": "src/data/hambleden-pairs-2026-draw.json",
+      "message": null,
+      "crewCount": 8,
+      "roundSizes": [
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "double-sculls",
+      "status": "success",
+      "outputPath": "src/data/double-sculls-2026-draw.json",
+      "message": null,
+      "crewCount": 8,
+      "roundSizes": [
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "stonor",
+      "status": "success",
+      "outputPath": "src/data/stonor-2026-draw.json",
+      "message": null,
+      "crewCount": 8,
+      "roundSizes": [
+        4,
+        2,
+        1
+      ]
+    },
+    {
+      "eventId": "diamond",
+      "status": "skipped",
+      "outputPath": null,
+      "message": "existing manual draw JSON",
+      "crewCount": null,
+      "roundSizes": []
+    },
+    {
+      "eventId": "princess-royal",
+      "status": "manual_required",
+      "outputPath": null,
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
+      "crewCount": null,
+      "roundSizes": []
+    }
+  ]
+}

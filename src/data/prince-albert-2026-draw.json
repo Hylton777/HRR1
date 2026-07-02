@@ -1,0 +1,99 @@
+{
+  "event": "The Prince Albert Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "Massachusetts Inst . T ech ., USA",
+          "shortName": "Massachusetts Inst . T ech ., USA"
+        },
+        "bucks": {
+          "name": "Oxford University 'B'",
+          "shortName": "Oxford Univ . 'B'",
+          "number": 731
+        }
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "Bates College, U.S.A.",
+          "shortName": "A .U .S .R . Orca, NED",
+          "number": 706
+        },
+        "bucks": {
+          "name": "Cambridge University",
+          "shortName": "Cambridge Univ",
+          "number": 709
+        }
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "Melbourne University, Australia",
+          "shortName": "Melbourne Univ ., AUS",
+          "number": 726
+        },
+        "bucks": {
+          "name": "University of London 'A'",
+          "shortName": "Univ . of London",
+          "number": 738
+        }
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "Edinburgh University 'A'",
+          "shortName": "Edinburgh Univ",
+          "number": 713
+        },
+        "bucks": {
+          "name": "University College, Dublin, Ireland",
+          "shortName": "Univ . Coll ., Dublin, IRL",
+          "number": 736
+        }
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

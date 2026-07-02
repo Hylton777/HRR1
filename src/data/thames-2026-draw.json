@@ -1,0 +1,378 @@
+{
+  "event": "The Thames Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "Penn Athletic Club Rowing Association, U.S.A.",
+          "shortName": "Penn Athletic Club R .A ., USA",
+          "number": 55
+        },
+        "bucks": {
+          "name": "City of Cambridge Rowing Club",
+          "shortName": "City of Cambridge R.C",
+          "number": 31
+        }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "Kingston R .C",
+          "shortName": "Kingston R .C"
+        },
+        "bucks": {
+          "name": "Cork B.C., IRL",
+          "shortName": "Cork B.C., IRL"
+        }
+      },
+      {
+        "id": "r1-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "Crabtree B .C",
+          "shortName": "Crabtree B .C"
+        },
+        "bucks": {
+          "name": "Sabrina Club",
+          "shortName": "Sabrina Club",
+          "number": 60
+        }
+      },
+      {
+        "id": "r1-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "Avon R .C ., NZL",
+          "shortName": "Avon R .C ., NZL"
+        },
+        "bucks": {
+          "name": "Thames Rowing Club 'A'",
+          "shortName": "Thames R.C. 'A'",
+          "number": 62
+        }
+      },
+      {
+        "id": "r1-4",
+        "drawRace": 5,
+        "berks": {
+          "name": "Marlow Rowing Club 'B'",
+          "shortName": "Marlow R .C . 'B'",
+          "number": 49
+        },
+        "bucks": {
+          "name": "R.V . Osnabrücker, GER",
+          "shortName": "R.V . Osnabrücker, GER"
+        }
+      },
+      {
+        "id": "r1-5",
+        "drawRace": 6,
+        "berks": {
+          "name": "Vesta Rowing Club 'B'",
+          "shortName": "Vesta R .C . 'B'",
+          "number": 71
+        },
+        "bucks": {
+          "name": "Leander Club",
+          "shortName": "Leander Club",
+          "number": 42
+        }
+      },
+      {
+        "id": "r1-6",
+        "drawRace": 7,
+        "berks": {
+          "name": "Potomac B .C ., USA",
+          "shortName": "Potomac B .C ., USA"
+        },
+        "bucks": {
+          "name": "London Rowing Club 'D'",
+          "shortName": "London R .C . 'D'",
+          "number": 47
+        }
+      },
+      {
+        "id": "r1-7",
+        "drawRace": 8,
+        "berks": {
+          "name": "Dart T otnes A .R .C",
+          "shortName": "Dart T otnes A .R .C"
+        },
+        "bucks": {
+          "name": "Mercantile R.C., AUS",
+          "shortName": "Mercantile R.C., AUS"
+        }
+      },
+      {
+        "id": "r1-8",
+        "drawRace": 9,
+        "berks": {
+          "name": "Marlow Rowing Club 'A'",
+          "shortName": "Marlow R.C. 'A'",
+          "number": 48
+        },
+        "bucks": {
+          "name": "Barcelona C .R ., ESP",
+          "shortName": "Barcelona C .R ., ESP"
+        }
+      },
+      {
+        "id": "r1-9",
+        "drawRace": 10,
+        "berks": {
+          "name": "Vesta Rowing Club 'A'",
+          "shortName": "Vesta R .C . 'A'",
+          "number": 70
+        },
+        "bucks": {
+          "name": "Agecroft R .C",
+          "shortName": "Agecroft R .C"
+        }
+      },
+      {
+        "id": "r1-10",
+        "drawRace": 11,
+        "berks": {
+          "name": "London Rowing Club 'B'",
+          "shortName": "London R.C. 'B'",
+          "number": 45
+        },
+        "bucks": {
+          "name": "Cantabrigian R .C",
+          "shortName": "Cantabrigian R .C"
+        }
+      },
+      {
+        "id": "r1-11",
+        "drawRace": 12,
+        "berks": {
+          "name": "Koninklijke Roei- en Zeilvereeniging De Maas, Netherlands",
+          "shortName": "K.R.Z.V . De Maas, NED",
+          "number": 41
+        },
+        "bucks": {
+          "name": "London Rowing Club 'C'",
+          "shortName": "London R .C . 'C'",
+          "number": 46
+        }
+      },
+      {
+        "id": "r1-12",
+        "drawRace": 13,
+        "berks": {
+          "name": "London Rowing Club 'A'",
+          "shortName": "London R.C. 'A'",
+          "number": 44
+        },
+        "bucks": {
+          "name": "Tyne A .R .C",
+          "shortName": "Tyne A .R .C"
+        }
+      },
+      {
+        "id": "r1-13",
+        "drawRace": 14,
+        "berks": {
+          "name": "Molesey B .C",
+          "shortName": "Molesey B .C"
+        },
+        "bucks": {
+          "name": "Tideway Scullers' School",
+          "shortName": "Tideway Scullers' Sch",
+          "number": 65
+        }
+      },
+      {
+        "id": "r1-14",
+        "drawRace": 15,
+        "berks": {
+          "name": "Sydney R.C., AUS",
+          "shortName": "Sydney R.C., AUS"
+        },
+        "bucks": {
+          "name": "Thames Rowing Club 'C'",
+          "shortName": "Thames R .C . 'C'",
+          "number": 64
+        }
+      },
+      {
+        "id": "r1-15",
+        "drawRace": 16,
+        "berks": {
+          "name": "Thames Rowing Club 'B'",
+          "shortName": "Thames R.C. 'B'",
+          "number": 63
+        },
+        "bucks": {
+          "name": "UK Armed Forces Rowing Club",
+          "shortName": "UK Armed Forces R .C",
+          "number": 68
+        }
+      }
+    ],
+    [
+      {
+        "id": "r2-0",
+        "drawRace": 1,
+        "feeders": [
+          "r1-0",
+          "r1-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-1",
+        "drawRace": 2,
+        "feeders": [
+          "r1-2",
+          "r1-3"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-2",
+        "drawRace": 3,
+        "feeders": [
+          "r1-4",
+          "r1-5"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-3",
+        "drawRace": 4,
+        "feeders": [
+          "r1-6",
+          "r1-7"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-4",
+        "drawRace": 5,
+        "feeders": [
+          "r1-8",
+          "r1-9"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-5",
+        "drawRace": 6,
+        "feeders": [
+          "r1-10",
+          "r1-11"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-6",
+        "drawRace": 7,
+        "feeders": [
+          "r1-12",
+          "r1-13"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "r2-7",
+        "drawRace": 8,
+        "feeders": [
+          "r1-14",
+          "r1-15"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": [
+          "r2-0",
+          "r2-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": [
+          "r2-2",
+          "r2-3"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "feeders": [
+          "r2-4",
+          "r2-5"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": [
+          "r2-6",
+          "r2-7"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

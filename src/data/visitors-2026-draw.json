@@ -1,0 +1,154 @@
+{
+  "event": "The Visitors' Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "Nautilus Rowing Club 'B'",
+          "shortName": "Nautilus R.C. 'B'",
+          "number": 359
+        },
+        "bucks": {
+          "name": "Molesey Boat Club",
+          "shortName": "Molesey B.C.",
+          "number": 357
+        }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "Ruder-Club Allemannia von 1866 e.V., Hamburg and Erster Kieler Ruder-Club von 1862 e.V., Germany",
+          "shortName": "Allemannia & Erster Kieler R.C.s, GER",
+          "number": 364
+        },
+        "bucks": {
+          "name": "Potomac Boat Club, U.S.A.",
+          "shortName": "Potomac B.C., USA",
+          "number": 363
+        }
+      },
+      {
+        "id": "r1-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "Tideway Scullers' School and Ever Green Boat Club, U.S.A.",
+          "shortName": "T.S.S. & Ever Green B.C., USA",
+          "number": 367
+        },
+        "bucks": {
+          "name": "Leander Club 'B'",
+          "shortName": "Leander Club 'B'",
+          "number": 356
+        }
+      },
+      {
+        "id": "r1-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "St. Edward's Martyrs Boat Club and Tideway Scullers' School",
+          "shortName": "Martyrs B.C. & Tideway Sc. Sch.",
+          "number": 366
+        },
+        "bucks": {
+          "name": "Nautilus Rowing Club 'C'",
+          "shortName": "Nautilus R.C. 'C'",
+          "number": 360
+        }
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": [
+          "r1-0"
+        ],
+        "berks": {
+          "name": "Nautilus Rowing Club 'A'",
+          "shortName": "Nautilus R.C. 'A'",
+          "number": 358
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": [
+          "r1-1"
+        ],
+        "berks": {
+          "name": "Oxford University and Erster Wiener Ruderclub Lia, Austria",
+          "shortName": "Oxford Univ. & E.W.R.C. Lia, AUT",
+          "number": 362
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "feeders": [
+          "r1-2"
+        ],
+        "berks": {
+          "name": "Leander Club 'A'",
+          "shortName": "Leander Club 'A'",
+          "number": 355
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": [
+          "r1-3"
+        ],
+        "berks": {
+          "name": "Algemene Amsterdamsche Studenten Roeivereniging Skøll and Tilburgse Studenten Roeivereniging Vidar, Netherlands",
+          "shortName": "A.A.S.R. Skøll & T.S.R. Vidar, NED",
+          "number": 352
+        },
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

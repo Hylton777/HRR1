@@ -1,0 +1,65 @@
+{
+  "event": "The Queen Mother Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "Oxford Brookes University and Queen's University, Belfast",
+          "shortName": "Oxford Brookes & Queen's, Belfast",
+          "number": 430
+        },
+        "bucks": {
+          "name": "Leander Club",
+          "shortName": "Leander Club",
+          "number": 428
+        }
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "r1-0"
+        ],
+        "berks": {
+          "name": "Associação Desportiva Naval Remo, Portugal and Skibbereen Rowing Club, Ireland",
+          "shortName": "Naval Remo, POR & Skibbereen, IRL",
+          "number": 427
+        },
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "Leander Club and Twickenham Rowing Club",
+          "shortName": "Leander Club & Twickenham R.C.",
+          "number": 429
+        },
+        "bucks": {
+          "name": "Team Italia, Italy",
+          "shortName": "Team Italia, ITA",
+          "number": 431
+        }
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}

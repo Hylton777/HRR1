@@ -1,0 +1,182 @@
+{
+  "event": "The Britannia Challenge Cup",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "Wallingford R .C",
+          "shortName": "Wallingford R .C"
+        },
+        "bucks": {
+          "name": "Potomac B.C., USA",
+          "shortName": "Potomac B.C., USA"
+        }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "Vesta R .C",
+          "shortName": "Vesta R .C"
+        },
+        "bucks": {
+          "name": "Molesey B.C",
+          "shortName": "Molesey B.C"
+        }
+      },
+      {
+        "id": "r1-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "Nottingham R .C",
+          "shortName": "Nottingham R .C"
+        },
+        "bucks": {
+          "name": "Thames R.C. 'A'",
+          "shortName": "Thames R.C. 'A'"
+        }
+      },
+      {
+        "id": "r1-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "Avon R .C ., NZL",
+          "shortName": "Avon R .C ., NZL"
+        },
+        "bucks": {
+          "name": "K.A.R.Z.V . De Hoop, NED",
+          "shortName": "K.A.R.Z.V . De Hoop, NED"
+        }
+      },
+      {
+        "id": "r1-4",
+        "drawRace": 5,
+        "berks": {
+          "name": "London R.C. 'A'",
+          "shortName": "London R.C. 'A'"
+        },
+        "bucks": {
+          "name": "London R .C . 'B'",
+          "shortName": "London R .C . 'B'"
+        }
+      },
+      {
+        "id": "r1-5",
+        "drawRace": 6,
+        "berks": {
+          "name": "Marlow R.C",
+          "shortName": "Marlow R.C"
+        },
+        "bucks": {
+          "name": "Lea R .C",
+          "shortName": "Lea R .C"
+        }
+      },
+      {
+        "id": "r1-6",
+        "drawRace": 7,
+        "berks": {
+          "name": "Thames R.C. 'B'",
+          "shortName": "Thames R.C. 'B'"
+        },
+        "bucks": {
+          "name": "Shoreham R .C",
+          "shortName": "Shoreham R .C"
+        }
+      },
+      {
+        "id": "r1-7",
+        "drawRace": 8,
+        "berks": {
+          "name": "Royal Chester R.C",
+          "shortName": "Royal Chester R.C"
+        },
+        "bucks": {
+          "name": "Fairmount R .A ., USA",
+          "shortName": "Fairmount R .A ., USA"
+        }
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": [
+          "r1-0",
+          "r1-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": [
+          "r1-2",
+          "r1-3"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "feeders": [
+          "r1-4",
+          "r1-5"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": [
+          "r1-6",
+          "r1-7"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": [
+          "qf-0",
+          "qf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": [
+          "qf-2",
+          "qf-3"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": [
+          "sf-0",
+          "sf-1"
+        ],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}
