@@ -204,7 +204,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     raceDays: WED_SUN_5ROUND_DAYS,
     roundSizes: [16, 8, 4, 2, 1],
     roundLabels: ["1st Round", "2nd Round", "Quarter-Final", "Semi-Final", "Final"],
-    seededCrewNumbers: [117, 118, 119, 127, 130, 136, 144, 149, 152, 155, 162, 184, 189, 191, 195, 199, 200, 201],
+    seededCrewNumbers: [117, 119, 127, 130, 136, 144, 162, 184, 189, 195, 199, 201],
     seededCrewNames: [],
     noRacingNote: "Wed\u2013Sun (no Tuesday heats) \u2014 times publish around 9pm BST the evening before.",
     category: "student-mens-eights",
