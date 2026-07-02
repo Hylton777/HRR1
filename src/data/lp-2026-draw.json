@@ -32,80 +32,72 @@
           "shortName": "Oxford Brookes Univ.",
           "number": 11
         }
-      },
+      }
+    ],
+    [
       {
-        "id": "r1-2",
-        "drawRace": 3,
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": ["r1-0"],
         "berks": {
           "name": "Leander Club",
           "shortName": "Leander Club",
           "number": 1
         },
-        "bucks": {
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": ["r1-1"],
+        "berks": {
           "name": "Molesey Boat Club and Amsterdamsche Studenten Roeivereeniging Nereus, Netherlands",
           "shortName": "Molesey B.C. & A.S.R. Nereus, NED",
           "number": 2
-        }
+        },
+        "bucks": null
       },
       {
-        "id": "r1-3",
-        "drawRace": 4,
+        "id": "qf-2",
+        "drawRace": 3,
         "berks": {
           "name": "Nautilus Rowing Club",
           "shortName": "Nautilus R.C.",
           "number": 3
         },
         "bucks": {
-          "name": "University of Washington, U.S.A.",
-          "shortName": "Univ. of Washington, USA",
-          "number": 4
-        }
-      },
-      {
-        "id": "r1-4",
-        "drawRace": 5,
-        "berks": {
-          "name": "Thames Rowing Club",
-          "shortName": "Thames R.C.",
-          "number": 5
-        },
-        "bucks": {
           "name": "Cambridge University and Harvard University, U.S.A.",
           "shortName": "Cambridge Univ. & Harvard Univ., USA",
           "number": 6
         }
-      }
-    ],
-    [
-      {
-        "id": "r2-0",
-        "drawRace": 1,
-        "feeders": [
-          "r1-0",
-          "r1-1"
-        ],
-        "berks": null,
-        "bucks": null
       },
       {
-        "id": "r2-1",
-        "drawRace": 2,
-        "feeders": [
-          "r1-2",
-          "r1-3"
-        ],
-        "berks": null,
-        "bucks": null
+        "id": "qf-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "University of Washington, U.S.A.",
+          "shortName": "Univ. of Washington, USA",
+          "number": 4
+        },
+        "bucks": {
+          "name": "Thames Rowing Club",
+          "shortName": "Thames R.C.",
+          "number": 5
+        }
       }
     ],
     [
       {
         "id": "sf-0",
         "drawRace": 1,
-        "feeders": [
-          "r2-0",
-          "r2-1"
-        ],
+        "feeders": ["qf-0", "qf-1"],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": ["qf-2", "qf-3"],
         "berks": null,
         "bucks": null
       }
@@ -114,10 +106,7 @@
       {
         "id": "final-0",
         "drawRace": 1,
-        "feeders": [
-          "sf-0",
-          "r1-4"
-        ],
+        "feeders": ["sf-0", "sf-1"],
         "berks": null,
         "bucks": null
       }
