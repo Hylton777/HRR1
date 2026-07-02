@@ -10,7 +10,7 @@ The app is multi-event: draw JSON + `events.ts` config drive everything else (`/
 
 1. **Research the official draw** — [HRR draw PDF](https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf), [race timetable](https://www.hrr.co.uk/compete/race-timetable/), [HRR results API](https://www.hrr.co.uk/wp-json/hrr/v1/results).
 2. **Create draw JSON** — `src/data/<event-id>-2026-draw.json`.
-3. **Register event** — `src/config/events.ts` (`EventId`, `EVENTS`, `EVENT_LIST`).
+3. **Register event** — `src/config/events.ts` (`EventId`, `EVENTS`, `EVENT_LIST`, `headerSubtitle` in POW format).
 4. **Verify bracket shape** — `roundSizes` must match `draw.rounds[].length` per round.
 5. **Verify feeder mapping** — every progression path must match the steward chart, including byes.
 6. **Verify visual alignment** — connector lines must run from each heat to the correct TBD slot.
@@ -96,7 +96,7 @@ new: {
   year: 2026,
   displayName: "… Challenge Cup",
   shortLabel: "Wyfold",                     // tab button text
-  headerSubtitle: "Live knockout bracket · N crews · …",
+  headerSubtitle: "Live knockout bracket · N crews · …",  // see Header subtitle below
   crewCount: 32,
   draw: newDraw as DrawData,
   raceDays: PE_RACE_DAYS,                   // or custom — see below
@@ -111,6 +111,30 @@ new: {
 Add to `EVENT_LIST` in tab order.
 
 **URL persistence:** `?event=new` (PE stays default with no param). `isEventId()` picks it up automatically.
+
+---
+
+## Header subtitle (`headerSubtitle`)
+
+Shown under the page title in `HomeView.tsx`. **Every event must use the same three-part format as POW** — do not put schedule notes, bye formats, or draw quirks here (those belong in `noRacingNote` or the draw JSON).
+
+```
+Live knockout bracket · {crewCount} crews · {event category}
+```
+
+| Event | `headerSubtitle` |
+|-------|------------------|
+| PE | `Live knockout bracket · 32 crews · Junior men's eights` |
+| POW | `Live knockout bracket · 16 crews · Intermediate quads` |
+| Ladies | `Live knockout bracket · 10 crews · Intermediate men's eights` |
+| Wyfold | `Live knockout bracket · 32 crews · Club coxless fours` |
+| Goblets | `Live knockout bracket · 8 crews · Premier men's coxless pairs` |
+
+Rules:
+
+- Always **`{crewCount} crews`** — never "pairs", "heats", or bye counts in the subtitle.
+- Third segment = HRR **event category** (e.g. Intermediate quads), not format/scheduling detail.
+- Use middle dot ` · ` separators (same as POW).
 
 ---
 

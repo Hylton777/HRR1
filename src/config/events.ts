@@ -220,7 +220,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     year: 2026,
     displayName: "Ladies' Challenge Plate",
     shortLabel: "Ladies",
-    headerSubtitle: "Live knockout bracket · 10 crews · 2 Thursday heats, 6 byes to Friday",
+    headerSubtitle: "Live knockout bracket · 10 crews · Intermediate men's eights",
     crewCount: 10,
     draw: lpDraw as DrawData,
     raceDays: LP_RACE_DAYS,
@@ -284,8 +284,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     year: 2026,
     displayName: "Silver Goblets & Nickalls' Challenge Cup",
     shortLabel: "Goblets",
-    headerSubtitle:
-      "Live knockout bracket · 8 pairs · Premier men's coxless pairs",
+    headerSubtitle: "Live knockout bracket · 8 crews · Premier men's coxless pairs",
     crewCount: 8,
     draw: gobletsDraw as DrawData,
     raceDays: GOBLETS_RACE_DAYS,
