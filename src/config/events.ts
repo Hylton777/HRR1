@@ -132,7 +132,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     raceDays: THU_SUN_4ROUND_DAYS,
     roundSizes: [2, 4, 2, 1],
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
-    seededCrewNumbers: [1, 3, 4, 6],
+    seededCrewNumbers: [6, 10, 14, 5],
     seededCrewNames: [],
     noRacingNote: "Ladies' races Thu\u2013Sun \u2014 times publish around 9pm BST the evening before.",
     category: "intermediate-mens-eights",
@@ -392,7 +392,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
   "princess-of-wales": {
     id: "princess-of-wales",
     trophySlug: "the-princess-of-wales-challenge-trophy",
-    timetableCodes: ["P Wales"],
+    timetableCodes: ["P Wales", "Ps Wales"],
     year: 2026,
     displayName: "Princess of Wales Challenge Trophy",
     shortLabel: "P Wales",
