@@ -2,7 +2,7 @@
 
 import type { EventConfig } from "@/config/events";
 import {
-  getEventBoatClassLabel,
+  formatEventSelectorOption,
   groupEventsForSelector,
 } from "@/config/event-selector-groups";
 
@@ -13,7 +13,7 @@ interface EventTabsProps {
 }
 
 function optionLabel(event: EventConfig): string {
-  return `${event.shortLabel} · ${getEventBoatClassLabel(event.category)}`;
+  return formatEventSelectorOption(event);
 }
 
 export default function EventTabs({
