@@ -89,7 +89,10 @@ export default function Dashboard({ eventId }: DashboardProps) {
               </div>
               <Bracket bracket={data.bracket} />
               <div className="xl:hidden mt-6">
-                <RecentResultsPanel results={data.results ?? []} />
+                <RecentResultsPanel
+                  results={data.results ?? []}
+                  rounds={data.bracket.rounds}
+                />
               </div>
             </section>
 
@@ -103,7 +106,10 @@ export default function Dashboard({ eventId }: DashboardProps) {
                   timetableDay={data.timetableDay}
                 />
               </div>
-              <RecentResultsPanel results={data.results ?? []} />
+              <RecentResultsPanel
+                results={data.results ?? []}
+                rounds={data.bracket.rounds}
+              />
             </aside>
           </div>
 
