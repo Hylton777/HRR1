@@ -518,6 +518,15 @@ def special_draw_crews(draw_text: str, key: str) -> list[str]:
       block = "Cantabrigian R.C." + (m.group(1) if m else "")
       return extract_crew_lines(block)
   if key == "wargrave":
+      # Wargrave crews sit on the continued draw page *before* the section header.
+      start = draw_text.find("The Draw— continued\nYork City")
+      end = draw_text.find("THE W ARGRAVE CHALLENGE CUP", start)
+      if start >= 0 and end > start:
+          block = draw_text[start:end]
+          lines = extract_crew_lines(block)
+          if len(lines) > 32:
+              lines = lines[:32]
+          return lines
       m = re.search(
           r"THE W\s*ARGRAVE CHALLENGE CUP\s*(.*?)(?:THE WYFOLD CHALLENGE CUP|THE W\s*YFOLD)",
           draw_text,

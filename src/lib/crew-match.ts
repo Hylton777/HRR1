@@ -226,6 +226,13 @@ function isDistinctCrewVariant(a: string, b: string): boolean {
 
   const na = normalizeCrewName(a);
   const nb = normalizeCrewName(b);
+  // Lea R.C. normalizes to "lea"; must not match Leander Club via prefix.
+  if (
+    (na.includes("leander") && nb === "lea") ||
+    (nb.includes("leander") && na === "lea")
+  ) {
+    return true;
+  }
   const kingsCollege = /\bking'?s college(?: school)?\b/;
   const kingsSchool = /\bking'?s school\b/;
   if (
@@ -356,6 +363,31 @@ function hasConflictingSquadLetters(a: string, b: string): boolean {
   return !lettersA.some((letter) => lettersB.includes(letter));
 }
 
+/** HRR often omits squad letters on shortName while full name has 'A'/'B'/etc. */
+function genericResultShortNameConflictsWithDraw(
+  drawCrew: Crew,
+  resultCrew: Crew,
+  comparingName: string,
+): boolean {
+  if (comparingName !== resultCrew.shortName) return false;
+  if (!resultCrew.shortName || resultCrew.shortName === resultCrew.name) {
+    return false;
+  }
+  if (squadLettersInName(resultCrew.shortName).length > 0) return false;
+
+  const drawLetters = [
+    ...squadLettersInName(drawCrew.name),
+    ...squadLettersInName(drawCrew.shortName ?? ""),
+  ];
+  const resultLetters = squadLettersInName(resultCrew.name);
+  if (!drawLetters.length || !resultLetters.length) return false;
+
+  return hasConflictingSquadLetters(
+    `crew '${drawLetters[0]}'`,
+    `crew '${resultLetters[0]}'`,
+  );
+}
+
 export function crewsMatch(
   a: string,
   b: string,
@@ -422,6 +454,11 @@ export function crewResultMatchesDraw(
   for (const drawName of nameVariants(drawCrew)) {
     for (const resultName of nameVariants(resultCrew)) {
       if (onlySharesGenericTokens(drawName, resultName)) continue;
+      if (
+        genericResultShortNameConflictsWithDraw(drawCrew, resultCrew, resultName)
+      ) {
+        continue;
+      }
       if (
         crewsMatch(drawName, resultName, {
           numberA: drawCrew.number,

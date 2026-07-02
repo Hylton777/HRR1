@@ -131,6 +131,9 @@ npx tsx scripts/test-deep-check.ts
 
 - [ ] **Fawley draw-sheet order** — R1 top-to-bottom: George Watson/Los Gatos 'A', St Paul's/Lea, … Los Gatos 'B'/Claires. Thursday last-16: `r2-6` = Kingston feeder vs **Tideway** bye; `r2-7` = Claires feeder vs **Hinksey** bye (not swapped). Repair: `repair_fawley()` + `FAWLEY_OFFICIAL_R1_KEYS` in `scripts/phase3-bye-draws.py`. All 16 HRR results should apply.
 
+- [ ] **Wargrave draw-sheet order** — R1 follows the continued draw page top-to-bottom (race 1 = `r1-0` York vs Bristol; race 8 = `r1-7` Molesey 'C' vs Vesta 'A'). Wednesday last-16 bye pairings: `r2-0` Mercantile + Bristol winner, `r2-3` Thames 'A' + London 'B' winner, `r2-4` London 'A' + Cambridge winner, `r2-5` Tyne + Thames 'B' winner, `r2-6` Molesey 'A' + Lea winner, `r2-7` Sydney + Molesey 'C' winner. Distinct squad `shortName` values required for Thames/Molesey/London/Vesta. Automated repair: `scripts/phase2-bye-draws.py` `repair_wargrave()`. Confirm all 18 Wargrave results apply.
+
+
 - [ ] **Regatta day per round** — `raceDays` in `events.ts` drives which rounds are expected on which day (`getScheduledRegattaDayForRound()` in `src/lib/regatta-days.ts`). Manual: on Wednesday, Wednesday-round matches may show times; Friday rounds should not show stale times from timetable bleed (`stripUnpublishedScheduleTimes` in `bracket-engine.ts`).
 
 ---
