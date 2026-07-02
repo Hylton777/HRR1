@@ -1,0 +1,177 @@
+{
+  "event": "The Diamond Challenge Sculls",
+  "year": 2026,
+  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "rounds": [
+    [
+      {
+        "id": "r1-0",
+        "drawRace": 1,
+        "berks": {
+          "name": "N.R. Whalan, Sydney Rowing Club, Australia",
+          "shortName": "N.R. Whalan, AUS",
+          "number": 837
+        },
+        "bucks": {
+          "name": "C. Baxter, Rowing South Africa, South Africa",
+          "shortName": "C. Baxter, RSA",
+          "number": 813
+        }
+      },
+      {
+        "id": "r1-1",
+        "drawRace": 2,
+        "berks": {
+          "name": "A.G. Clack, Leander Club",
+          "shortName": "A.G. Clack",
+          "number": 814
+        },
+        "bucks": {
+          "name": "K. Hultsch, Ruderverein Wiking Linz, Austria",
+          "shortName": "K. Hultsch, AUT",
+          "number": 820
+        }
+      },
+      {
+        "id": "r1-2",
+        "drawRace": 3,
+        "berks": {
+          "name": "S. Cuthbertson, Reading University",
+          "shortName": "S. Cuthbertson",
+          "number": 815
+        },
+        "bucks": {
+          "name": "J.R. Poulsen, Bagsværd Roklub, Denmark",
+          "shortName": "J.R. Poulsen, DEN",
+          "number": 832
+        }
+      },
+      {
+        "id": "r1-3",
+        "drawRace": 4,
+        "berks": {
+          "name": "M. Bateman, Henley Rowing Club",
+          "shortName": "M. Bateman",
+          "number": 812
+        },
+        "bucks": {
+          "name": "D.M.V. Gonçalves, Real Club Fluvial Portuense, Portugal",
+          "shortName": "D.M.V. Gonçalves, POR",
+          "number": 818
+        }
+      },
+      {
+        "id": "r1-4",
+        "drawRace": 5,
+        "berks": {
+          "name": "O. Zeidler, Frankfurter Rudergesellschaft Germania 1869 e.V., Germany",
+          "shortName": "O. Zeidler, GER",
+          "number": 840
+        },
+        "bucks": {
+          "name": "J.C. Bakker, Groninger Studenten Roeivereniging Aegir, Netherlands",
+          "shortName": "J.C. Bakker, NED",
+          "number": 810
+        }
+      },
+      {
+        "id": "r1-5",
+        "drawRace": 6,
+        "berks": {
+          "name": "N.R. Mohr, Cambridge University",
+          "shortName": "N.R. Mohr",
+          "number": 827
+        },
+        "bucks": {
+          "name": "M.Q. Oddershede, Bagsværd Roklub, Denmark",
+          "shortName": "M.Q. Oddershede, DEN",
+          "number": 830
+        }
+      },
+      {
+        "id": "r1-6",
+        "drawRace": 7,
+        "berks": {
+          "name": "B.C.D. Parsonage, Clydesdale Amateur Rowing Club",
+          "shortName": "B.C.D. Parsonage",
+          "number": 831
+        },
+        "bucks": {
+          "name": "J.E. Lawn, Vesta Rowing Club",
+          "shortName": "J.E. Lawn",
+          "number": 823
+        }
+      },
+      {
+        "id": "r1-7",
+        "drawRace": 8,
+        "berks": {
+          "name": "T. Gränitz, Berliner Ruderclub, Germany",
+          "shortName": "T. Gränitz, GER",
+          "number": 819
+        },
+        "bucks": {
+          "name": "A.M.C. Jackson, London Rowing Club",
+          "shortName": "A.M.C. Jackson",
+          "number": 821
+        }
+      }
+    ],
+    [
+      {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": ["r1-0", "r1-1"],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": ["r1-2", "r1-3"],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "feeders": ["r1-4", "r1-5"],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": ["r1-6", "r1-7"],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "sf-0",
+        "drawRace": 1,
+        "feeders": ["qf-0", "qf-1"],
+        "berks": null,
+        "bucks": null
+      },
+      {
+        "id": "sf-1",
+        "drawRace": 2,
+        "feeders": ["qf-2", "qf-3"],
+        "berks": null,
+        "bucks": null
+      }
+    ],
+    [
+      {
+        "id": "final-0",
+        "drawRace": 1,
+        "feeders": ["sf-0", "sf-1"],
+        "berks": null,
+        "bucks": null
+      }
+    ]
+  ]
+}
