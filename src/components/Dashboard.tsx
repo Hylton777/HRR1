@@ -75,8 +75,6 @@ export default function Dashboard({ eventId }: DashboardProps) {
             onRefresh={() => mutate()}
           />
 
-          <ResultAuditBanner audit={data.resultAudit} />
-
           <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-6 sm:gap-8">
             <section className="min-w-0">
               <h2 className="font-display text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-[var(--hrr-navy)]">
@@ -108,6 +106,8 @@ export default function Dashboard({ eventId }: DashboardProps) {
               <RecentResultsPanel results={data.results ?? []} />
             </aside>
           </div>
+
+          <ResultAuditBanner audit={data.resultAudit} />
 
           <p className="text-xs text-[var(--muted)] text-center pt-4 border-t border-[var(--card-border)]">
             Auto-refreshes every 30 seconds. Produced by Hylton.

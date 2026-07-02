@@ -519,27 +519,38 @@ function updateStatuses(rounds: BracketMatch[][]): void {
 }
 
 export function collectUpcomingRaces(rounds: BracketMatch[][]): UpcomingRace[] {
-  const upcoming = rounds
-    .flat()
-    .filter((match) => match.status === "scheduled")
-    .map((match) => ({
-      id: match.id,
-      roundLabel: match.roundLabel,
-      berks: match.berks,
-      bucks: match.bucks,
-      raceNumber: match.raceNumber,
-      raceTime: match.raceTime,
-      raceDay: match.raceDay,
-    }));
+  const upcoming = rounds.flatMap((round, roundIndex) =>
+    round
+      .filter((match) => match.status === "scheduled")
+      .map((match) => ({
+        race: {
+          id: match.id,
+          roundLabel: match.roundLabel,
+          berks: match.berks,
+          bucks: match.bucks,
+          raceNumber: match.raceNumber,
+          raceTime: match.raceTime,
+          raceDay: match.raceDay,
+        },
+        roundIndex,
+      })),
+  );
 
-  return upcoming.sort((a, b) => {
-    if (a.raceTime && b.raceTime) {
-      return a.raceTime.localeCompare(b.raceTime);
+  upcoming.sort((a, b) => {
+    if (a.roundIndex !== b.roundIndex) {
+      return a.roundIndex - b.roundIndex;
     }
-    if (a.raceTime) return -1;
-    if (b.raceTime) return 1;
+    const raceA = a.race;
+    const raceB = b.race;
+    if (raceA.raceTime && raceB.raceTime) {
+      return raceA.raceTime.localeCompare(raceB.raceTime);
+    }
+    if (raceA.raceTime) return -1;
+    if (raceB.raceTime) return 1;
     return 0;
   });
+
+  return upcoming.map((entry) => entry.race);
 }
 
 function validateDrawStructure(

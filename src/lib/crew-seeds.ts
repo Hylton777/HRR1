@@ -79,15 +79,31 @@ export function enrichCrew(
 
   let merged = crew;
   if (registry) {
-    for (const [, entry] of registry) {
-      if (crewsMatch(entry.name, crew.name)) {
-        merged = {
-          ...entry,
-          ...crew,
-          shortName: crew.shortName ?? entry.shortName,
-          number: crew.number ?? entry.number,
-        };
-        break;
+    if (crew.number != null) {
+      for (const [, entry] of registry) {
+        if (entry.number != null && entry.number === crew.number) {
+          merged = {
+            ...entry,
+            ...crew,
+            shortName: crew.shortName ?? entry.shortName,
+            number: crew.number,
+          };
+          break;
+        }
+      }
+    }
+
+    if (merged === crew) {
+      for (const [, entry] of registry) {
+        if (crewsMatch(entry.name, crew.name)) {
+          merged = {
+            ...entry,
+            ...crew,
+            shortName: crew.shortName ?? entry.shortName,
+            number: crew.number ?? entry.number,
+          };
+          break;
+        }
       }
     }
   }
