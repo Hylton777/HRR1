@@ -1,213 +1,169 @@
 {
   "event": "The Fawley Challenge Cup",
   "year": 2026,
-  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
-  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "source": "Henley Royal Regatta 2026 Draw (repaired from HRR results + entries)",
+  "sourceUrl": "https://www.hrr.co.uk/wp-json/hrr/v1/results",
   "rounds": [
     [
       {
         "id": "r1-0",
         "drawRace": 1,
         "berks": {
-          "name": "The King's School, Worcester",
-          "shortName": "King's Sch., Worcester",
-          "number": 596
+          "name": "St. Paul’s School ‘A’",
+          "shortName": "St. Paul's Sch.",
+          "number": 589
         },
         "bucks": {
-          "name": "Westminster Sch",
-          "shortName": "Westminster Sch"
+          "name": "Lea Rowing Club ‘A’",
+          "shortName": "Lea R.C.",
+          "number": 563
         }
       },
       {
         "id": "r1-1",
         "drawRace": 2,
         "berks": {
-          "name": "King's Sch ., Chester",
-          "shortName": "King's Sch ., Chester"
+          "name": "George Watson’s College",
+          "shortName": "George Watson's Coll.",
+          "number": 552
         },
         "bucks": {
-          "name": "Shiplake College 'A'",
-          "shortName": "Shiplake Coll",
-          "number": 583
+          "name": "Los Gatos Rowing Club ‘A’, U.S.A.",
+          "shortName": "Los Gatos R.C.",
+          "number": 566
         }
       },
       {
         "id": "r1-2",
         "drawRace": 3,
         "berks": {
-          "name": "Claires Court School 'A'",
-          "shortName": "Claires Court Sch",
-          "number": 546
+          "name": "Tauranga Boys’ College, New Zealand",
+          "shortName": "Tauranga Boys' Coll.",
+          "number": 591
         },
         "bucks": {
-          "name": "Enniskillen Royal B .C",
-          "shortName": "Enniskillen Royal B .C"
+          "name": "Belen Jesuit Preparatory School ‘B’, U.S.A.",
+          "shortName": "Belen Jesuit Prep. Sch.",
+          "number": 542
         }
       },
       {
         "id": "r1-3",
         "drawRace": 4,
         "berks": {
-          "name": "Phillips Exeter, USA",
-          "shortName": "Phillips Exeter, USA"
+          "name": "Wallingford Rowing Club ‘A’",
+          "shortName": "Wallingford R.C.",
+          "number": 602
         },
         "bucks": {
-          "name": "St. Edward's Sch",
-          "shortName": "St. Edward's Sch"
+          "name": "Tiffin School",
+          "shortName": "Tiffin Sch.",
+          "number": 600
         }
       },
       {
         "id": "r1-4",
         "drawRace": 5,
         "berks": {
-          "name": "Latymer Upper Sch",
-          "shortName": "Latymer Upper Sch"
+          "name": "Aramoho Whanganui Rowing Club, New Zealand",
+          "shortName": "Aramoho Whanganui R.C.",
+          "number": 538
         },
         "bucks": {
-          "name": "King's Coll. Sch",
-          "shortName": "King's Coll. Sch"
+          "name": "Hereford Cathedral School",
+          "shortName": "Hereford Cathedral Sch.",
+          "number": 555
         }
       },
       {
         "id": "r1-5",
         "drawRace": 6,
         "berks": {
-          "name": "Dulwich Coll",
-          "shortName": "Dulwich Coll"
+          "name": "Ridley College, Canada",
+          "shortName": "Ridley Coll.",
+          "number": 582
         },
         "bucks": {
-          "name": "Deerfield Academy, USA",
-          "shortName": "Deerfield Academy, USA"
+          "name": "Norwich School ‘A’",
+          "shortName": "Norwich Sch.",
+          "number": 579
         }
       },
       {
         "id": "r1-6",
         "drawRace": 7,
         "berks": {
-          "name": "Los Gatos Rowing Club 'A', U.S.A.",
-          "shortName": "Los Gatos R .C ., USA",
-          "number": 566
+          "name": "Kingston Rowing Club ‘A’",
+          "shortName": "Kingston R.C.",
+          "number": 561
         },
         "bucks": {
-          "name": "The Windsor Boys' School",
-          "shortName": "Windsor Boys' Sch",
-          "number": 597
+          "name": "City of Cambridge Rowing Club ‘A’",
+          "shortName": "City of Cambridge R.C.",
+          "number": 544
         }
       },
       {
         "id": "r1-7",
         "drawRace": 8,
         "berks": {
-          "name": "Montclair High Sch ., USA",
-          "shortName": "Montclair High Sch ., USA"
+          "name": "Los Gatos Rowing Club ‘B’, U.S.A.",
+          "shortName": "Los Gatos R.C.",
+          "number": 567
         },
         "bucks": {
-          "name": "Hampton Sch",
-          "shortName": "Hampton Sch"
+          "name": "Claires Court School ‘A’",
+          "shortName": "Claires Court Sch.",
+          "number": 546
         }
       },
       {
         "id": "r1-8",
         "drawRace": 9,
-        "berks": {
-          "name": "Radley Coll",
-          "shortName": "Radley Coll"
-        },
-        "bucks": {
-          "name": "Belen Jesuit Preparatory School 'A', U.S.A.",
-          "shortName": "Belen Jesuit Prep . Sch ., USA",
-          "number": 541
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-9",
         "drawRace": 10,
-        "berks": {
-          "name": "Abingdon School",
-          "shortName": "Abingdon Sch",
-          "number": 535
-        },
-        "bucks": {
-          "name": "Tideway Scullers' School 'A'",
-          "shortName": "Tideway Scullers' Sch",
-          "number": 598
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-10",
         "drawRace": 11,
-        "berks": {
-          "name": "Reading Blue Coat Sch",
-          "shortName": "Reading Blue Coat Sch"
-        },
-        "bucks": {
-          "name": "Boulogne 92 Aviron, FRA",
-          "shortName": "Boulogne 92 Aviron, FRA"
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-11",
         "drawRace": 12,
-        "berks": {
-          "name": "Bedford Sch",
-          "shortName": "Bedford Sch"
-        },
-        "bucks": {
-          "name": "Eton College",
-          "shortName": "Eton Coll",
-          "number": 550
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-12",
         "drawRace": 13,
-        "berks": {
-          "name": "St. Paul's School 'A'",
-          "shortName": "St. Paul's Sch",
-          "number": 589
-        },
-        "bucks": {
-          "name": "Marlow R .C",
-          "shortName": "Marlow R .C"
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-13",
         "drawRace": 14,
-        "berks": {
-          "name": "Kew House School",
-          "shortName": "Kew House Sch",
-          "number": 557
-        },
-        "bucks": {
-          "name": "KAND R .C ., AUS",
-          "shortName": "KAND R .C ., AUS"
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-14",
         "drawRace": 15,
-        "berks": {
-          "name": "Sydney Univ. B.C., AUS",
-          "shortName": "Sydney Univ. B.C., AUS"
-        },
-        "bucks": {
-          "name": "Winchester College",
-          "shortName": "Winchester Coll",
-          "number": 605
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-15",
         "drawRace": 16,
-        "berks": {
-          "name": "Shrewsbury Sch",
-          "shortName": "Shrewsbury Sch"
-        },
-        "bucks": {
-          "name": "Leeds R .C",
-          "shortName": "Leeds R .C"
-        }
+        "berks": null,
+        "bucks": null
       }
     ],
     [

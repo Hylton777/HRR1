@@ -138,15 +138,28 @@ export function parseTimetableCrew(raw: string): string {
   return raw.replace(/^\d+\s+/, "").trim();
 }
 
+function resultNameVariants(crew: HrrResult["winner"]): string[] {
+  const names = [crew.name];
+  if (crew.shortName && crew.shortName !== crew.name) {
+    names.push(crew.shortName);
+  }
+  return names;
+}
+
 export function resultMatchesPair(
   result: HrrResult,
   crewA: string,
   crewB: string,
 ): boolean {
-  const winner = result.winner.name;
-  const loser = result.loser.name;
-  return (
-    (crewsMatch(winner, crewA) && crewsMatch(loser, crewB)) ||
-    (crewsMatch(winner, crewB) && crewsMatch(loser, crewA))
-  );
+  for (const winner of resultNameVariants(result.winner)) {
+    for (const loser of resultNameVariants(result.loser)) {
+      if (
+        (crewsMatch(winner, crewA) && crewsMatch(loser, crewB)) ||
+        (crewsMatch(winner, crewB) && crewsMatch(loser, crewA))
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
 }

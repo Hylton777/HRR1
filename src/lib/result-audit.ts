@@ -52,6 +52,16 @@ function isLikelyPastRace(
   return getLondonNowMinutes() >= raceMinutes + 45;
 }
 
+function resultSideMatches(
+  bracketName: string,
+  resultName: string,
+  resultShortName?: string,
+): boolean {
+  if (crewsMatch(bracketName, resultName)) return true;
+  if (resultShortName && crewsMatch(bracketName, resultShortName)) return true;
+  return false;
+}
+
 function countUnmatchedResults(
   rounds: BracketMatch[][],
   results: HrrResult[],
@@ -64,9 +74,17 @@ function countUnmatchedResults(
         if (match.status !== "complete") continue;
         if (
           match.winner &&
-          crewsMatch(match.winner.name, result.winner.name) &&
           match.loser &&
-          crewsMatch(match.loser.name, result.loser.name)
+          resultSideMatches(
+            match.winner.name,
+            result.winner.name,
+            result.winner.shortName,
+          ) &&
+          resultSideMatches(
+            match.loser.name,
+            result.loser.name,
+            result.loser.shortName,
+          )
         ) {
           matched.add(result.id);
         }
