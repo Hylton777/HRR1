@@ -84,7 +84,9 @@ export function normalizeCrewName(name: string): string {
 
   s = s.replace(/\./g, " ");
   s = repairSpacedTokens(s);
-  s = s.replace(/\s+(rowing club|boat club|school|college)\.?$/gi, "");
+  s = s.replace(/\s+(rowing club|boat club)\.?$/gi, "");
+  s = s.replace(/(?<!college)\s+school\.?$/gi, "");
+  s = s.replace(/\s+college\.?$/gi, "");
   s = s.replace(/\s+/g, " ").trim();
   return s;
 }
@@ -143,6 +145,56 @@ function parseSquadSuffix(name: string): { base: string; squad: string } | null 
   return null;
 }
 
+function parseNamedSchool(
+  name: string,
+): { stem: string; location: string | null } | null {
+  const normalized = normalizeCrewName(name);
+  if (!/\bschool\b/.test(normalized)) return null;
+
+  const afterSchool = normalized.match(/\bschool[,.]?\s+(.+)$/);
+  const location = afterSchool?.[1]?.trim() || null;
+  let stem = normalized;
+  if (location) {
+    stem = normalized.slice(0, normalized.length - location.length).replace(/[,.]\s*$/, "").trim();
+  }
+
+  return { stem, location };
+}
+
+/** Distinguish e.g. King's College School vs The King's School, Worcester. */
+function areNamedSchoolVariantsDistinct(a: string, b: string): boolean {
+  const schoolA = parseNamedSchool(a);
+  const schoolB = parseNamedSchool(b);
+  if (!schoolA || !schoolB) return false;
+
+  const collegeA = schoolA.stem.includes("college");
+  const collegeB = schoolB.stem.includes("college");
+  if (collegeA !== collegeB && schoolA.stem.includes("king") && schoolB.stem.includes("king")) {
+    return true;
+  }
+
+  if (
+    schoolA.stem === schoolB.stem &&
+    schoolA.location &&
+    schoolB.location &&
+    schoolA.location !== schoolB.location
+  ) {
+    return true;
+  }
+
+  if (
+    schoolA.stem !== schoolB.stem &&
+    schoolA.stem.includes("king") &&
+    schoolB.stem.includes("king") &&
+    schoolA.stem.includes("school") &&
+    schoolB.stem.includes("school")
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 /** Names that share a prefix but denote different draw entries (e.g. Leander Club vs Leander Club & Leeds). */
 function isDistinctCrewVariant(a: string, b: string): boolean {
   if (a === b) return false;
@@ -168,6 +220,19 @@ function isDistinctCrewVariant(a: string, b: string): boolean {
   if (longer.includes(" and ") && !shorter.includes(" and ")) {
     const parts = splitCompositeParts(longer);
     if (parts.some((part) => part === shorter)) return true;
+  }
+
+  if (areNamedSchoolVariantsDistinct(a, b)) return true;
+
+  const na = normalizeCrewName(a);
+  const nb = normalizeCrewName(b);
+  const kingsCollege = /\bking'?s college(?: school)?\b/;
+  const kingsSchool = /\bking'?s school\b/;
+  if (
+    (kingsCollege.test(na) && kingsSchool.test(nb) && !kingsCollege.test(nb)) ||
+    (kingsCollege.test(nb) && kingsSchool.test(na) && !kingsCollege.test(na))
+  ) {
+    return true;
   }
 
   return false;
