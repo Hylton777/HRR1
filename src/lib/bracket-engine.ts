@@ -6,6 +6,12 @@ import {
   resultMatchesPair,
 } from "./hrr-api";
 import { enrichCrew, withSeededFlag } from "./crew-seeds";
+import type { RegattaDay } from "./regatta-days";
+import {
+  getScheduledRegattaDayForRound,
+  isRoundOnRegattaDay,
+  resolveRegattaDayIso,
+} from "./regatta-days";
 import type {
   BracketMatch,
   BracketState,
@@ -281,9 +287,16 @@ function findMatchForTimetableRace(
   bucksRaw: string,
   berksNumber: number | null,
   bucksNumber: number | null,
+  timetableDayIso: string | null,
+  raceDays: RegattaDay[],
 ): BracketMatch | null {
-  for (const round of rounds) {
-    for (const match of round) {
+  const roundIsEligible = (roundIndex: number): boolean =>
+    !timetableDayIso ||
+    isRoundOnRegattaDay(roundIndex, timetableDayIso, raceDays);
+
+  for (let ri = 0; ri < rounds.length; ri++) {
+    if (!roundIsEligible(ri)) continue;
+    for (const match of rounds[ri]) {
       if (match.status === "complete") continue;
       if (matchHasBothCrews(match, berksRaw, bucksRaw, berksNumber, bucksNumber)) {
         return match;
@@ -292,6 +305,7 @@ function findMatchForTimetableRace(
   }
 
   for (let ri = 0; ri < rounds.length; ri++) {
+    if (!roundIsEligible(ri)) continue;
     if (!pairMatchesRoundWinners(rounds, ri, berksRaw, bucksRaw)) continue;
     for (const match of rounds[ri]) {
       if (match.status === "complete") continue;
@@ -300,6 +314,7 @@ function findMatchForTimetableRace(
   }
 
   for (let ri = 0; ri < rounds.length; ri++) {
+    if (!roundIsEligible(ri)) continue;
     for (const match of rounds[ri]) {
       if (match.status === "complete") continue;
       const berks = getCrewName(match.berks);
@@ -454,12 +469,49 @@ function applyTimetableRace(
   }
 }
 
+/** HRR publishes one day's timetable at a time — never keep times on later rounds/days. */
+function stripUnpublishedScheduleTimes(
+  rounds: BracketMatch[][],
+  timetableDayIso: string | null,
+  raceDays: RegattaDay[],
+): void {
+  if (!timetableDayIso) return;
+
+  const timetableIdx = raceDays.findIndex((d) => d.isoDate === timetableDayIso);
+  if (timetableIdx < 0) return;
+
+  for (const round of rounds) {
+    for (const match of round) {
+      if (match.status === "complete") continue;
+
+      const scheduledDay = getScheduledRegattaDayForRound(
+        match.roundIndex,
+        raceDays,
+      );
+      if (!scheduledDay) continue;
+
+      const matchIdx = raceDays.findIndex(
+        (d) => d.isoDate === scheduledDay.isoDate,
+      );
+      if (matchIdx > timetableIdx) {
+        match.raceTime = null;
+        match.raceNumber = null;
+        match.raceDay = null;
+      }
+    }
+  }
+}
+
 function mergeTimetable(
   rounds: BracketMatch[][],
   timetable: TimetableData,
   registry: Map<string, Crew>,
+  raceDays: RegattaDay[],
 ): void {
   const { races, raceDay } = timetable;
+  const timetableDayIso = resolveRegattaDayIso(raceDay, raceDays);
+  if (!timetableDayIso || races.length === 0) return;
+
   const sortedRaces = [...races].sort((a, b) => {
     const numA = parseInt(a.raceNumber, 10) || 0;
     const numB = parseInt(b.raceNumber, 10) || 0;
@@ -477,8 +529,13 @@ function mergeTimetable(
       bucksRaw,
       berksNumber,
       bucksNumber,
+      timetableDayIso,
+      raceDays,
     );
     if (!match || match.status === "complete") continue;
+    if (!isRoundOnRegattaDay(match.roundIndex, timetableDayIso, raceDays)) {
+      continue;
+    }
 
     const bothDrawCrewsKnown = Boolean(match.berks && match.bucks);
     const emptySlot = !match.berks && !match.bucks;
@@ -505,6 +562,8 @@ function mergeTimetable(
 
     applyTimetableRace(match, race, raceDay);
   }
+
+  stripUnpublishedScheduleTimes(rounds, timetableDayIso, raceDays);
 }
 
 function updateStatuses(rounds: BracketMatch[][]): void {
@@ -692,7 +751,7 @@ export function buildBracket(
     );
   }
 
-  mergeTimetable(rounds, timetable, registry);
+  mergeTimetable(rounds, timetable, registry, event.raceDays);
   updateStatuses(rounds);
 
   const final = rounds[rounds.length - 1][0];
