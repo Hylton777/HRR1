@@ -127,7 +127,7 @@ npx tsx scripts/test-deep-check.ts
 
 - [ ] **`roundSizes` matches draw JSON length** — For each event, `draw.rounds[i].length === roundSizes[i]`. Automated: `validateRoundCounts()` in `src/lib/bracket-layout.ts` (surfaced as `bracketWarnings` on `/api/bracket/{eventId}`). API check: `roundCounts` array in JSON response.
 
-- [ ] **Temple day-1 feeder pairing** — Wednesday heats 13+15 feed `r2-6` (day-2 race 7) and heats 14+16 feed `r2-7` (day-2 race 8) via Henley cross-pairing (not adjacent 13+14 / 15+16). Automated repair: `scripts/phase3-bye-draws.py` `repair_temple()`. Confirm bracket connectors align and all 24 Temple results apply.
+- [ ] **Temple draw-sheet order** — R1 array follows the official draw top-to-bottom (race 1 = `r1-0` Brookes 'E' vs Asopos; race 16 = `r1-15` London vs Newcastle). Adjacent feeders then wire correctly: heats 3+4 → `r2-1` (Njord vs Washington), 5+6 → `r2-2` (Laga vs Wesleyan), 13+14 → `r2-6` (day-2 race 7), 15+16 → `r2-7` (day-2 race 8). Automated repair: `scripts/phase3-bye-draws.py` `repair_temple()`. Confirm bracket connectors align and all 24 Temple results apply.
 
 - [ ] **Regatta day per round** — `raceDays` in `events.ts` drives which rounds are expected on which day (`getScheduledRegattaDayForRound()` in `src/lib/regatta-days.ts`). Manual: on Wednesday, Wednesday-round matches may show times; Friday rounds should not show stale times from timetable bleed (`stripUnpublishedScheduleTimes` in `bracket-engine.ts`).
 
