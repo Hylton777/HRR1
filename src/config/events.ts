@@ -200,7 +200,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     crewCount: 32,
     draw: wargraveDraw as DrawData,
     raceDays: PE_RACE_DAYS,
-    roundSizes: [16, 8, 4, 2, 1],
+    roundSizes: [8, 8, 4, 2, 1],
     roundLabels: ["1st Round", "2nd Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [76, 79, 87, 89, 93, 94, 95, 102, 103, 104, 109],
     seededCrewNames: [],
