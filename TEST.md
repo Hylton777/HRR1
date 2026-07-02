@@ -119,15 +119,36 @@ npx tsx scripts/test-deep-check.ts
 
 - [ ] **Matches within a round follow `drawRace`** — Each `DrawMatch` in `src/data/*-draw.json` has `drawRace` (1-based race number on the official chart). `bracket-layout.ts` sorts by `drawRace ?? matchIndex` for collision resolution. Manual: compare vertical order in `BracketTreeCore` column to the [official draw PDF](https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf) for one event (e.g. `pe`, `thames`).
 
+- [ ] **Draw-sheet order, not race-time order (all events, all rounds)** — Every round in every event must follow the **official steward draw chart** (top-to-bottom on the PDF), **not** the chronological order results appear in the HRR API (`raceDateTime`). This is a hard requirement for correct feeder wiring and bracket connectors.
+  - **Convention in this repo:** `rounds[ri][0]` = top of the chart for that round (`drawRace: 1`); index increases down the page. Standard 32-crew trees pair **adjacent** draw races into the next round (1+2→R2-1, 3+4→R2-2, …) once R1 is in draw-sheet order.
+  - **Never build R1 from** `sorted(results, raceDateTime)` alone — that was the root cause of the Temple bug (London vs Newcastle listed first because it raced earliest, instead of Brookes 'E' vs Asopos at the top of the chart).
+  - **Safe sources:** transcribe from the official draw PDF (`scripts/generate-all-events.py`, manual JSON like `pe` / `pow` / `wyfold` / `goblets` / `diamond`), or rebuild from results then **re-sort pairings into draw-sheet order** (`repair_temple()` pattern in `scripts/phase3-bye-draws.py`).
+  - **At-risk scripts:** `repair-draw-from-results.py`, `rebuild-r1-from-hrr-results.py`, and any `repair_*()` that appends Wednesday/Tuesday results in API order without a draw-sheet sort step.
+  - **Per-round checks:** (1) `drawRace === matchIndex + 1` for every match in the round; (2) for R1, compare heat order to the PDF section top-to-bottom; (3) for later rounds, confirm `feeders` match the steward chart (bye-format events may be non-adjacent — see §1).
+  - **Automated audit (ad-hoc, Jul 2026):** compare each event's R1 pairing sequence to `extract_r1_pairings()` from the draw PDF and to first-day HRR results; flag when correlation with race-time ≥ 85% and PDF correlation is low. A dedicated `scripts/audit-draw-sheet-order.ts` is not yet checked in — run before each regatta day after draw repairs.
+
+- [ ] **Draw-sheet order audit snapshot (2026-07-02)** — Full 30-event review against the official PDF + HRR first-day results:
+
+  | Status | Events | Notes |
+  |--------|--------|-------|
+  | **OK** | All events with source `Henley Royal Regatta 2026 Draw (2 July 2026)` (e.g. `thames`, `stonor`, `double-sculls`, `hambleden-pairs`, `lp`, `bridge`, `town`, `visitors`, `queen-victoria`, …) | Generated or transcribed from the draw PDF; R1 spot-checks match PDF top-to-bottom. |
+  | **OK** | `pe`, `pow`, `wyfold`, `goblets`, `diamond` | Manually maintained from PDF (`SKIP_EXISTING` in `generate-all-events.py`). |
+  | **OK** | `temple` | Fixed PR #31 — R1 now Brookes 'E' vs Asopos first, London vs Newcastle last; 24/24 results apply. |
+  | **OK** | `island`, `prince-philip`, `prince-albert`, `diamond-jubilee` | `Phase 2`/`Phase 3` repairs; R1 manually verified against PDF (8/8 or 4/4 positional match). |
+  | **Verify manually** | `wargrave`, `fawley` | R1 filled from Tuesday results via repair scripts; PDF section did not parse in `generate-all-events.py` (marker/spacing). Partial correlation with race-time order — **confirm against paper draw before relying on connectors**. |
+  | **Bye / non-standard** | `grand`, `remenham`, `princess-grace`, `stewards`, … | Few or no R1 heats in JSON; order is in bye slots and feeder wiring — check steward chart per event. |
+
+  **No confirmed draw-sheet inversion** remains in events marked OK above. The only confirmed production bug was `temple` (now fixed).
+
+- [ ] **Temple reference pairing** — Wednesday heats 1–16 top-to-bottom: Brookes 'E'/Asopos … London/Newcastle. Thursday: 3+4→`r2-1` (Washington/Njord), 5+6→`r2-2` (Laga/Wesleyan), 13+14→`r2-6` (day-2 race 7), 15+16→`r2-7` (day-2 race 8). Repair: `repair_temple()` + `TEMPLE_OFFICIAL_R1_KEYS` in `scripts/phase3-bye-draws.py`.
+
 - [ ] **Round column order matches `roundLabels`** — Column headers come from `event.roundLabels[roundIndex]` in `BracketTreeCore.tsx`. Confirm against HRR schedule for events with non-default labels:
   - `island`: `1st Round`, `Quarter-Final`, `Semi-Final`, `Penultimate`, `Final`
   - `diamond-jubilee` / `princess-royal`: `Last 16` instead of `2nd Round`
   - `prince-albert`: `Qualifier`, `Last 16`, `Quarter-Final`, `Semi-Final`, `Final`
   - Source: `roundLabels` in `src/config/events.ts`
 
-- [ ] **`roundSizes` matches draw JSON length** — For each event, `draw.rounds[i].length === roundSizes[i]`. Automated: `validateRoundCounts()` in `src/lib/bracket-layout.ts` (surfaced as `bracketWarnings` on `/api/bracket/{eventId}`). API check: `roundCounts` array in JSON response.
-
-- [ ] **Temple draw-sheet order** — R1 array follows the official draw top-to-bottom (race 1 = `r1-0` Brookes 'E' vs Asopos; race 16 = `r1-15` London vs Newcastle). Adjacent feeders then wire correctly: heats 3+4 → `r2-1` (Njord vs Washington), 5+6 → `r2-2` (Laga vs Wesleyan), 13+14 → `r2-6` (day-2 race 7), 15+16 → `r2-7` (day-2 race 8). Automated repair: `scripts/phase3-bye-draws.py` `repair_temple()`. Confirm bracket connectors align and all 24 Temple results apply.
+- [ ] **`roundSizes` matches draw JSON length`** — For each event, `draw.rounds[i].length === roundSizes[i]`. Automated: `validateRoundCounts()` in `src/lib/bracket-layout.ts` (surfaced as `bracketWarnings` on `/api/bracket/{eventId}`). API check: `roundCounts` array in JSON response.
 
 - [ ] **Regatta day per round** — `raceDays` in `events.ts` drives which rounds are expected on which day (`getScheduledRegattaDayForRound()` in `src/lib/regatta-days.ts`). Manual: on Wednesday, Wednesday-round matches may show times; Friday rounds should not show stale times from timetable bleed (`stripUnpublishedScheduleTimes` in `bracket-engine.ts`).
 
