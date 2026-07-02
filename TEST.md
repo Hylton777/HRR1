@@ -229,4 +229,32 @@ Priority events for bye/progression QA (covered by `verify-phase1-engine.ts`):
 
 ## Known Issues / Notes
 
-<!-- Fill in as you find problems during QA -->
+### Latest automated run (London 2026-07-02)
+
+| Check | Result |
+|-------|--------|
+| `verify-phase1-engine.ts` | **PASS** (10/10 target events, all results applied) |
+| `audit-all-events.ts` | **PASS** — 0 errors, 0 warnings (30 events) |
+| `audit-timing.ts` | **PASS** — 0 missing / 0 premature |
+| `test-deep-check.ts` | **PASS** — 232/232 results applied, all `roundSizes` match draw |
+| `npm run build` | **PASS** |
+| `phase4-bye-draws.py` re-run | **Idempotent** (no diff) |
+| Home `GET /` | **200** |
+| All 30 `GET /api/bracket/{id}` | **200**, `bracketWarnings: []`, `Cache-Control: no-store` |
+
+**`audit-event-results.py` (API `resultAudit.isComplete`):** exit 1 — six events flag *scheduled but not yet rowed* races, not data bugs:
+
+| Event | Pending match(es) | Notes |
+|-------|-------------------|-------|
+| `temple` | `r2-5` Syracuse vs Oxford Brookes 'D' | 7/8 R2 complete; 0 unmatched HRR results |
+| `fawley` | `r2-6`, `r2-7` | Thursday last-16 not yet rowed |
+| `island` | `qf-7` Nereus vs London | QF not yet rowed |
+| `lp` | `r1-1` | Thursday heat pending |
+| `britannia` | `qf-0`…`qf-3` | Wednesday QFs pending |
+| `diamond` | `r1-6`, `r1-7` | R1 heats pending |
+
+`ResultAuditBanner` showing for these events is **expected** until HRR publishes results. Re-run API audit after racing: `python3 scripts/audit-event-results.py http://localhost:3000`.
+
+**Manual QA not run in CI:** mobile pinch/zoom layout, long-name truncation hover, browser console inspection — see sections 3 and 6 above.
+
+<!-- Add further issues below as you find them -->
