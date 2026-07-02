@@ -1,13 +1,45 @@
 "use client";
 
-import { useState } from "react";
-import { EVENT_LIST, EVENTS, type EventId } from "@/config/events";
+import { useCallback, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import {
+  EVENT_LIST,
+  EVENTS,
+  isEventId,
+  type EventId,
+} from "@/config/events";
 import Dashboard from "@/components/Dashboard";
 import EventTabs from "@/components/EventTabs";
 
+function eventIdFromParams(params: URLSearchParams): EventId {
+  const value = params.get("event");
+  if (value && isEventId(value)) return value;
+  return "pe";
+}
+
 export default function HomeView() {
-  const [eventId, setEventId] = useState<EventId>("pe");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const eventId = useMemo(
+    () => eventIdFromParams(searchParams),
+    [searchParams],
+  );
   const event = EVENTS[eventId];
+
+  const handleEventChange = useCallback(
+    (id: string) => {
+      if (!isEventId(id)) return;
+      const params = new URLSearchParams(searchParams.toString());
+      if (id === "pe") {
+        params.delete("event");
+      } else {
+        params.set("event", id);
+      }
+      const query = params.toString();
+      router.replace(query ? `?${query}` : "/", { scroll: false });
+    },
+    [router, searchParams],
+  );
 
   return (
     <>
@@ -28,7 +60,7 @@ export default function HomeView() {
             <EventTabs
               events={EVENT_LIST}
               activeId={eventId}
-              onChange={(id) => setEventId(id as EventId)}
+              onChange={handleEventChange}
             />
           </div>
         </div>
