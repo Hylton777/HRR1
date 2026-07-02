@@ -32,37 +32,122 @@ def write_draw(name: str, draw: dict) -> None:
 
 
 def repair_wargrave() -> None:
+    """Official draw-sheet order (continued page) + Wednesday bye last-16 pairings."""
     entries = load_entries("THE WARGRA VE CHALLENGE CUP")
-    draw = json.loads((DATA / "wargrave-2026-draw.json").read_text())
 
-    # Wednesday "last 16" pairings: bye/pre-qualified crew + Tuesday R1 winner.
-      # Wednesday last-16: bye/pre-qualified crew on one station, Tuesday R1 winner on the other.
-    r2_pairings = [
-        (102, None, ["r1-0"]),   # Sydney vs Molesey C (feeder)
-        (94, None, ["r1-1"]),   # Molesey A vs Lea
-        (109, None, ["r1-2"]),   # Tyne vs Thames B
-        (89, None, ["r1-3"]),   # London A vs Cambridge
-        (None, 103, ["r1-4"]),   # London B vs Thames A
-        (None, 87, ["r1-5"]),   # Molesey B vs Leander
-        (None, 76, ["r1-6"]),   # Thames C vs Avon
-        (None, 93, ["r1-7"]),   # Bristol vs Mercantile
+    # Tuesday R1 — top-to-bottom on the official draw (8 heats).
+    r1_specs: list[tuple[int, int, str, str]] = [
+        (114, 78, "York City R.C.", "City of Bristol R.C."),
+        (95, 99, "Molesey B.C. 'B'", "Royal Chester R.C."),
+        (105, 92, "Thames R.C. 'C'", "Marlow R.C."),
+        (112, 90, "Vesta R.C. 'B'", "London R.C. 'B'"),
+        (79, 106, "City of Cambridge R.C.", "Thames R.C. 'D'"),
+        (104, 107, "Thames R.C. 'B'", "Tideway Scullers' Sch."),
+        (86, 91, "Lea R.C.", "London R.C. 'C'"),
+        (96, 111, "Molesey B.C. 'C'", "Vesta R.C. 'A'"),
     ]
 
-    r2 = []
-    for idx, (berks_num, bucks_num, feeders) in enumerate(r2_pairings):
-        match = {
-            "id": f"r2-{idx}",
-            "drawRace": idx + 1,
-            "feeders": feeders,
-            "berks": crew(berks_num, entries) if berks_num else None,
-            "bucks": crew(bucks_num, entries) if bucks_num else None,
-        }
-        r2.append(match)
+    r1: list[dict] = []
+    for idx, (berks_num, bucks_num, berks_short, bucks_short) in enumerate(r1_specs):
+        r1.append(
+            {
+                "id": f"r1-{idx}",
+                "drawRace": idx + 1,
+                "berks": crew(berks_num, entries, berks_short),
+                "bucks": crew(bucks_num, entries, bucks_short),
+            }
+        )
+    for idx in range(len(r1_specs), 16):
+        r1.append(
+            {
+                "id": f"r1-{idx}",
+                "drawRace": idx + 1,
+                "berks": None,
+                "bucks": None,
+            }
+        )
 
-    draw["rounds"][1] = r2
-    draw["source"] = (
-        "Henley Royal Regatta 2026 Draw (Phase 2: bye-aware last-16 pairings)"
-    )
+    # Wednesday last-16: bye crew on one station, Tuesday R1 winner on the other.
+    r2 = [
+        {
+            "id": "r2-0",
+            "drawRace": 1,
+            "feeders": ["r1-0"],
+            "berks": crew(93, entries, "Mercantile R.C., AUS"),
+            "bucks": None,
+        },
+        {
+            "id": "r2-1",
+            "drawRace": 2,
+            "feeders": ["r1-1"],
+            "berks": crew(87, entries, "Leander Club"),
+            "bucks": None,
+        },
+        {
+            "id": "r2-2",
+            "drawRace": 3,
+            "feeders": ["r1-2"],
+            "berks": crew(76, entries, "Avon R.C., NZL"),
+            "bucks": None,
+        },
+        {
+            "id": "r2-3",
+            "drawRace": 4,
+            "feeders": ["r1-3"],
+            "berks": None,
+            "bucks": crew(103, entries, "Thames R.C. 'A'"),
+        },
+        {
+            "id": "r2-4",
+            "drawRace": 5,
+            "feeders": ["r1-4"],
+            "berks": crew(89, entries, "London R.C. 'A'"),
+            "bucks": None,
+        },
+        {
+            "id": "r2-5",
+            "drawRace": 6,
+            "feeders": ["r1-5"],
+            "berks": crew(109, entries, "Tyne A.R.C."),
+            "bucks": None,
+        },
+        {
+            "id": "r2-6",
+            "drawRace": 7,
+            "feeders": ["r1-6"],
+            "berks": crew(94, entries, "Molesey B.C. 'A'"),
+            "bucks": None,
+        },
+        {
+            "id": "r2-7",
+            "drawRace": 8,
+            "feeders": ["r1-7"],
+            "berks": crew(102, entries, "Sydney R.C., AUS"),
+            "bucks": None,
+        },
+    ]
+
+    qf = [
+        {"id": "qf-0", "drawRace": 1, "feeders": ["r2-0", "r2-1"], "berks": None, "bucks": None},
+        {"id": "qf-1", "drawRace": 2, "feeders": ["r2-2", "r2-3"], "berks": None, "bucks": None},
+        {"id": "qf-2", "drawRace": 3, "feeders": ["r2-4", "r2-5"], "berks": None, "bucks": None},
+        {"id": "qf-3", "drawRace": 4, "feeders": ["r2-6", "r2-7"], "berks": None, "bucks": None},
+    ]
+    sf = [
+        {"id": "sf-0", "drawRace": 1, "feeders": ["qf-0", "qf-1"], "berks": None, "bucks": None},
+        {"id": "sf-1", "drawRace": 2, "feeders": ["qf-2", "qf-3"], "berks": None, "bucks": None},
+    ]
+    final = [
+        {"id": "final-0", "drawRace": 1, "feeders": ["sf-0", "sf-1"], "berks": None, "bucks": None},
+    ]
+
+    draw = {
+        "event": "The Wargrave Challenge Cup",
+        "year": 2026,
+        "source": "Henley Royal Regatta 2026 Draw (official order + bye-aware last-16)",
+        "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+        "rounds": [r1, r2, qf, sf, final],
+    }
     write_draw("wargrave", draw)
 
 
