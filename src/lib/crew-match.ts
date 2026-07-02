@@ -456,6 +456,25 @@ export function crewResultMatchesDraw(
     return true;
   }
 
+  const drawSquad = parseSquadSuffix(normalizeCrewName(drawCrew.name));
+  const resultSquad = parseSquadSuffix(normalizeCrewName(resultCrew.name));
+  if (drawSquad && !resultSquad) {
+    for (const resultName of nameVariants(resultCrew)) {
+      const normalizedResult = normalizeCrewName(resultName);
+      if (normalizedResult === drawSquad.base) {
+        return true;
+      }
+      if (
+        crewsMatch(drawSquad.base, normalizedResult, {
+          numberA: drawCrew.number,
+          numberB: resultCrew.number,
+        })
+      ) {
+        return true;
+      }
+    }
+  }
+
   for (const drawName of nameVariants(drawCrew)) {
     for (const resultName of nameVariants(resultCrew)) {
       if (onlySharesGenericTokens(drawName, resultName)) continue;

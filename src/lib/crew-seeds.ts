@@ -147,6 +147,14 @@ function matchRegistryScore(entry: Crew, crew: Crew): number {
   return score;
 }
 
+function extractSquadLetter(
+  crew: Pick<Crew, "name" | "shortName">,
+): string | null {
+  const text = `${crew.shortName ?? ""} ${crew.name}`;
+  const match = text.match(/['']([a-f])['']/i);
+  return match?.[1]?.toLowerCase() ?? null;
+}
+
 function findBestRegistryEntry(
   crew: Crew,
   registry: CrewRegistry,
@@ -159,11 +167,17 @@ function findBestRegistryEntry(
     }
   }
 
+  const crewSquad = extractSquadLetter(crew);
   let best: Crew | null = null;
   let bestScore = 0;
 
   for (const entry of registry.entries) {
     if (entry.number != null && excludeNumbers?.has(entry.number)) continue;
+
+    if (crewSquad) {
+      const entrySquad = extractSquadLetter(entry);
+      if (entrySquad && entrySquad !== crewSquad) continue;
+    }
 
     const score = matchRegistryScore(entry, crew);
     if (score > bestScore) {

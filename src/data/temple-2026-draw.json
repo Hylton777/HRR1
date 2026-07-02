@@ -10,11 +10,13 @@
         "drawRace": 1,
         "berks": {
           "name": "Oxford Brookes University 'E'",
-          "shortName": "Oxford Brookes Univ. 'E'"
+          "shortName": "Oxford Brookes Univ. 'E'",
+          "number": 166
         },
         "bucks": {
           "name": "Algemene Leidse Studenten Roeivereniging Asopos de Vliet, Netherlands",
-          "shortName": "A.L.S.R.V. Asopos de Vliet"
+          "shortName": "A.L.S.R.V. Asopos de Vliet",
+          "number": 117
         }
       },
       {
@@ -22,11 +24,13 @@
         "drawRace": 2,
         "berks": {
           "name": "Delftsche Studenten Roeivereeniging Laga 'B', Netherlands",
-          "shortName": "D.S.R.V. Laga 'B'"
+          "shortName": "D.S.R.V. Laga 'B'",
+          "number": 131
         },
         "bucks": {
           "name": "Syracuse University, U.S.A.",
-          "shortName": "Syracuse Univ."
+          "shortName": "Syracuse Univ.",
+          "number": 184
         }
       },
       {
@@ -34,11 +38,13 @@
         "drawRace": 3,
         "berks": {
           "name": "Koninklijke Studenten Roeivereeniging Njord, Netherlands",
-          "shortName": "K.S.R.V. Njord"
+          "shortName": "K.S.R.V. Njord",
+          "number": 152
         },
         "bucks": {
-          "name": "Imperial College London",
-          "shortName": "Imperial Coll. London"
+          "name": "Imperial College London 'A'",
+          "shortName": "Imperial Coll. London 'A'",
+          "number": 149
         }
       },
       {
@@ -46,11 +52,13 @@
         "drawRace": 4,
         "berks": {
           "name": "Radley College",
-          "shortName": "Radley Coll."
+          "shortName": "Radley Coll.",
+          "number": 171
         },
         "bucks": {
           "name": "University of Washington, U.S.A.",
-          "shortName": "Univ. of Washington"
+          "shortName": "Univ. of Washington",
+          "number": 199
         }
       },
       {
@@ -58,11 +66,13 @@
         "drawRace": 5,
         "berks": {
           "name": "Oxford Brookes University 'C'",
-          "shortName": "Oxford Brookes Univ. 'C'"
+          "shortName": "Oxford Brookes Univ. 'C'",
+          "number": 164
         },
         "bucks": {
           "name": "Delftsche Studenten Roeivereeniging Laga 'A', Netherlands",
-          "shortName": "D.S.R.V. Laga 'A'"
+          "shortName": "D.S.R.V. Laga 'A'",
+          "number": 130
         }
       },
       {
@@ -70,11 +80,13 @@
         "drawRace": 6,
         "berks": {
           "name": "Wesleyan University, U.S.A.",
-          "shortName": "Wesleyan Univ."
+          "shortName": "Wesleyan Univ.",
+          "number": 200
         },
         "bucks": {
           "name": "Groninger Studenten Roeivereniging Aegir, Netherlands",
-          "shortName": "G.S.R. Aegir"
+          "shortName": "G.S.R. Aegir",
+          "number": 144
         }
       },
       {
@@ -82,11 +94,13 @@
         "drawRace": 7,
         "berks": {
           "name": "Amsterdamsche Studenten Roeivereeniging Nereus 'B', Netherlands",
-          "shortName": "A.S.R. Nereus 'B'"
+          "shortName": "A.S.R. Nereus 'B'",
+          "number": 120
         },
         "bucks": {
           "name": "Massachusetts Institute of Technology, U.S.A.",
-          "shortName": "Massachusetts Inst. Tech."
+          "shortName": "Massachusetts Inst. Tech.",
+          "number": 155
         }
       },
       {
@@ -94,11 +108,13 @@
         "drawRace": 8,
         "berks": {
           "name": "Sydney University, Australia",
-          "shortName": "Sydney Univ."
+          "shortName": "Sydney Univ.",
+          "number": 183
         },
         "bucks": {
           "name": "Amsterdamsche Studenten Roeivereeniging Nereus 'A', Netherlands",
-          "shortName": "A.S.R. Nereus 'A'"
+          "shortName": "A.S.R. Nereus 'A'",
+          "number": 119
         }
       },
       {
@@ -106,23 +122,27 @@
         "drawRace": 9,
         "berks": {
           "name": "Oxford Brookes University 'A'",
-          "shortName": "Oxford Brookes Univ. 'A'"
+          "shortName": "Oxford Brookes Univ. 'A'",
+          "number": 162
         },
         "bucks": {
           "name": "Algemene Utrechtse Studenten Roeivereniging Orca, Netherlands",
-          "shortName": "A.U.S.R. Orca"
+          "shortName": "A.U.S.R. Orca",
+          "number": 118
         }
       },
       {
         "id": "r1-9",
         "drawRace": 10,
         "berks": {
-          "name": "Nottingham University",
-          "shortName": "Nottingham Univ."
+          "name": "Nottingham University 'A'",
+          "shortName": "Nottingham Univ. 'A'",
+          "number": 159
         },
         "bucks": {
-          "name": "St. Paul's School",
-          "shortName": "St. Paul's Sch."
+          "name": "St. Paul's School 'A'",
+          "shortName": "St. Paul's Sch. 'A'",
+          "number": 181
         }
       },
       {
@@ -130,23 +150,27 @@
         "drawRace": 11,
         "berks": {
           "name": "Yale University, U.S.A.",
-          "shortName": "Yale Univ."
+          "shortName": "Yale Univ.",
+          "number": 201
         },
         "bucks": {
           "name": "Oxford Brookes University 'B'",
-          "shortName": "Oxford Brookes Univ. 'B'"
+          "shortName": "Oxford Brookes Univ. 'B'",
+          "number": 163
         }
       },
       {
         "id": "r1-11",
         "drawRace": 12,
         "berks": {
-          "name": "Durham University",
-          "shortName": "Durham Univ."
+          "name": "Durham University 'A'",
+          "shortName": "Durham Univ. 'A'",
+          "number": 136
         },
         "bucks": {
           "name": "Santa Clara University, U.S.A.",
-          "shortName": "Santa Clara Univ."
+          "shortName": "Santa Clara Univ.",
+          "number": 173
         }
       },
       {
@@ -154,23 +178,27 @@
         "drawRace": 13,
         "berks": {
           "name": "Cambridge University 'A'",
-          "shortName": "Cambridge Univ. 'A'"
+          "shortName": "Cambridge Univ. 'A'",
+          "number": 127
         },
         "bucks": {
           "name": "Oxford Brookes University 'D'",
-          "shortName": "Oxford Brookes Univ. 'D'"
+          "shortName": "Oxford Brookes Univ. 'D'",
+          "number": 165
         }
       },
       {
         "id": "r1-13",
         "drawRace": 14,
         "berks": {
-          "name": "University of Bristol",
-          "shortName": "Univ. of Bristol"
+          "name": "University of Bristol 'A'",
+          "shortName": "Univ. of Bristol 'A'",
+          "number": 191
         },
         "bucks": {
           "name": "Cambridge University 'B'",
-          "shortName": "Cambridge Univ. 'B'"
+          "shortName": "Cambridge Univ. 'B'",
+          "number": 128
         }
       },
       {
@@ -178,11 +206,13 @@
         "drawRace": 15,
         "berks": {
           "name": "Trinity College, Hartford, U.S.A.",
-          "shortName": "Trinity Coll., Hartford"
+          "shortName": "Trinity Coll., Hartford",
+          "number": 189
         },
         "bucks": {
           "name": "Drexel University, U.S.A.",
-          "shortName": "Drexel Univ."
+          "shortName": "Drexel Univ.",
+          "number": 134
         }
       },
       {
@@ -190,11 +220,13 @@
         "drawRace": 16,
         "berks": {
           "name": "University of London",
-          "shortName": "Univ. of London"
+          "shortName": "Univ. of London",
+          "number": 195
         },
         "bucks": {
           "name": "Newcastle University",
-          "shortName": "Newcastle Univ."
+          "shortName": "Newcastle Univ.",
+          "number": 156
         }
       }
     ],
