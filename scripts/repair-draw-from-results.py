@@ -31,6 +31,12 @@ EVENTS = {
         "The Fawley Challenge Cup",
         32,
     ),
+    "temple": (
+        "the-temple-challenge-cup",
+        "THE TEMPLE CHALLENGE CUP",
+        "The Temple Challenge Cup",
+        32,
+    ),
 }
 
 

@@ -129,11 +129,18 @@ function splitCompositeParts(name: string): string[] {
 }
 
 function parseSquadSuffix(name: string): { base: string; squad: string } | null {
-  const match = name.match(/^(.*)\s+(['']?[a-d]['']?)$/i);
-  if (!match) return null;
-  const squad = match[2]!.replace(/['']/g, "").toLowerCase();
-  if (!SQUAD_SUFFIX_RE.test(match[2]!)) return null;
-  return { base: match[1]!.trim(), squad };
+  const patterns = [
+    /^(.*)\s+(['']?[a-d]['']?)$/i,
+    /^(.*)\s+(['']?[a-d]['']?)\s*,/i,
+    /^(.*)\s+(['']?[a-d]['']?)\s+(?:netherlands|germany|australia|usa|zealand|ireland|canada|austria|belgium|denmark|spain|sweden|norway|france|italy)$/i,
+  ];
+  for (const pattern of patterns) {
+    const match = name.match(pattern);
+    if (!match || !SQUAD_SUFFIX_RE.test(match[2]!)) continue;
+    const squad = match[2]!.replace(/['']/g, "").toLowerCase();
+    return { base: match[1]!.trim(), squad };
+  }
+  return null;
 }
 
 /** Names that share a prefix but denote different draw entries (e.g. Leander Club vs Leander Club & Leeds). */
@@ -270,6 +277,20 @@ function nameVariants(crew: Pick<Crew, "name" | "shortName">): string[] {
   return names.map(decodeHtmlEntities);
 }
 
+function squadLettersInName(name: string): string[] {
+  return [
+    ...name.matchAll(/['']([a-d])['']/gi),
+    ...name.matchAll(/\s([a-d])\s*,/gi),
+  ].map((match) => match[1]!.toLowerCase());
+}
+
+function hasConflictingSquadLetters(a: string, b: string): boolean {
+  const lettersA = squadLettersInName(a);
+  const lettersB = squadLettersInName(b);
+  if (!lettersA.length || !lettersB.length) return false;
+  return !lettersA.some((letter) => lettersB.includes(letter));
+}
+
 export function crewsMatch(
   a: string,
   b: string,
@@ -284,6 +305,9 @@ export function crewsMatch(
   const na = normalizeCrewName(a);
   const nb = normalizeCrewName(b);
   if (!na || !nb) return false;
+  if (hasConflictingSquadLetters(a, b) || hasConflictingSquadLetters(na, nb)) {
+    return false;
+  }
   if (na === nb) return true;
   if (isDistinctCrewVariant(na, nb)) return false;
 

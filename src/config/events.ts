@@ -85,9 +85,10 @@ const POW_RACE_DAYS: RegattaDay[] = [
 ];
 
 const GOBLETS_RACE_DAYS: RegattaDay[] = [
-  { id: "fri", label: "Friday 3 July", shortLabel: "Fri", isoDate: "2026-07-03", primaryRoundIndex: 0 },
-  { id: "sat", label: "Saturday 4 July", shortLabel: "Sat", isoDate: "2026-07-04", primaryRoundIndex: 1 },
-  { id: "sun", label: "Sunday 5 July", shortLabel: "Sun", isoDate: "2026-07-05", primaryRoundIndex: 2 },
+  { id: "thu", label: "Thursday 2 July", shortLabel: "Thu", isoDate: "2026-07-02", primaryRoundIndex: 0 },
+  { id: "fri", label: "Friday 3 July", shortLabel: "Fri", isoDate: "2026-07-03", primaryRoundIndex: 1 },
+  { id: "sat", label: "Saturday 4 July", shortLabel: "Sat", isoDate: "2026-07-04", primaryRoundIndex: 2 },
+  { id: "sun", label: "Sunday 5 July", shortLabel: "Sun", isoDate: "2026-07-05", primaryRoundIndex: 3 },
 ];
 
 const LP_RACE_DAYS: RegattaDay[] = [
@@ -235,7 +236,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     crewCount: 16,
     draw: islandDraw as DrawData,
     raceDays: PE_RACE_DAYS,
-    roundSizes: [8, 4, 2, 1],
+    roundSizes: [8, 6, 3, 1],
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [203, 208, 211, 215, 216, 219, 221, 224, 226, 228, 245, 246, 249, 252],
     seededCrewNames: [],
@@ -271,8 +272,8 @@ export const EVENTS: Record<EventId, EventConfig> = {
     crewCount: 16,
     draw: prince_philipDraw as DrawData,
     raceDays: PE_RACE_DAYS,
-    roundSizes: [8, 4, 2, 1],
-    roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
+    roundSizes: [8, 8, 4, 2, 1],
+    roundLabels: ["1st Round", "Last 16", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [306, 307, 308, 309, 311, 313, 314, 315, 318, 323, 324, 327, 328, 329, 334, 339],
     seededCrewNames: [],
     noRacingNote: "P Philip races per HRR schedule \u2014 times publish around 9pm BST the evening before.",

@@ -5,7 +5,7 @@
 import { EVENT_LIST } from "../src/config/events";
 import { buildBracket } from "../src/lib/bracket-engine";
 import { fetchEventResults, fetchEventTimetable } from "../src/lib/hrr-api";
-import { crewsMatch } from "../src/lib/crew-match";
+import { crewsMatch, crewResultMatchesDraw } from "../src/lib/crew-match";
 import {
   getLondonTodayIso,
   getScheduledRegattaDayForRound,
@@ -108,7 +108,11 @@ function crewLabel(crew: Crew | null): string {
 function crewsEquivalent(a: Crew | null, b: Crew | null): boolean {
   if (!a || !b) return false;
   if (a.number != null && b.number != null && a.number === b.number) return true;
-  return crewsMatch(a.name, b.name);
+  return (
+    crewResultMatchesDraw(a, b) ||
+    crewResultMatchesDraw(b, a) ||
+    crewsMatch(a.name, b.name, { numberA: a.number, numberB: b.number })
+  );
 }
 
 function buildMatchIndex(
@@ -236,7 +240,7 @@ function auditEvent(
           const loserProgressed =
             crewsEquivalent(match.berks, feeder.loser) ||
             crewsEquivalent(match.bucks, feeder.loser);
-          if (loserProgressed) {
+          if (loserProgressed && !crewsEquivalent(feeder.winner, feeder.loser)) {
             issues.push({
               eventId: event.id,
               severity: "error",
@@ -294,6 +298,9 @@ function auditEvent(
       }
 
       if (slot === "berks" && match.berks && feeder.winner) {
+        if (!match.bucks && match.feeders?.length === 1) {
+          continue;
+        }
         if (
           match.berks.number != null &&
           feeder.winner.number != null &&

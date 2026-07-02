@@ -70,7 +70,7 @@
       "headerCategory": "Intermediate men's eights",
       "raceDayPreset": "lp",
       "category": "intermediate-mens-eights",
-      "entriesTitle": "THE LADIES\u2019 CHALLENGE PLATE",
+      "entriesTitle": "THE LADIES’ CHALLENGE PLATE",
       "format": "bye",
       "seededCrewNumbersHint": [],
       "generation": {
@@ -80,7 +80,7 @@
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "bridge",
@@ -106,11 +106,11 @@
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "thames",
@@ -146,7 +146,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/thames-2026-draw.json",
-        "message": "14 crew slot(s) could not be matched to entry numbers",
+        "message": "1 crew slot(s) could not be matched to entry numbers",
         "crewCount": 32,
         "roundSizes": [
           16,
@@ -186,7 +186,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/wargrave-2026-draw.json",
-        "message": "26 crew slot(s) could not be matched to entry numbers",
+        "message": "13 crew slot(s) could not be matched to entry numbers",
         "crewCount": 32,
         "roundSizes": [
           16,
@@ -233,7 +233,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/temple-2026-draw.json",
-        "message": "15 crew slot(s) could not be matched to entry numbers",
+        "message": "11 crew slot(s) could not be matched to entry numbers",
         "crewCount": 32,
         "roundSizes": [
           16,
@@ -383,13 +383,13 @@
       "headerCategory": "Premier men's coxless fours",
       "raceDayPreset": "pow",
       "category": "premier-mens-coxless-fours",
-      "entriesTitle": "THE STEWARDS\u2019 CHALLENGE CUP",
+      "entriesTitle": "THE STEWARDS’ CHALLENGE CUP",
       "format": "three_crew",
       "seededCrewNumbersHint": [],
       "generation": {
         "status": "success",
         "outputPath": "src/data/stewards-2026-draw.json",
-        "message": "1 crew slot(s) could not be matched to entry numbers",
+        "message": null,
         "crewCount": 3,
         "roundSizes": [
           1,
@@ -414,11 +414,11 @@
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "visitors",
@@ -431,7 +431,7 @@
       "headerCategory": "Intermediate men's coxless fours",
       "raceDayPreset": "pow",
       "category": "intermediate-mens-coxless-fours",
-      "entriesTitle": "THE VISITORS\u2019 CHALLENGE CUP",
+      "entriesTitle": "THE VISITORS’ CHALLENGE CUP",
       "format": "bye",
       "seededCrewNumbersHint": [
         352,
@@ -446,11 +446,11 @@
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "wyfold",
@@ -506,11 +506,11 @@
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "princess-grace",
@@ -529,7 +529,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/princess-grace-2026-draw.json",
-        "message": "1 crew slot(s) could not be matched to entry numbers",
+        "message": null,
         "crewCount": 2,
         "roundSizes": [
           1
@@ -590,7 +590,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/princess-of-wales-2026-draw.json",
-        "message": "1 crew slot(s) could not be matched to entry numbers",
+        "message": "3 crew slot(s) could not be matched to entry numbers",
         "crewCount": 8,
         "roundSizes": [
           4,
@@ -625,7 +625,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/danesfield-2026-draw.json",
-        "message": "6 crew slot(s) could not be matched to entry numbers",
+        "message": null,
         "crewCount": 16,
         "roundSizes": [
           8,
@@ -659,11 +659,11 @@
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
     },
     {
       "id": "fawley",
@@ -698,7 +698,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/fawley-2026-draw.json",
-        "message": "20 crew slot(s) could not be matched to entry numbers",
+        "message": "15 crew slot(s) could not be matched to entry numbers",
         "crewCount": 32,
         "roundSizes": [
           16,
@@ -743,7 +743,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/diamond-jubilee-2026-draw.json",
-        "message": "2 crew slot(s) could not be matched to entry numbers",
+        "message": null,
         "crewCount": 16,
         "roundSizes": [
           8,
@@ -816,7 +816,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/prince-albert-2026-draw.json",
-        "message": "1 crew slot(s) could not be matched to entry numbers",
+        "message": "2 crew slot(s) could not be matched to entry numbers",
         "crewCount": 8,
         "roundSizes": [
           4,
@@ -836,7 +836,7 @@
       "headerCategory": "Premier men's coxless pairs",
       "raceDayPreset": "goblets",
       "category": "premier-mens-coxless-pairs",
-      "entriesTitle": "THE SILVER GOBLETS & NICKALLS\u2019 CHALLENGE CUP",
+      "entriesTitle": "THE SILVER GOBLETS & NICKALLS’ CHALLENGE CUP",
       "format": "skip",
       "seededCrewNumbersHint": [
         749,
@@ -877,7 +877,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/hambleden-pairs-2026-draw.json",
-        "message": null,
+        "message": "5 crew slot(s) could not be matched to entry numbers",
         "crewCount": 8,
         "roundSizes": [
           4,
@@ -913,7 +913,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/double-sculls-2026-draw.json",
-        "message": null,
+        "message": "8 crew slot(s) could not be matched to entry numbers",
         "crewCount": 8,
         "roundSizes": [
           4,
@@ -939,7 +939,7 @@
       "generation": {
         "status": "success",
         "outputPath": "src/data/stonor-2026-draw.json",
-        "message": null,
+        "message": "8 crew slot(s) could not be matched to entry numbers",
         "crewCount": 8,
         "roundSizes": [
           4,
@@ -1007,11 +1007,11 @@
       "generation": {
         "status": "manual_required",
         "outputPath": null,
-        "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+        "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
         "crewCount": null,
         "roundSizes": []
       },
-      "manualNote": "Non-standard bye draw \u2014 transcribe steward chart manually (see lp-2026-draw.json pattern)"
+      "manualNote": "Non-standard bye draw — transcribe steward chart manually (see lp-2026-draw.json pattern)"
     }
   ],
   "results": [
@@ -1047,7 +1047,7 @@
       "eventId": "bridge",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     },
@@ -1055,7 +1055,7 @@
       "eventId": "thames",
       "status": "success",
       "outputPath": "src/data/thames-2026-draw.json",
-      "message": "14 crew slot(s) could not be matched to entry numbers",
+      "message": "1 crew slot(s) could not be matched to entry numbers",
       "crewCount": 32,
       "roundSizes": [
         16,
@@ -1069,7 +1069,7 @@
       "eventId": "wargrave",
       "status": "success",
       "outputPath": "src/data/wargrave-2026-draw.json",
-      "message": "26 crew slot(s) could not be matched to entry numbers",
+      "message": "13 crew slot(s) could not be matched to entry numbers",
       "crewCount": 32,
       "roundSizes": [
         16,
@@ -1083,7 +1083,7 @@
       "eventId": "temple",
       "status": "success",
       "outputPath": "src/data/temple-2026-draw.json",
-      "message": "15 crew slot(s) could not be matched to entry numbers",
+      "message": "11 crew slot(s) could not be matched to entry numbers",
       "crewCount": 32,
       "roundSizes": [
         16,
@@ -1128,7 +1128,7 @@
       "eventId": "stewards",
       "status": "success",
       "outputPath": "src/data/stewards-2026-draw.json",
-      "message": "1 crew slot(s) could not be matched to entry numbers",
+      "message": null,
       "crewCount": 3,
       "roundSizes": [
         1,
@@ -1139,7 +1139,7 @@
       "eventId": "town",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     },
@@ -1147,7 +1147,7 @@
       "eventId": "visitors",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     },
@@ -1163,7 +1163,7 @@
       "eventId": "queen-mother",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     },
@@ -1171,7 +1171,7 @@
       "eventId": "princess-grace",
       "status": "success",
       "outputPath": "src/data/princess-grace-2026-draw.json",
-      "message": "1 crew slot(s) could not be matched to entry numbers",
+      "message": null,
       "crewCount": 2,
       "roundSizes": [
         1
@@ -1189,7 +1189,7 @@
       "eventId": "princess-of-wales",
       "status": "success",
       "outputPath": "src/data/princess-of-wales-2026-draw.json",
-      "message": "1 crew slot(s) could not be matched to entry numbers",
+      "message": "3 crew slot(s) could not be matched to entry numbers",
       "crewCount": 8,
       "roundSizes": [
         4,
@@ -1201,7 +1201,7 @@
       "eventId": "danesfield",
       "status": "success",
       "outputPath": "src/data/danesfield-2026-draw.json",
-      "message": "6 crew slot(s) could not be matched to entry numbers",
+      "message": null,
       "crewCount": 16,
       "roundSizes": [
         8,
@@ -1214,7 +1214,7 @@
       "eventId": "queen-victoria",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     },
@@ -1222,7 +1222,7 @@
       "eventId": "fawley",
       "status": "success",
       "outputPath": "src/data/fawley-2026-draw.json",
-      "message": "20 crew slot(s) could not be matched to entry numbers",
+      "message": "15 crew slot(s) could not be matched to entry numbers",
       "crewCount": 32,
       "roundSizes": [
         16,
@@ -1236,7 +1236,7 @@
       "eventId": "diamond-jubilee",
       "status": "success",
       "outputPath": "src/data/diamond-jubilee-2026-draw.json",
-      "message": "2 crew slot(s) could not be matched to entry numbers",
+      "message": null,
       "crewCount": 16,
       "roundSizes": [
         8,
@@ -1262,7 +1262,7 @@
       "eventId": "prince-albert",
       "status": "success",
       "outputPath": "src/data/prince-albert-2026-draw.json",
-      "message": "1 crew slot(s) could not be matched to entry numbers",
+      "message": "2 crew slot(s) could not be matched to entry numbers",
       "crewCount": 8,
       "roundSizes": [
         4,
@@ -1282,7 +1282,7 @@
       "eventId": "hambleden-pairs",
       "status": "success",
       "outputPath": "src/data/hambleden-pairs-2026-draw.json",
-      "message": null,
+      "message": "5 crew slot(s) could not be matched to entry numbers",
       "crewCount": 8,
       "roundSizes": [
         4,
@@ -1294,7 +1294,7 @@
       "eventId": "double-sculls",
       "status": "success",
       "outputPath": "src/data/double-sculls-2026-draw.json",
-      "message": null,
+      "message": "8 crew slot(s) could not be matched to entry numbers",
       "crewCount": 8,
       "roundSizes": [
         4,
@@ -1306,7 +1306,7 @@
       "eventId": "stonor",
       "status": "success",
       "outputPath": "src/data/stonor-2026-draw.json",
-      "message": null,
+      "message": "8 crew slot(s) could not be matched to entry numbers",
       "crewCount": 8,
       "roundSizes": [
         4,
@@ -1326,7 +1326,7 @@
       "eventId": "princess-royal",
       "status": "manual_required",
       "outputPath": null,
-      "message": "Bye / non-standard draw format \u2014 build draw JSON manually from steward chart",
+      "message": "Bye / non-standard draw format — build draw JSON manually from steward chart",
       "crewCount": null,
       "roundSizes": []
     }

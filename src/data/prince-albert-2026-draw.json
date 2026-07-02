@@ -1,7 +1,7 @@
 {
   "event": "The Prince Albert Challenge Cup",
   "year": 2026,
-  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
+  "source": "Henley Royal Regatta 2026 Draw (Phase 2: corrected qf-1 pairing)",
   "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
   "rounds": [
     [
@@ -22,9 +22,9 @@
         "id": "qf-1",
         "drawRace": 2,
         "berks": {
-          "name": "Bates College, U.S.A.",
+          "name": "Algemene Utrechtse Studenten Roeivereniging Orca, Netherlands",
           "shortName": "A .U .S .R . Orca, NED",
-          "number": 706
+          "number": 704
         },
         "bucks": {
           "name": "Cambridge University",
