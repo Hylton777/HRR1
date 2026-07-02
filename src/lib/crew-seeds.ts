@@ -124,6 +124,29 @@ export function mergeDrawWithResult(
   );
 }
 
+function matchRegistryScore(entry: Crew, crew: Crew): number {
+  if (entry.number != null && crew.number != null && entry.number === crew.number) {
+    return 100;
+  }
+
+  if (!crewResultMatchesDraw(entry, crew)) return 0;
+
+  let score = 0;
+  if (entry.shortName && crew.shortName && crewsMatch(entry.shortName, crew.shortName)) {
+    score += 80;
+  } else if (entry.shortName && crewsMatch(entry.shortName, crew.name)) {
+    score += 75;
+  }
+  if (crewsMatch(entry.name, crew.name)) {
+    score += 60;
+  }
+  if (crew.shortName && crewsMatch(entry.name, crew.shortName)) {
+    score += 55;
+  }
+
+  return score;
+}
+
 function findBestRegistryEntry(
   crew: Crew,
   registry: CrewRegistry,
@@ -142,17 +165,7 @@ function findBestRegistryEntry(
   for (const entry of registry.entries) {
     if (entry.number != null && excludeNumbers?.has(entry.number)) continue;
 
-    if (!crewResultMatchesDraw(entry, crew)) continue;
-
-    let score = 10;
-    if (entry.number != null && crew.number != null && entry.number === crew.number) {
-      score = 100;
-    } else if (entry.shortName && crew.shortName && crewsMatch(entry.shortName, crew.shortName)) {
-      score = 80;
-    } else if (crewsMatch(entry.name, crew.name)) {
-      score = 60;
-    }
-
+    const score = matchRegistryScore(entry, crew);
     if (score > bestScore) {
       best = entry;
       bestScore = score;
