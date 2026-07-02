@@ -162,6 +162,24 @@ function matchHasBothCrews(
   );
 }
 
+function matchHasResultCrews(match: BracketMatch, result: HrrResult): boolean {
+  const winnerNames = [result.winner.name, result.winner.shortName].filter(
+    Boolean,
+  ) as string[];
+  const loserNames = [result.loser.name, result.loser.shortName].filter(
+    Boolean,
+  ) as string[];
+
+  for (const winner of winnerNames) {
+    for (const loser of loserNames) {
+      if (matchHasBothCrews(match, winner, loser)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 
 function getRoundWinners(round: BracketMatch[]): Set<string> {
   const winners = new Set<string>();
@@ -308,6 +326,14 @@ function findMatchForTimetableRace(
   return null;
 }
 
+function resultMatchesByRaceNumber(
+  match: BracketMatch,
+  result: HrrResult,
+): boolean {
+  if (!match.raceNumber || !result.number) return false;
+  return match.raceNumber.trim() === result.number.trim();
+}
+
 function tryApplyResult(
   rounds: BracketMatch[][],
   result: HrrResult,
@@ -320,9 +346,7 @@ function tryApplyResult(
       const match = rounds[ri][mi];
       if (match.status === "complete") continue;
 
-      if (
-        matchHasBothCrews(match, result.winner.name, result.loser.name)
-      ) {
+      if (matchHasResultCrews(match, result)) {
         rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
         return true;
       }
@@ -358,9 +382,64 @@ function tryApplyResult(
           return true;
         }
       }
+
+      if (
+        resultMatchesByRaceNumber(match, result) &&
+        match.berks &&
+        match.bucks
+      ) {
+        const berksName = getCrewName(match.berks);
+        const bucksName = getCrewName(match.bucks);
+        if (
+          berksName &&
+          bucksName &&
+          (matchHasResultCrews(match, result) ||
+            resultMatchesPair(result, berksName, bucksName))
+        ) {
+          rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
+          return true;
+        }
+      }
     }
   }
   return false;
+}
+
+function tryApplyResultByRaceNumber(
+  rounds: BracketMatch[][],
+  result: HrrResult,
+  event: EventConfig,
+  registry: Map<string, Crew>,
+): boolean {
+  if (!result.number) return false;
+
+  const candidates: Array<{ ri: number; mi: number; match: BracketMatch }> = [];
+
+  for (let ri = 0; ri < rounds.length; ri++) {
+    for (let mi = 0; mi < rounds[ri].length; mi++) {
+      const match = rounds[ri][mi];
+      if (match.status === "complete") continue;
+      if (!resultMatchesByRaceNumber(match, result)) continue;
+      if (!match.berks || !match.bucks) continue;
+
+      const berksName = getCrewName(match.berks);
+      const bucksName = getCrewName(match.bucks);
+      if (
+        berksName &&
+        bucksName &&
+        (matchHasResultCrews(match, result) ||
+            resultMatchesPair(result, berksName, bucksName))
+      ) {
+        candidates.push({ ri, mi, match });
+      }
+    }
+  }
+
+  if (candidates.length !== 1) return false;
+
+  const { ri, mi, match } = candidates[0]!;
+  rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
+  return true;
 }
 
 function applyTimetableRace(
@@ -488,12 +567,23 @@ function countUnmatchedResults(
     for (const round of rounds) {
       for (const match of round) {
         if (match.status !== "complete") continue;
-        if (
-          match.winner &&
-          crewsMatch(match.winner.name, result.winner.name) &&
-          match.loser &&
-          crewsMatch(match.loser.name, result.loser.name)
-        ) {
+        if (!match.winner || !match.loser) continue;
+
+        const winnerNames = [result.winner.name, result.winner.shortName].filter(
+          Boolean,
+        ) as string[];
+        const loserNames = [result.loser.name, result.loser.shortName].filter(
+          Boolean,
+        ) as string[];
+
+        const winnerMatched = winnerNames.some((name) =>
+          crewsMatch(match.winner!.name, name),
+        );
+        const loserMatched = loserNames.some((name) =>
+          crewsMatch(match.loser!.name, name),
+        );
+
+        if (winnerMatched && loserMatched) {
           matched.add(result.id);
         }
       }
@@ -556,6 +646,14 @@ export function buildBracket(
       if (
         tryApplyResult(rounds, result, event, registry, matchById)
       ) {
+        applied.add(result.id);
+        progress = true;
+      }
+    }
+
+    for (const result of sortedResults) {
+      if (applied.has(result.id)) continue;
+      if (tryApplyResultByRaceNumber(rounds, result, event, registry)) {
         applied.add(result.id);
         progress = true;
       }

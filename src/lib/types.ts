@@ -102,6 +102,44 @@ export interface BracketApiResponse {
   upcomingRaces: UpcomingRace[];
   roundCounts?: number[];
   bracketWarnings?: string[];
+  resultAudit?: ResultAudit;
+}
+
+export interface MissingResultMatch {
+  matchId: string;
+  roundLabel: string;
+  raceDay: string | null;
+  raceNumber: string | null;
+  raceTime: string | null;
+  berks: string;
+  bucks: string;
+  reason: "same_day_partial" | "past_race_time";
+}
+
+export interface UnmatchedHrrResultSummary {
+  id: number;
+  number: string;
+  raceDay: string;
+  raceTime: string;
+  winner: string;
+  loser: string;
+}
+
+export interface ResultAudit {
+  isComplete: boolean;
+  completeCount: number;
+  expectedRacedCount: number;
+  fetchedResultCount: number;
+  unmatchedResultCount: number;
+  missingResults: MissingResultMatch[];
+  unmatchedResults: UnmatchedHrrResultSummary[];
+  incompleteDays: {
+    raceDay: string;
+    isoDate: string;
+    complete: number;
+    missing: number;
+  }[];
+  warnings: string[];
 }
 
 export interface TimetableRace {

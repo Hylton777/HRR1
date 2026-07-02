@@ -130,14 +130,52 @@ def normalize_apostrophes(text: str) -> str:
     return text.replace("\u2019", "'").replace("\u2018", "'").replace("`", "'")
 
 
+def repair_spaced_tokens(name: str) -> str:
+    tokens = name.split()
+    if not tokens:
+        return name
+    repaired: list[str] = []
+    i = 0
+    while i < len(tokens):
+        token = tokens[i]
+        if len(token) == 1 and i + 1 < len(tokens) and len(tokens[i + 1]) > 1:
+            tokens[i + 1] = token + tokens[i + 1]
+            i += 1
+            continue
+        if token in {"a", "r", "c", "b"} and i + 2 < len(tokens):
+            if tokens[i + 1] in {"r", "c"}:
+                repaired.append("".join(tokens[i : i + 3]))
+                i += 3
+                continue
+        repaired.append(token)
+        i += 1
+    return " ".join(repaired)
+
+
+def compact_name_key(name: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", normalize_name_key(name))
+
+
 def normalize_name_key(name: str) -> str:
     name = normalize_apostrophes(name).lower()
     name = unicodedata.normalize("NFKD", name)
     name = "".join(c for c in name if not unicodedata.combining(c))
+    name = re.sub(r"\s*\.\s*", ".", name)
     name = re.sub(r"[^\w\s&']", " ", name)
     name = re.sub(r"\s*&\s*", " and ", name)
     name = re.sub(r"\buniv\b", "university", name)
-    name = re.sub(r"\b(r\.?c\.?|b\.?c\.?)\b", "rowing club", name)
+    name = re.sub(
+        r"\b(a\.?r\.?c\.?|r\.?v\.?|r\.?c\.?|b\.?c\.?|sch\.?|coll\.?)\b",
+        "rowing club",
+        name,
+    )
+    name = re.sub(
+        r"\b(aus|usa|ned|ger|irl|nzl|nz|esp|fra|ita|por|bel|den|can|germany|spain|australia)\b",
+        "",
+        name,
+    )
+    name = re.sub(r"\s+(rowing club|boat club|school|college)\.?$", "", name)
+    name = repair_spaced_tokens(name)
     name = re.sub(r"\s+", " ", name).strip()
     return name
 
@@ -283,23 +321,38 @@ def title_case_event(entries_title: str) -> str:
 
 def match_crew(draw_name: str, entries: list[tuple[int, str]]) -> tuple[int | None, str, str]:
     draw_key = normalize_name_key(draw_name)
+    draw_compact = compact_name_key(draw_name)
+    draw_tokens = {t for t in draw_key.split() if len(t) > 2}
+    draw_suffix = re.search(r"'([A-D])'", normalize_apostrophes(draw_name))
     best: tuple[int, str] | None = None
     best_score = 0
     for num, full in entries:
         full_key = normalize_name_key(full)
+        full_compact = compact_name_key(full)
+        full_suffix = re.search(r"'([A-D])'", normalize_apostrophes(full))
         score = 0
         if draw_key == full_key:
             score = 100
         elif draw_key in full_key or full_key in draw_key:
             score = 80
+        elif draw_compact and full_compact and (
+            draw_compact in full_compact or full_compact in draw_compact
+        ):
+            score = 75
         else:
-            draw_tokens = set(draw_key.split())
-            full_tokens = set(full_key.split())
+            full_tokens = {t for t in full_key.split() if len(t) > 2}
             overlap = len(draw_tokens & full_tokens)
             if overlap >= 2:
-                score = 50 + overlap
+                score = 55 + overlap * 5
+            elif overlap == 1 and len(draw_tokens) <= 2:
+                score = 50
             elif draw_tokens and draw_tokens <= full_tokens:
                 score = 45 + len(draw_tokens)
+        if draw_suffix and full_suffix:
+            if draw_suffix.group(1) == full_suffix.group(1):
+                score += 8
+            else:
+                score -= 25
         if score > best_score:
             best_score = score
             best = (num, full)
@@ -322,7 +375,7 @@ def crew_obj(draw_name: str, entries: list[tuple[int, str]]) -> dict[str, Any]:
     number, full_name, short = match_crew(draw_name, entries)
     return {
         "name": full_name,
-        "shortName": make_short_name(short, full_name),
+        "shortName": make_short_name(full_name, full_name),
         **({"number": number} if number is not None else {}),
     }
 

@@ -1,207 +1,169 @@
 {
   "event": "The Wargrave Challenge Cup",
   "year": 2026,
-  "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
-  "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
+  "source": "Henley Royal Regatta 2026 Draw (repaired from HRR results + entries)",
+  "sourceUrl": "https://www.hrr.co.uk/wp-json/hrr/v1/results",
   "rounds": [
     [
       {
         "id": "r1-0",
         "drawRace": 1,
         "berks": {
-          "name": "Vesta R .C",
-          "shortName": "Vesta R .C"
+          "name": "Molesey Boat Club ‘C’",
+          "shortName": "Molesey B.C.",
+          "number": 96
         },
         "bucks": {
-          "name": "1877 Club",
-          "shortName": "1877 Club"
+          "name": "Vesta Rowing Club ‘A’",
+          "shortName": "Vesta R.C.",
+          "number": 111
         }
       },
       {
         "id": "r1-1",
         "drawRace": 2,
         "berks": {
-          "name": "Barcelona C .R ., ESP",
-          "shortName": "Barcelona C .R ., ESP"
+          "name": "Lea Rowing Club",
+          "shortName": "Lea R.C.",
+          "number": 86
         },
         "bucks": {
-          "name": "Thames Rowing Club 'B'",
-          "shortName": "Thames R.C. 'B'",
-          "number": 104
+          "name": "London Rowing Club ‘C’",
+          "shortName": "London R.C.",
+          "number": 91
         }
       },
       {
         "id": "r1-2",
         "drawRace": 3,
         "berks": {
-          "name": "Upper Thames Rowing Club",
-          "shortName": "Upper Thames R .C",
-          "number": 110
+          "name": "Thames Rowing Club ‘B’",
+          "shortName": "Thames R.C.",
+          "number": 104
         },
         "bucks": {
-          "name": "Quintin B .C",
-          "shortName": "Quintin B .C"
+          "name": "Tideway Scullers’ School ‘A’",
+          "shortName": "Tideway Scullers' Sch.",
+          "number": 107
         }
       },
       {
         "id": "r1-3",
         "drawRace": 4,
         "berks": {
-          "name": "Swan River R .C ., AUS",
-          "shortName": "Swan River R .C ., AUS"
+          "name": "City of Cambridge Rowing Club ‘A’",
+          "shortName": "City of Cambridge R.C.",
+          "number": 79
         },
         "bucks": {
-          "name": "Mercantile R.C., AUS",
-          "shortName": "Mercantile R.C., AUS"
+          "name": "Thames Rowing Club ‘D’",
+          "shortName": "Thames R.C.",
+          "number": 106
         }
       },
       {
         "id": "r1-4",
         "drawRace": 5,
         "berks": {
-          "name": "Derby R .C . 'A'",
-          "shortName": "Derby R .C . 'A'"
+          "name": "Vesta Rowing Club ‘B’",
+          "shortName": "Vesta R.C.",
+          "number": 112
         },
         "bucks": {
-          "name": "R .V . Datteln, GER",
-          "shortName": "R .V . Datteln, GER"
+          "name": "London Rowing Club ‘B’",
+          "shortName": "London R.C.",
+          "number": 90
         }
       },
       {
         "id": "r1-5",
         "drawRace": 6,
         "berks": {
-          "name": "Derby R .C . 'B'",
-          "shortName": "Derby R .C . 'B'"
+          "name": "Molesey Boat Club ‘B’",
+          "shortName": "Molesey B.C.",
+          "number": 95
         },
         "bucks": {
-          "name": "Northwich R.C",
-          "shortName": "Northwich R.C"
+          "name": "Royal Chester Rowing Club ‘A’",
+          "shortName": "Royal Chester R.C.",
+          "number": 99
         }
       },
       {
         "id": "r1-6",
         "drawRace": 7,
         "berks": {
-          "name": "Fairmount R .A ., USA",
-          "shortName": "Fairmount R .A ., USA"
+          "name": "Thames Rowing Club ‘C’",
+          "shortName": "Thames R.C.",
+          "number": 105
         },
         "bucks": {
-          "name": "Minerva Bath R .C",
-          "shortName": "Minerva Bath R .C"
+          "name": "Marlow Rowing Club",
+          "shortName": "Marlow R.C.",
+          "number": 92
         }
       },
       {
         "id": "r1-7",
         "drawRace": 8,
         "berks": {
-          "name": "City of Bristol Rowing Club",
-          "shortName": "City of Bristol R .C",
-          "number": 78
+          "name": "York City Rowing Club",
+          "shortName": "York City R.C.",
+          "number": 114
         },
         "bucks": {
-          "name": "Sydney R.C. 'A', AUS",
-          "shortName": "Sydney R.C. 'A', AUS"
+          "name": "City of Bristol Rowing Club",
+          "shortName": "City of Bristol R.C.",
+          "number": 78
         }
       },
       {
         "id": "r1-8",
         "drawRace": 9,
-        "berks": {
-          "name": "Molesey B.C",
-          "shortName": "Molesey B.C"
-        },
-        "bucks": {
-          "name": "Agecroft R .C . 'A'",
-          "shortName": "Agecroft R .C . 'A'"
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-9",
         "drawRace": 10,
-        "berks": {
-          "name": "Agecroft R .C . 'B'",
-          "shortName": "Agecroft R .C . 'B'"
-        },
-        "bucks": {
-          "name": "Wallingford R .C",
-          "shortName": "Wallingford R .C"
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-10",
         "drawRace": 11,
-        "berks": {
-          "name": "St. Andrew Boat Club",
-          "shortName": "St. Andrew B.C. 'A'",
-          "number": 101
-        },
-        "bucks": {
-          "name": "St. Andrew Boat Club",
-          "shortName": "St . Andrew B .C . 'B'",
-          "number": 101
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-11",
         "drawRace": 12,
-        "berks": {
-          "name": "Star Club",
-          "shortName": "Star Club"
-        },
-        "bucks": {
-          "name": "K .R .C . Gent, BEL",
-          "shortName": "K .R .C . Gent, BEL"
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-12",
         "drawRace": 13,
-        "berks": {
-          "name": "Thames Rowing Club 'A'",
-          "shortName": "Thames R.C. 'A'",
-          "number": 103
-        },
-        "bucks": {
-          "name": "Walton R .C",
-          "shortName": "Walton R .C"
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-13",
         "drawRace": 14,
-        "berks": {
-          "name": "Marlow R .C",
-          "shortName": "Marlow R .C"
-        },
-        "bucks": {
-          "name": "Cork B .C ., IRL",
-          "shortName": "Cork B .C ., IRL"
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-14",
         "drawRace": 15,
-        "berks": {
-          "name": "London R.C",
-          "shortName": "London R.C"
-        },
-        "bucks": {
-          "name": "Nottingham R .C",
-          "shortName": "Nottingham R .C"
-        }
+        "berks": null,
+        "bucks": null
       },
       {
         "id": "r1-15",
         "drawRace": 16,
-        "berks": {
-          "name": "Sydney R .C . 'B', AUS",
-          "shortName": "Sydney R .C . 'B', AUS"
-        },
-        "bucks": {
-          "name": "Haldens R .K ., NOR",
-          "shortName": "Haldens R .K ., NOR"
-        }
+        "berks": null,
+        "bucks": null
       }
     ],
     [

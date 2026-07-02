@@ -7,6 +7,7 @@ import { EventProvider } from "@/components/EventContext";
 import LiveIndicator from "@/components/LiveIndicator";
 import NextRacesPanel from "@/components/NextRacesPanel";
 import RecentResultsPanel from "@/components/RecentResultsPanel";
+import ResultAuditBanner from "@/components/ResultAuditBanner";
 import { EVENTS, type EventId } from "@/config/events";
 import type { BracketApiResponse } from "@/lib/types";
 
@@ -73,6 +74,8 @@ export default function Dashboard({ eventId }: DashboardProps) {
             isValidating={isValidating}
             onRefresh={() => mutate()}
           />
+
+          <ResultAuditBanner audit={data.resultAudit} />
 
           <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-6 sm:gap-8">
             <section className="min-w-0">
