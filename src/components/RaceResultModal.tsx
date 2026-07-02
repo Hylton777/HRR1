@@ -20,16 +20,19 @@ function DetailItem({
   label,
   value,
   className = "",
+  loserLeading = false,
 }: {
   label: string;
   value: string;
   className?: string;
+  loserLeading?: boolean;
 }) {
   return (
     <div className={`text-center ${className}`}>
       <span className="block text-sm text-[var(--muted)]">{label}</span>
       <span className="block text-[13px] font-medium text-[var(--hrr-navy)] tabular-nums mt-0.5">
         {value}
+        {loserLeading ? "*" : ""}
       </span>
     </div>
   );
@@ -142,6 +145,7 @@ export default function RaceResultModal({
             <DetailItem
               label="Barrier"
               value={detail.splits.barrier.time}
+              loserLeading={detail.splits.barrier.loserLeading}
               className="col-span-3"
             />
           )}
@@ -149,6 +153,7 @@ export default function RaceResultModal({
             <DetailItem
               label="Fawley"
               value={detail.splits.fawley.time}
+              loserLeading={detail.splits.fawley.loserLeading}
               className="col-span-3"
             />
           )}
@@ -170,14 +175,9 @@ export default function RaceResultModal({
 
           {(detail.splits.barrier?.loserLeading ||
             detail.splits.fawley?.loserLeading) && (
-            <div className="col-span-12 text-xs text-[var(--muted)] text-center">
-              {detail.splits.barrier?.loserLeading && (
-                <span className="mr-3">Loser leading at Barrier</span>
-              )}
-              {detail.splits.fawley?.loserLeading && (
-                <span>Loser leading at Fawley</span>
-              )}
-            </div>
+            <p className="col-span-12 text-xs text-[var(--muted)] text-center">
+              * Loser was leading at that milestone
+            </p>
           )}
 
           <p className="col-span-12 text-[10px] text-center text-[var(--muted)] pt-1">
