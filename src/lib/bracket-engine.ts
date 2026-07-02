@@ -214,6 +214,140 @@ function getFeederWinner(
   return null;
 }
 
+function crewEquals(a: Crew | null, b: Crew | null): boolean {
+  if (!a || !b) return false;
+  return crewsMatch(a.name, b.name);
+}
+
+function applyInferredResult(
+  match: BracketMatch,
+  winner: Crew,
+  loser: Crew,
+  event: EventConfig,
+  registry: Map<string, Crew>,
+): BracketMatch {
+  return {
+    ...match,
+    status: "complete",
+    winner: enrichCrew(winner, event, registry) ?? winner,
+    loser: enrichCrew(loser, event, registry) ?? loser,
+    verdict: "Inferred",
+  };
+}
+
+/** If a downstream slot names a crew, that crew must have won its feeder race. */
+function tryInferFeederWinner(
+  feeder: BracketMatch,
+  advancedCrew: Crew | null,
+  event: EventConfig,
+  registry: Map<string, Crew>,
+): boolean {
+  if (!advancedCrew || feeder.status === "complete") return false;
+  if (!feeder.berks || !feeder.bucks) return false;
+
+  const winner = crewEquals(feeder.berks, advancedCrew)
+    ? feeder.berks
+    : crewEquals(feeder.bucks, advancedCrew)
+      ? feeder.bucks
+      : null;
+  if (!winner) return false;
+
+  const loser = crewEquals(winner, feeder.berks) ? feeder.bucks : feeder.berks;
+  Object.assign(
+    feeder,
+    applyInferredResult(feeder, winner, loser, event, registry),
+  );
+  return true;
+}
+
+function tryInferSingleFeederWinner(
+  parent: BracketMatch,
+  feeder: BracketMatch | undefined,
+  event: EventConfig,
+  registry: Map<string, Crew>,
+): boolean {
+  if (!feeder || feeder.status === "complete") return false;
+  if (!feeder.berks || !feeder.bucks) return false;
+
+  const parentCrews = [parent.berks, parent.bucks].filter(Boolean) as Crew[];
+  if (parentCrews.length === 0) return false;
+
+  const matching = [feeder.berks, feeder.bucks].filter((crew) =>
+    parentCrews.some((parentCrew) => crewEquals(crew, parentCrew)),
+  );
+  if (matching.length !== 1) return false;
+
+  const winner = matching[0]!;
+  const loser = crewEquals(winner, feeder.berks) ? feeder.bucks : feeder.berks;
+  Object.assign(
+    feeder,
+    applyInferredResult(feeder, winner, loser, event, registry),
+  );
+  return true;
+}
+
+function inferMissingFeederResults(
+  rounds: BracketMatch[][],
+  event: EventConfig,
+  registry: Map<string, Crew>,
+  matchById: Map<string, BracketMatch>,
+): boolean {
+  let changed = false;
+
+  for (const round of rounds) {
+    for (const match of round) {
+      if (!match.feeders?.length) continue;
+      if (!match.berks && !match.bucks) continue;
+
+      if (match.feeders.length === 2) {
+        const feederBerks = matchById.get(match.feeders[0]!);
+        const feederBucks = matchById.get(match.feeders[1]!);
+        if (
+          tryInferFeederWinner(feederBerks!, match.berks, event, registry)
+        ) {
+          changed = true;
+        }
+        if (
+          tryInferFeederWinner(feederBucks!, match.bucks, event, registry)
+        ) {
+          changed = true;
+        }
+      } else if (match.feeders.length === 1) {
+        const feeder = matchById.get(match.feeders[0]!);
+        if (tryInferSingleFeederWinner(match, feeder, event, registry)) {
+          changed = true;
+        }
+      }
+    }
+  }
+
+  return changed;
+}
+
+function propagateBracketProgress(
+  rounds: BracketMatch[][],
+  event: EventConfig,
+  registry: Map<string, Crew>,
+): boolean {
+  let changed = false;
+  let progress = true;
+
+  while (progress) {
+    progress = false;
+    const matchById = buildMatchIndex(rounds);
+    if (inferMissingFeederResults(rounds, event, registry, matchById)) {
+      progress = true;
+      changed = true;
+    }
+    if (propagateFeederWinners(rounds, event, registry, matchById)) {
+      progress = true;
+      changed = true;
+    }
+  }
+
+  return changed;
+}
+
 /** Fill empty berks/bucks slots from completed feeder races (e.g. Wyfold R2, QF). */
 function propagateFeederWinners(
   rounds: BracketMatch[][],
@@ -275,12 +409,59 @@ function pairMatchesRoundWinners(
   return aIsWinner && bIsWinner;
 }
 
+function crewAppearsInFeeder(
+  feeder: BracketMatch,
+  raw: string,
+  number: number | null,
+): boolean {
+  return (
+    crewMatchesSlot(feeder.berks, raw, number) ||
+    crewMatchesSlot(feeder.bucks, raw, number)
+  );
+}
+
+function findMatchByFeederPools(
+  rounds: BracketMatch[][],
+  berksRaw: string,
+  bucksRaw: string,
+  berksNumber: number | null,
+  bucksNumber: number | null,
+  matchById: Map<string, BracketMatch>,
+): BracketMatch | null {
+  for (const round of rounds) {
+    for (const match of round) {
+      if (match.status === "complete" || match.feeders?.length !== 2) continue;
+
+      const feederBerks = matchById.get(match.feeders[0]!);
+      const feederBucks = matchById.get(match.feeders[1]!);
+      if (
+        !feederBerks?.berks ||
+        !feederBerks?.bucks ||
+        !feederBucks?.berks ||
+        !feederBucks?.bucks
+      ) {
+        continue;
+      }
+
+      if (
+        crewAppearsInFeeder(feederBerks, berksRaw, berksNumber) &&
+        crewAppearsInFeeder(feederBucks, bucksRaw, bucksNumber)
+      ) {
+        return match;
+      }
+    }
+  }
+
+  return null;
+}
+
 function findMatchForTimetableRace(
   rounds: BracketMatch[][],
   berksRaw: string,
   bucksRaw: string,
   berksNumber: number | null,
   bucksNumber: number | null,
+  matchById: Map<string, BracketMatch>,
 ): BracketMatch | null {
   for (const round of rounds) {
     for (const match of round) {
@@ -298,6 +479,16 @@ function findMatchForTimetableRace(
       if (!match.berks && !match.bucks) return match;
     }
   }
+
+  const feederMatch = findMatchByFeederPools(
+    rounds,
+    berksRaw,
+    bucksRaw,
+    berksNumber,
+    bucksNumber,
+    matchById,
+  );
+  if (feederMatch) return feederMatch;
 
   for (let ri = 0; ri < rounds.length; ri++) {
     for (const match of rounds[ri]) {
@@ -348,6 +539,7 @@ function tryApplyResult(
 
       if (matchHasResultCrews(match, result)) {
         rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
+        propagateBracketProgress(rounds, event, registry);
         return true;
       }
 
@@ -355,6 +547,7 @@ function tryApplyResult(
       const bucks = getCrewName(match.bucks);
       if (berks && bucks && resultMatchesPair(result, berks, bucks)) {
         rounds[ri][mi] = applyResultToMatch(match, result, event, registry);
+        propagateBracketProgress(rounds, event, registry);
         return true;
       }
 
@@ -471,20 +664,38 @@ function mergeTimetable(
     const bucksRaw = parseTimetableCrew(race.bucks);
     const berksNumber = parseTimetableCrewNumber(race.berks);
     const bucksNumber = parseTimetableCrewNumber(race.bucks);
+    const matchById = buildMatchIndex(rounds);
     const match = findMatchForTimetableRace(
       rounds,
       berksRaw,
       bucksRaw,
       berksNumber,
       bucksNumber,
+      matchById,
     );
     if (!match || match.status === "complete") continue;
 
     const bothDrawCrewsKnown = Boolean(match.berks && match.bucks);
     const emptySlot = !match.berks && !match.bucks;
+    const feederBackedSlot =
+      emptySlot &&
+      Boolean(
+        match.feeders?.length === 2 &&
+          findMatchByFeederPools(
+            rounds,
+            berksRaw,
+            bucksRaw,
+            berksNumber,
+            bucksNumber,
+            matchById,
+          )?.id === match.id,
+      );
 
     if (emptySlot) {
-      if (!pairMatchesRoundWinners(rounds, match.roundIndex, berksRaw, bucksRaw)) {
+      if (
+        !feederBackedSlot &&
+        !pairMatchesRoundWinners(rounds, match.roundIndex, berksRaw, bucksRaw)
+      ) {
         continue;
       }
       match.berks = resolveCrew(race.berks, registry);
@@ -659,9 +870,7 @@ export function buildBracket(
       }
     }
 
-    if (
-      propagateFeederWinners(rounds, event, registry, buildMatchIndex(rounds))
-    ) {
+    if (propagateBracketProgress(rounds, event, registry)) {
       progress = true;
     }
   }
@@ -682,6 +891,7 @@ export function buildBracket(
   }
 
   mergeTimetable(rounds, timetable, registry);
+  propagateBracketProgress(rounds, event, registry);
   updateStatuses(rounds);
 
   const final = rounds[rounds.length - 1][0];
