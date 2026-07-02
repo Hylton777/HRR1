@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { formatRaceSchedule } from "@/lib/schedule-label";
-import { crewsMatch } from "@/lib/crew-match";
+import { crewsEquivalentForDisplay } from "@/lib/display-consistency";
 import { isSeededCrew } from "@/lib/crew-seeds";
 import { raceResultFromMatch, type RaceResultDetail } from "@/lib/race-result";
 import type { Crew, RaceSplits } from "@/lib/types";
@@ -250,9 +250,9 @@ export default function MatchCard(props: MatchCardProps) {
   const [detail, setDetail] = useState<RaceResultDetail | null>(null);
 
   const berksWon =
-    winner && berks ? crewsMatch(winner.name, berks.name) : false;
+    winner && berks ? crewsEquivalentForDisplay(winner, berks) : false;
   const bucksWon =
-    winner && bucks ? crewsMatch(winner.name, bucks.name) : false;
+    winner && bucks ? crewsEquivalentForDisplay(winner, bucks) : false;
 
   const openDetail = () => {
     const next = buildDetailFromProps(props);

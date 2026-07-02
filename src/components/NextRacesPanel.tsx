@@ -88,7 +88,16 @@ export default function NextRacesPanel({
           >
             official HRR draw
           </a>
-          {timetableDay ? ` (${timetableDay})` : ""}.
+          {timetableDay ? ` (${timetableDay})` : ""}. Racing days per the{" "}
+          <a
+            href="https://www.hrr.co.uk/racing-schedule/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-[var(--hrr-blue)]"
+          >
+            HRR programme
+          </a>
+          .
           {event.noRacingNote ? ` ${event.noRacingNote}` : ""}
         </p>
       </div>
@@ -107,8 +116,17 @@ export default function NextRacesPanel({
         >
           official HRR draw
         </a>
-        {timetableDay ? ` (${timetableDay})` : ""}. Published around 9pm BST
-        the evening before racing.
+        {timetableDay ? ` (${timetableDay})` : ""}. Racing days per the{" "}
+        <a
+          href="https://www.hrr.co.uk/racing-schedule/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-[var(--hrr-blue)]"
+        >
+          HRR programme
+        </a>
+        .
+        {event.noRacingNote ? ` ${event.noRacingNote}` : ""}
       </p>
       <div className="space-y-3">
         {races.map((race) => {

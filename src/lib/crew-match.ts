@@ -439,6 +439,7 @@ export function crewsMatch(
     return true;
   }
 
+  if (onlySharesGenericTokens(a, b)) return false;
   return sharesDistinctiveToken(a, b);
 }
 

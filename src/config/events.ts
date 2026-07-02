@@ -114,7 +114,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["Final"],
     seededCrewNumbers: [],
     seededCrewNames: [],
-    noRacingNote: "Grand races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Races Sunday only (final) \u2014 times publish around 9pm BST the evening before.",
     category: "premier-mens-eights",
   },
   "remenham": {
@@ -132,7 +132,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["Final"],
     seededCrewNumbers: [],
     seededCrewNames: [],
-    noRacingNote: "Remenham races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Races Sunday only (final) \u2014 times publish around 9pm BST the evening before.",
     category: "premier-womens-eights",
   },
   "lp": {
@@ -168,7 +168,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [15, 17, 20, 21, 24, 26],
     seededCrewNames: [],
-    noRacingNote: "Bridge races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Thu; QF Fri; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "intermediate-womens-eights",
   },
   "thames": {
@@ -186,7 +186,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "2nd Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [27, 31, 33, 39, 41, 42, 44, 45, 48, 50, 59, 61, 62, 63, 67, 70],
     seededCrewNames: [],
-    noRacingNote: "Thames races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Tue\u2013Wed; QF Fri; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "club-mens-eights",
   },
   "wargrave": {
@@ -204,7 +204,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "2nd Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [76, 79, 87, 89, 93, 94, 95, 102, 103, 104, 109],
     seededCrewNames: [],
-    noRacingNote: "Wargrave races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Tue\u2013Wed; last 16 Thu; no Friday; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "club-womens-eights",
   },
   "temple": {
@@ -222,7 +222,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "2nd Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [117, 118, 119, 127, 130, 136, 144, 149, 152, 155, 162, 184, 189, 191, 195, 199, 200, 201],
     seededCrewNames: [],
-    noRacingNote: "Temple races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Wed\u2013Sun (no Tuesday heats) \u2014 times publish around 9pm BST the evening before.",
     category: "student-mens-eights",
   },
   "island": {
@@ -240,7 +240,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Penultimate", "Final"],
     seededCrewNumbers: [203, 208, 211, 215, 216, 219, 221, 224, 226, 228, 245, 246, 249, 252],
     seededCrewNames: [],
-    noRacingNote: "Island races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Wed\u2013Sun (no Tuesday heats) \u2014 times publish around 9pm BST the evening before.",
     category: "student-womens-eights",
   },
   "pe": {
@@ -258,7 +258,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "2nd Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [256, 263, 270, 273, 281, 282, 283, 284, 286, 288, 290, 300],
     seededCrewNames: [],
-    noRacingNote: "PE has no racing on Thursday \u2014 Friday times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Tue\u2013Wed; QF Fri; SF Sat; final Sun \u2014 no Thursday \u2014 times publish around 9pm BST the evening before.",
     category: "junior-mens-eights",
   },
   "prince-philip": {
@@ -276,7 +276,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Last 16", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [306, 307, 308, 309, 311, 313, 314, 315, 318, 323, 324, 327, 328, 329, 334, 339],
     seededCrewNames: [],
-    noRacingNote: "P Philip races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Tue\u2013Wed; QF Fri; SF Sat; final Sun \u2014 no Thursday \u2014 times publish around 9pm BST the evening before.",
     category: "junior-womens-eights",
   },
   "stewards": {
@@ -294,7 +294,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["Semi-Final", "Final"],
     seededCrewNumbers: [],
     seededCrewNames: [],
-    noRacingNote: "Stewards races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Races Sat\u2013Sun only (semi-final & final) \u2014 times publish around 9pm BST the evening before.",
     category: "premier-mens-coxless-fours",
   },
   "town": {
@@ -312,7 +312,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [],
     seededCrewNames: [],
-    noRacingNote: "Town races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Thu; QF Fri; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "premier-womens-coxless-fours",
   },
   "visitors": {
@@ -330,7 +330,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [352, 355, 356, 358, 359, 362, 364, 367],
     seededCrewNames: [],
-    noRacingNote: "Visitors races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Thu; QF Fri; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "intermediate-mens-coxless-fours",
   },
   "wyfold": {
@@ -348,7 +348,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "2nd Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [383, 388, 392, 393, 395, 397, 400, 401, 405, 409, 413, 415, 416, 420],
     seededCrewNames: [],
-    noRacingNote: "Heats run Tue\u2013Wed; knockout continues Fri\u2013Sun \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Tue\u2013Wed; last 16 Thu; no Friday; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "club-coxless-fours",
   },
   "queen-mother": {
@@ -366,7 +366,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [],
     seededCrewNames: [],
-    noRacingNote: "Q Mother races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Races Fri\u2013Sun (quarter-finals onward) \u2014 times publish around 9pm BST the evening before.",
     category: "premier-mens-quads",
   },
   "princess-grace": {
@@ -384,7 +384,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["Final"],
     seededCrewNumbers: [],
     seededCrewNames: [],
-    noRacingNote: "P Grace races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Races Sunday only (final) \u2014 times publish around 9pm BST the evening before.",
     category: "premier-womens-quads",
   },
   "pow": {
@@ -402,7 +402,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [434, 443, 446, 450],
     seededCrewNames: [],
-    noRacingNote: "Races Thu\u2013Sun \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Thu; QF Fri; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "intermediate-mens-quads",
   },
   "princess-of-wales": {
@@ -420,7 +420,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [462, 463, 464, 465, 471],
     seededCrewNames: [],
-    noRacingNote: "P Wales races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Races Fri\u2013Sun (quarter-finals onward) \u2014 times publish around 9pm BST the evening before.",
     category: "intermediate-womens-quads",
   },
   "danesfield": {
@@ -438,7 +438,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [481, 485, 486, 489, 491, 500, 501, 502],
     seededCrewNames: [],
-    noRacingNote: "Danesfield races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Wed; continues Thu; no Friday; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "club-womens-quads",
   },
   "queen-victoria": {
@@ -456,7 +456,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [512, 514, 516, 526, 527, 531],
     seededCrewNames: [],
-    noRacingNote: "Q Victoria races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Wed; QF Fri; no Thursday; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "student-womens-quads",
   },
   "fawley": {
@@ -474,7 +474,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "2nd Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [538, 541, 546, 552, 553, 556, 565, 570, 579, 582, 586, 591, 597, 598, 600],
     seededCrewNames: [],
-    noRacingNote: "Fawley races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Tue; no Wednesday; continues Thu\u2013Sun \u2014 times publish around 9pm BST the evening before.",
     category: "junior-mens-quads",
   },
   "diamond-jubilee": {
@@ -492,7 +492,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Last 16", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [609, 612, 615, 617, 629, 630, 632, 637, 641, 643, 644, 645, 648, 653, 655, 659],
     seededCrewNames: [],
-    noRacingNote: "D Jubilee races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Tue; no Wednesday; continues Thu\u2013Sun \u2014 times publish around 9pm BST the evening before.",
     category: "junior-womens-quads",
   },
   "britannia": {
@@ -510,7 +510,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [677, 679, 682, 683, 688, 693],
     seededCrewNames: [],
-    noRacingNote: "Britannia races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Wed; continues Thu; no Friday; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "club-coxed-fours",
   },
   "prince-albert": {
@@ -528,7 +528,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["Qualifier", "Last 16", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [704, 709, 716, 717, 721, 724, 727, 728, 730, 736, 744],
     seededCrewNames: [],
-    noRacingNote: "P Albert races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Wed\u2013Sun (no Tuesday heats) \u2014 times publish around 9pm BST the evening before.",
     category: "student-mens-coxed-fours",
   },
   "goblets": {
@@ -546,7 +546,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [749, 751, 759, 761],
     seededCrewNames: [],
-    noRacingNote: "Goblets races Fri\u2013Sun \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Races Fri\u2013Sun (quarter-finals onward) \u2014 times publish around 9pm BST the evening before.",
     category: "premier-mens-coxless-pairs",
   },
   "hambleden-pairs": {
@@ -564,7 +564,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [765, 767, 769, 770, 772, 774],
     seededCrewNames: [],
-    noRacingNote: "Hambleden races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Races Fri\u2013Sun (quarter-finals onward) \u2014 times publish around 9pm BST the evening before.",
     category: "premier-womens-coxless-pairs",
   },
   "double-sculls": {
@@ -582,7 +582,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [777, 780, 781, 782, 783, 784, 787, 789, 790],
     seededCrewNames: [],
-    noRacingNote: "Doubles races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Thu; QF Fri; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "premier-mens-doubles",
   },
   "stonor": {
@@ -600,7 +600,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [],
     seededCrewNames: [],
-    noRacingNote: "Stonor races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Races Fri\u2013Sun (quarter-finals onward) \u2014 times publish around 9pm BST the evening before.",
     category: "premier-womens-doubles",
   },
   "diamond": {
@@ -618,7 +618,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [813, 818, 819, 820, 830, 831, 832, 840],
     seededCrewNames: [],
-    noRacingNote: "Diamond races Thu\u2013Sun \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Thu; QF Fri; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "premier-mens-sculls",
   },
   "princess-royal": {
@@ -636,7 +636,7 @@ export const EVENTS: Record<EventId, EventConfig> = {
     roundLabels: ["1st Round", "Quarter-Final", "Semi-Final", "Final"],
     seededCrewNumbers: [842, 848, 849, 850, 852, 853, 854, 856, 859],
     seededCrewNames: [],
-    noRacingNote: "P Royal races per HRR schedule \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote: "Heats Thu; QF Fri; SF Sat; final Sun \u2014 times publish around 9pm BST the evening before.",
     category: "premier-womens-sculls",
   },
 };
