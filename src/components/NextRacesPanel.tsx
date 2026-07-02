@@ -44,46 +44,19 @@ export default function NextRacesPanel({
   }
 
   if (compact) {
-    const next = races[0];
-    const nextMeta = formatUpcomingRaceMeta(
-      next.raceTime,
-      next.raceNumber,
-      next.raceDay,
-    );
     return (
       <div className="rounded-sm border border-[var(--hrr-blue)]/30 bg-[var(--card)] shadow-sm p-3 space-y-2">
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="font-display text-sm font-semibold text-[var(--hrr-navy)]">
-            Next Races
-          </h2>
-          {races.length > 1 && (
-            <span className="text-[10px] text-[var(--muted)]">
-              +{races.length - 1} more
-            </span>
-          )}
-        </div>
-        <div className="text-sm font-medium leading-snug">
-          <span className="text-[10px] text-[var(--muted)] block mb-0.5">
-            {next.roundLabel}
-            {nextMeta ? ` · ${nextMeta}` : ""}
-          </span>
-          <span className={crewClass(next.berks, "text-[var(--berks)]", event)}>
-            {displayName(next.berks)}
-          </span>
-          <span className="text-[var(--muted)] font-normal"> vs </span>
-          <span className={crewClass(next.bucks, "text-[var(--bucks)]", event)}>
-            {displayName(next.bucks)}
-          </span>
-        </div>
-        {races.length > 1 && (
-          <div className="flex gap-2 overflow-x-auto pb-0.5 -mx-1 px-1">
-            {races.slice(1, 4).map((race) => {
-              const meta = formatUpcomingRaceMeta(
-                race.raceTime,
-                race.raceNumber,
-                race.raceDay,
-              );
-              return (
+        <h2 className="font-display text-sm font-semibold text-[var(--hrr-navy)]">
+          Next Races
+        </h2>
+        <div className="flex gap-2 overflow-x-auto pb-0.5 -mx-1 px-1">
+          {races.map((race) => {
+            const meta = formatUpcomingRaceMeta(
+              race.raceTime,
+              race.raceNumber,
+              race.raceDay,
+            );
+            return (
               <div
                 key={race.id}
                 className="shrink-0 min-w-[140px] rounded-sm border border-[var(--card-border)] bg-[var(--hrr-cream)] px-2 py-1.5 text-[10px]"
@@ -93,13 +66,18 @@ export default function NextRacesPanel({
                   {meta ? ` · ${meta}` : ""}
                 </div>
                 <div className="font-medium truncate">
-                  {displayName(race.berks)} v {displayName(race.bucks)}
+                  <span className={crewClass(race.berks, "text-[var(--berks)]", event)}>
+                    {displayName(race.berks)}
+                  </span>
+                  <span className="text-[var(--muted)] font-normal"> v </span>
+                  <span className={crewClass(race.bucks, "text-[var(--bucks)]", event)}>
+                    {displayName(race.bucks)}
+                  </span>
                 </div>
               </div>
             );
-            })}
-          </div>
-        )}
+          })}
+        </div>
         <p className="text-[10px] text-[var(--muted)] leading-snug">
           Timings from the{" "}
           <a
@@ -111,7 +89,7 @@ export default function NextRacesPanel({
             official HRR draw
           </a>
           {timetableDay ? ` (${timetableDay})` : ""}.
-        {event.noRacingNote ? ` ${event.noRacingNote}` : ""}
+          {event.noRacingNote ? ` ${event.noRacingNote}` : ""}
         </p>
       </div>
     );
