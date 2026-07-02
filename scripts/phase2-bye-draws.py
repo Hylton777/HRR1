@@ -57,15 +57,6 @@ def repair_wargrave() -> None:
                 "bucks": crew(bucks_num, entries, bucks_short),
             }
         )
-    for idx in range(len(r1_specs), 16):
-        r1.append(
-            {
-                "id": f"r1-{idx}",
-                "drawRace": idx + 1,
-                "berks": None,
-                "bucks": None,
-            }
-        )
 
     # Wednesday last-16: bye crew on one station, Tuesday R1 winner on the other.
     r2 = [
