@@ -30,6 +30,17 @@ function topFromCenter(centerY: number, matchHeight: number): number {
   return centerY - matchHeight / 2;
 }
 
+function anchorYOnMatch(
+  top: number,
+  match: BracketMatch,
+  matchHeight: number,
+): number {
+  const anchor = inferFeederAnchor(match);
+  const ratio =
+    anchor === "bucks" ? BUCKS_SLOT_CENTER_RATIO : BERKS_SLOT_CENTER_RATIO;
+  return top + matchHeight * ratio;
+}
+
 function idealOffsetForMatch(
   match: BracketMatch,
   offsets: Map<string, number>,
@@ -47,18 +58,38 @@ function idealOffsetForMatch(
     }
   }
 
-  if (match.feeders?.length === 1) {
-    const feederTop = offsets.get(match.feeders[0]);
-    if (feederTop !== undefined) {
-      const feederCenter = matchCenter(feederTop, matchHeight);
-      const anchor = inferFeederAnchor(match);
-      const ratio =
-        anchor === "bucks" ? BUCKS_SLOT_CENTER_RATIO : BERKS_SLOT_CENTER_RATIO;
-      return feederCenter - matchHeight * ratio;
+  return match.matchIndex * cell * Math.pow(2, roundIndex);
+}
+
+/** Align 1st-round heats with the TBD row on their quarter-final. */
+function backAlignFeederRound(
+  rounds: BracketMatch[][],
+  offsets: Map<string, number>,
+  matchHeight: number,
+): void {
+  const round0 = rounds[0];
+  if (!round0?.length) return;
+
+  const childByFeeder = new Map<string, BracketMatch>();
+
+  for (let ri = 1; ri < rounds.length; ri++) {
+    for (const match of rounds[ri]) {
+      if (match.feeders?.length === 1) {
+        childByFeeder.set(match.feeders[0], match);
+      }
     }
   }
 
-  return match.matchIndex * cell * Math.pow(2, roundIndex);
+  for (const feeder of round0) {
+    const child = childByFeeder.get(feeder.id);
+    if (!child) continue;
+
+    const childTop = offsets.get(child.id);
+    if (childTop === undefined) continue;
+
+    const anchorY = anchorYOnMatch(childTop, child, matchHeight);
+    offsets.set(feeder.id, topFromCenter(anchorY, matchHeight));
+  }
 }
 
 /** Nudge matches apart only when feeder midpoints would overlap in the column */
@@ -123,6 +154,8 @@ export function computeMatchOffsets(
       offsets.set(id, top);
     }
   }
+
+  backAlignFeederRound(rounds, offsets, matchHeight);
 
   return offsets;
 }
