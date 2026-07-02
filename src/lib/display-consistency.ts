@@ -1,4 +1,5 @@
 import type { EventConfig } from "@/config/events";
+import { resolveRegattaDayIso } from "@/lib/regatta-days";
 import { enrichCrewFromEvent } from "@/lib/crew-seeds";
 import { crewResultMatchesDraw } from "@/lib/crew-match";
 import {
@@ -52,6 +53,72 @@ function normalizeRaceNumber(value: string | null | undefined): string | null {
   return trimmed.length > 0 ? trimmed : null;
 }
 
+function raceDaysMatch(
+  matchDay: string | null | undefined,
+  resultDay: string | null | undefined,
+  raceDays: EventConfig["raceDays"],
+): boolean {
+  if (!matchDay || !resultDay) return false;
+
+  const matchIso = resolveRegattaDayIso(matchDay, raceDays);
+  const resultIso = resolveRegattaDayIso(resultDay, raceDays);
+  if (matchIso && resultIso) return matchIso === resultIso;
+
+  return matchDay.toLowerCase().trim() === resultDay.toLowerCase().trim();
+}
+
+function findMatchesByRaceNumber(
+  completeMatches: BracketMatch[],
+  resultNumber: string,
+): BracketMatch[] {
+  return completeMatches.filter(
+    (match) => normalizeRaceNumber(match.raceNumber) === resultNumber,
+  );
+}
+
+function pickRaceNumberMatch(
+  matches: BracketMatch[],
+  result: HrrResult,
+  event: EventConfig,
+): BracketMatch | null {
+  if (matches.length === 0) return null;
+  if (matches.length === 1) return matches[0]!;
+
+  const sameDay = matches.filter((match) =>
+    raceDaysMatch(match.raceDay, result.raceDay, event.raceDays),
+  );
+  if (sameDay.length === 1) return sameDay[0]!;
+
+  const pool = sameDay.length > 0 ? sameDay : matches;
+  for (const match of pool) {
+    if (!match.berks || !match.bucks) continue;
+    if (resultMatchesDrawPair(result, match.berks, match.bucks)) {
+      return match;
+    }
+  }
+
+  for (const match of pool) {
+    if (!match.winner || !match.loser) continue;
+    const winnerMatches =
+      crewResultMatchesDraw(match.winner, result.winner) ||
+      crewResultMatchesDraw(
+        match.winner,
+        enrichCrewFromEvent(result.winner, event) ?? result.winner,
+      );
+    const loserMatches =
+      crewResultMatchesDraw(match.loser, result.loser) ||
+      crewResultMatchesDraw(
+        match.loser,
+        enrichCrewFromEvent(result.loser, event) ?? result.loser,
+      );
+    if (winnerMatches && loserMatches) {
+      return match;
+    }
+  }
+
+  return null;
+}
+
 export function findBracketMatchForResult(
   rounds: BracketMatch[][],
   result: HrrResult,
@@ -61,8 +128,10 @@ export function findBracketMatchForResult(
   const completeMatches = rounds.flat().filter((match) => match.status === "complete");
 
   if (resultNumber) {
-    const byRaceNumber = completeMatches.find(
-      (match) => normalizeRaceNumber(match.raceNumber) === resultNumber,
+    const byRaceNumber = pickRaceNumberMatch(
+      findMatchesByRaceNumber(completeMatches, resultNumber),
+      result,
+      event,
     );
     if (byRaceNumber) return byRaceNumber;
   }
