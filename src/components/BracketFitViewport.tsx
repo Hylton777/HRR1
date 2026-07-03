@@ -25,6 +25,7 @@ import {
 } from "@/lib/bracket-viewport";
 import type { BracketViewPreset } from "@/lib/regatta-days";
 import BracketTreeCore from "./BracketTreeCore";
+import BracketTreeSplit from "./BracketTreeSplit";
 
 function distance(a: { x: number; y: number }, b: { x: number; y: number }) {
   return Math.hypot(a.x - b.x, a.y - b.y);
@@ -39,7 +40,7 @@ export interface BracketFitViewportProps {
   viewPreset?: BracketViewPreset;
   dimUnfocused?: boolean;
   compact?: boolean;
-  layout?: "columns" | "rows";
+  layout?: "columns" | "rows" | "split";
   viewportClassName?: string;
   showZoomControls?: boolean;
   zoomControlsClassName?: string;
@@ -407,13 +408,21 @@ function BracketFitViewport({
           }}
         >
           <div className="p-2">
-            <BracketTreeCore
-              bracket={bracket}
-              compact={compact}
-              viewPreset={viewPreset}
-              dimUnfocused={dimUnfocused}
-              layout={layout}
-            />
+            {layout === "split" ? (
+              <BracketTreeSplit
+                bracket={bracket}
+                viewPreset={viewPreset}
+                dimUnfocused={dimUnfocused}
+              />
+            ) : (
+              <BracketTreeCore
+                bracket={bracket}
+                compact={compact}
+                viewPreset={viewPreset}
+                dimUnfocused={dimUnfocused}
+                layout={layout}
+              />
+            )}
           </div>
         </div>
       </div>

@@ -29,6 +29,8 @@ export interface BracketTreeCoreProps {
   columnClassName?: string;
   /** columns = left-to-right rounds; rows = bottom-up rounds for laptop */
   layout?: "columns" | "rows";
+  /** Omit root marker when nested inside a split bracket */
+  embedded?: boolean;
 }
 
 function ChampionCard({
@@ -68,6 +70,7 @@ export default function BracketTreeCore({
   dimUnfocused = false,
   columnClassName = "",
   layout = "columns",
+  embedded = false,
 }: BracketTreeCoreProps) {
   const event = useEvent();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -153,7 +156,11 @@ export default function BracketTreeCore({
         : 0;
 
     return (
-      <div ref={rootRef} className="relative min-w-max" data-bracket-root>
+      <div
+        ref={rootRef}
+        className="relative min-w-max"
+        {...(!embedded ? { "data-bracket-root": true } : {})}
+      >
         <BracketConnectors
           rootRef={rootRef}
           rounds={bracket.rounds}
@@ -233,7 +240,11 @@ export default function BracketTreeCore({
   }
 
   return (
-    <div ref={rootRef} className="relative min-w-max" data-bracket-root>
+    <div
+      ref={rootRef}
+      className="relative min-w-max"
+      {...(!embedded ? { "data-bracket-root": true } : {})}
+    >
       <BracketConnectors
         rootRef={rootRef}
         rounds={bracket.rounds}

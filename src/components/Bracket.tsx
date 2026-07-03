@@ -17,7 +17,7 @@ export default function Bracket({ bracket }: BracketProps) {
       <div className="hidden md:block md:sticky md:top-0 md:z-20 md:h-[calc(100dvh-3.5rem)]">
         <BracketFitViewport
           bracket={bracket}
-          layout="rows"
+          layout="split"
           viewportClassName="h-full min-h-0"
         />
       </div>
