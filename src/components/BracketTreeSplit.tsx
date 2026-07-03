@@ -108,7 +108,7 @@ export default function BracketTreeSplit({
   return (
     <div
       ref={rootRef}
-      className="relative flex flex-row items-start justify-between gap-6 w-full min-w-max"
+      className="relative flex flex-row items-start gap-6 min-w-max mx-auto"
       data-bracket-root
     >
       <BracketCenterConnectors

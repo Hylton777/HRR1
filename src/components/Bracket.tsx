@@ -14,13 +14,14 @@ export default function Bracket({ bracket }: BracketProps) {
       <div className="md:hidden">
         <BracketMobileZoom bracket={bracket} />
       </div>
-      <div className="hidden md:block md:sticky md:top-0 md:z-20 md:h-[calc(100dvh-3.5rem)]">
+      <div className="hidden md:block md:sticky md:top-0 md:z-20 md:h-[100dvh]">
         <BracketFitViewport
           bracket={bracket}
           layout="split"
           viewportClassName="h-full min-h-0 border-0 shadow-none rounded-none"
           showZoomControls={false}
-          contentPaddingClassName="p-1"
+          contentPaddingClassName="p-0"
+          fitPadding={0}
         />
       </div>
     </>

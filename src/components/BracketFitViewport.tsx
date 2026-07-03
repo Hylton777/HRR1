@@ -66,7 +66,7 @@ function BracketFitViewport({
   maxFitScale,
   contentPaddingClassName = "p-2",
 }: BracketFitViewportProps, ref) {
-  const resolvedFitPadding = fitPadding ?? (layout === "split" ? 4 : viewPreset === "full" ? 8 : 16);
+  const resolvedFitPadding = fitPadding ?? (layout === "split" ? 0 : viewPreset === "full" ? 8 : 16);
   const resolvedMaxFitScale = maxFitScale ?? (layout === "split" ? MAX_FIT_SCALE : MAX_SCALE);
   const viewportRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -132,10 +132,15 @@ function BracketFitViewport({
     if (!content) return contentSizeRef.current;
 
     const inner = content.querySelector("[data-bracket-root]") as HTMLElement;
-    const size = {
-      width: inner?.offsetWidth ?? content.offsetWidth,
-      height: inner?.offsetHeight ?? content.offsetHeight,
-    };
+    const size = inner
+      ? {
+          width: Math.max(inner.scrollWidth, inner.offsetWidth),
+          height: Math.max(inner.scrollHeight, inner.offsetHeight),
+        }
+      : {
+          width: content.scrollWidth,
+          height: content.scrollHeight,
+        };
     contentSizeRef.current = size;
     return size;
   }, []);
@@ -148,17 +153,20 @@ function BracketFitViewport({
 
       const runFit = () => {
         requestAnimationFrame(() => {
-          const viewportRect = viewport.getBoundingClientRect();
-          const contentSize = measureContentSize();
-          const focus = getFocusBounds(content, nextPreset);
-          const next = computeFitTransform(
-            viewportRect,
-            contentSize,
-            focus,
-            resolvedFitPadding,
-            resolvedMaxFitScale,
-          );
-          commitTransform(next);
+          requestAnimationFrame(() => {
+            const viewportRect = viewport.getBoundingClientRect();
+            const contentSize = measureContentSize();
+            const focus = getFocusBounds(content, nextPreset);
+            const next = computeFitTransform(
+              viewportRect,
+              contentSize,
+              focus,
+              resolvedFitPadding,
+              resolvedMaxFitScale,
+            );
+            applyTransformToDom(next);
+            setTransform(next);
+          });
         });
       };
 
@@ -173,7 +181,7 @@ function BracketFitViewport({
 
       runFit();
     },
-    [commitTransform, measureContentSize, resolvedFitPadding, resolvedMaxFitScale],
+    [applyTransformToDom, measureContentSize, resolvedFitPadding, resolvedMaxFitScale],
   );
 
   const prevPresetRef = useRef(viewPreset);
@@ -419,7 +427,7 @@ function BracketFitViewport({
             transform: formatTransform(transform),
           }}
         >
-          <div className={`${contentPaddingClassName}${layout === "split" ? " w-full" : ""}`}>
+          <div className={contentPaddingClassName}>
             {layout === "split" ? (
               <BracketTreeSplit
                 bracket={bracket}
