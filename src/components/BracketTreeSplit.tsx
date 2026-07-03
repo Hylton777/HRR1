@@ -6,6 +6,7 @@ import {
   computeMatchOffsets,
   computeSplitLayoutMetrics,
   computeViewportSplitDimensions,
+  getCompactCardTypography,
 } from "@/lib/bracket-layout";
 import {
   canSplitBracket,
@@ -29,20 +30,31 @@ export interface BracketTreeSplitProps {
 function ChampionCard({
   champion,
   event,
+  matchWidth,
+  matchHeight,
 }: {
   champion: NonNullable<BracketState["champion"]>;
   event: ReturnType<typeof useEvent>;
+  matchWidth: number;
+  matchHeight: number;
 }) {
+  const type = getCompactCardTypography(matchWidth, matchHeight);
+
   return (
     <div
-      className="bg-gradient-to-br from-[var(--hrr-navy)] to-[var(--hrr-blue)] rounded-sm text-center text-white p-2.5"
+      className="bg-gradient-to-br from-[var(--hrr-navy)] to-[var(--hrr-blue)] rounded-sm text-center text-white"
+      style={{ padding: `${Math.round(type.paddingX * 0.75)}px` }}
       data-bracket-region="champion"
     >
-      <div className="uppercase tracking-wider opacity-80 mb-0.5 text-[10px]">
+      <div
+        className="uppercase tracking-wider opacity-80 mb-0.5"
+        style={{ fontSize: type.championLabelFontSize }}
+      >
         2026 Winner
       </div>
       <div
-        className={`text-sm ${isSeededCrew(champion, event) ? "font-extrabold" : "font-bold"}`}
+        className={isSeededCrew(champion, event) ? "font-extrabold" : "font-bold"}
+        style={{ fontSize: type.championNameFontSize }}
       >
         {champion.shortName || champion.name}
       </div>
@@ -133,6 +145,7 @@ export default function BracketTreeSplit({
     rawRightAreaOffsetY,
     finalTop,
   );
+  const type = getCompactCardTypography(matchWidth, matchHeight);
 
   return (
     <div
@@ -172,9 +185,15 @@ export default function BracketTreeSplit({
           className="flex flex-col items-center shrink-0"
           style={{ width: matchWidth }}
         >
-          <h3 className="font-display font-semibold text-[var(--hrr-navy)] text-center text-xs mb-1 py-0.5">
+          <h3
+            className="font-display font-semibold text-[var(--hrr-navy)] text-center mb-1 py-0.5"
+            style={{ fontSize: type.roundLabelFontSize }}
+          >
             {event.roundLabels[finalRoundIndex] ?? final.roundLabel}
-            <span className="block font-sans font-normal text-[var(--muted)] text-[10px]">
+            <span
+              className="block font-sans font-normal text-[var(--muted)]"
+              style={{ fontSize: type.roundMetaFontSize }}
+            >
               1 race
             </span>
           </h3>
@@ -218,10 +237,18 @@ export default function BracketTreeSplit({
             style={{ width: matchWidth }}
             data-bracket-region="champion-column"
           >
-            <h3 className="font-display font-semibold text-[var(--hrr-navy)] text-center text-xs mb-1">
+            <h3
+              className="font-display font-semibold text-[var(--hrr-navy)] text-center mb-1"
+              style={{ fontSize: type.roundLabelFontSize }}
+            >
               Champion
             </h3>
-            <ChampionCard champion={bracket.champion} event={event} />
+            <ChampionCard
+              champion={bracket.champion}
+              event={event}
+              matchWidth={matchWidth}
+              matchHeight={matchHeight}
+            />
           </div>
         )}
       </div>

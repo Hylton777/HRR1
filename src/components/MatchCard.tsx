@@ -9,6 +9,7 @@ import type { Crew, RaceSplits } from "@/lib/types";
 import {
   COMPACT_MATCH_HEIGHT,
   COMPACT_MATCH_WIDTH,
+  getCompactCardTypography,
 } from "@/lib/bracket-layout";
 import RaceResultModal from "./RaceResultModal";
 import { useEvent } from "./EventContext";
@@ -135,7 +136,6 @@ function CompactBracketBox({
   event,
   width = COMPACT_MATCH_WIDTH,
   height = COMPACT_MATCH_HEIGHT,
-  large = false,
 }: {
   berks: MatchCardProps["berks"];
   bucks: MatchCardProps["bucks"];
@@ -150,7 +150,6 @@ function CompactBracketBox({
   event: ReturnType<typeof useEvent>;
   width?: number;
   height?: number;
-  large?: boolean;
 }) {
   const rowClass = (isWinner: boolean, isLoser: boolean, hasCrew: boolean, crew: MatchCardProps["berks"]) => {
     if (isWinner) {
@@ -198,10 +197,7 @@ function CompactBracketBox({
     onOpenDetail?.();
   };
 
-  const textMain =
-    width >= 320 ? "text-sm" : width >= 220 ? "text-xs" : "text-[9px]";
-  const textVerdict =
-    width >= 320 ? "text-xs" : width >= 220 ? "text-[9px]" : "text-[8px]";
+  const type = getCompactCardTypography(width, height);
 
   return (
     <div
@@ -235,13 +231,17 @@ function CompactBracketBox({
       }}
     >
       {status === "scheduled" && raceTime && (
-        <div className={`${large ? "text-[10px]" : "text-[7px]"} text-[var(--hrr-blue)] text-center bg-[var(--hrr-cream)] border-b border-[var(--card-border)] leading-tight py-px shrink-0`}>
+        <div
+          className="text-[var(--hrr-blue)] text-center bg-[var(--hrr-cream)] border-b border-[var(--card-border)] leading-tight shrink-0"
+          style={{ fontSize: type.timeFontSize, padding: `${Math.max(1, Math.round(type.timeFontSize * 0.15))}px 0` }}
+        >
           {raceTime}
         </div>
       )}
       <div className="flex flex-col flex-1 min-h-0">
         <div
-          className={`flex-1 flex items-center px-1.5 min-h-0 border-b border-[var(--card-border)] ${textMain} leading-tight ${rowClass(berksWon, status === "complete" && !berksWon && !!berks, !!berks, berks)}`}
+          className={`flex-1 flex items-center min-h-0 border-b border-[var(--card-border)] leading-snug ${rowClass(berksWon, status === "complete" && !berksWon && !!berks, !!berks, berks)}`}
+          style={{ fontSize: type.crewFontSize, paddingLeft: type.paddingX, paddingRight: type.paddingX }}
           data-connector-anchor="berks"
         >
           <span
@@ -252,7 +252,8 @@ function CompactBracketBox({
           </span>
         </div>
         <div
-          className={`flex-1 flex items-center px-1.5 min-h-0 ${textMain} leading-tight ${rowClass(bucksWon, status === "complete" && !bucksWon && !!bucks, !!bucks, bucks)}`}
+          className={`flex-1 flex items-center min-h-0 leading-snug ${rowClass(bucksWon, status === "complete" && !bucksWon && !!bucks, !!bucks, bucks)}`}
+          style={{ fontSize: type.crewFontSize, paddingLeft: type.paddingX, paddingRight: type.paddingX }}
           data-connector-anchor="bucks"
         >
           <span
@@ -264,7 +265,13 @@ function CompactBracketBox({
         </div>
       </div>
       {status === "complete" && verdict && (
-        <div className={`${textVerdict} font-semibold text-center text-[var(--hrr-navy)] bg-emerald-50 border-t border-emerald-200 leading-tight py-0.5 shrink-0 truncate px-1`}>
+        <div
+          className="font-semibold text-center text-[var(--hrr-navy)] bg-emerald-50 border-t border-emerald-200 leading-tight shrink-0 truncate"
+          style={{
+            fontSize: type.verdictFontSize,
+            padding: `${Math.max(2, Math.round(type.verdictFontSize * 0.2))}px ${type.paddingX}px`,
+          }}
+        >
           {verdict}
         </div>
       )}
@@ -320,7 +327,6 @@ export default function MatchCard(props: MatchCardProps) {
           event={event}
           width={compactWidth}
           height={compactHeight}
-          large={compactWidth !== undefined && compactWidth >= 220}
         />
         {detail && (
           <RaceResultModal detail={detail} onClose={() => setDetail(null)} />

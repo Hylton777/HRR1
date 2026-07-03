@@ -5,6 +5,39 @@ export const COMPACT_MATCH_HEIGHT = 58;
 export const COMPACT_MATCH_GAP = 8;
 export const COMPACT_MATCH_WIDTH = 128;
 
+export interface CompactCardTypography {
+  crewFontSize: number;
+  verdictFontSize: number;
+  timeFontSize: number;
+  paddingX: number;
+  roundLabelFontSize: number;
+  roundMetaFontSize: number;
+  championLabelFontSize: number;
+  championNameFontSize: number;
+}
+
+/** Scale type with match card size — larger boxes (fewer-entry events) get bigger text. */
+export function getCompactCardTypography(
+  matchWidth: number,
+  matchHeight: number,
+): CompactCardTypography {
+  const scale = Math.min(
+    matchWidth / COMPACT_MATCH_WIDTH,
+    matchHeight / COMPACT_MATCH_HEIGHT,
+  );
+
+  return {
+    crewFontSize: Math.min(26, Math.max(9, Math.round(8 + scale * 4))),
+    verdictFontSize: Math.min(18, Math.max(7, Math.round(6 + scale * 3))),
+    timeFontSize: Math.min(15, Math.max(7, Math.round(6 + scale * 2.2))),
+    paddingX: Math.max(6, Math.round(4 + scale * 3.5)),
+    roundLabelFontSize: Math.min(22, Math.max(10, Math.round(9 + scale * 3))),
+    roundMetaFontSize: Math.min(16, Math.max(8, Math.round(7 + scale * 2.2))),
+    championLabelFontSize: Math.min(16, Math.max(9, Math.round(8 + scale * 2))),
+    championNameFontSize: Math.min(24, Math.max(12, Math.round(10 + scale * 3.5))),
+  };
+}
+
 /** Laptop split bracket — fallback when viewport not measured yet */
 export const SPLIT_MATCH_HEIGHT = 86;
 export const SPLIT_MATCH_GAP = 12;

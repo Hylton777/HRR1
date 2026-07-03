@@ -11,6 +11,7 @@ import {
   computeMatchOffsets,
   computeRowMatchOffsets,
   getColumnHeight,
+  getCompactCardTypography,
   getMatchMarginTops,
   getRowWidth,
 } from "@/lib/bracket-layout";
@@ -98,6 +99,9 @@ export default function BracketTreeCore({
   const matchWidth = matchWidthProp ?? (compact ? COMPACT_MATCH_WIDTH : 220);
   const gap = matchGapProp ?? (compact ? COMPACT_MATCH_GAP : DESKTOP_MATCH_GAP);
   const columnWidth = matchWidth;
+  const compactType = compact
+    ? getCompactCardTypography(matchWidth, matchHeight)
+    : null;
   const offsets =
     matchOffsets ??
     (layout === "rows"
@@ -309,22 +313,24 @@ export default function BracketTreeCore({
           >
             <h3
               className={`font-display font-semibold text-[var(--hrr-navy)] text-center sticky top-0 bg-[var(--background)] z-10 ${
-                compact
-                  ? matchWidth > COMPACT_MATCH_WIDTH
-                    ? "text-xs mb-1 py-0.5"
-                    : "text-[10px] mb-1 py-0.5"
-                  : "text-sm mb-4 py-1"
+                compact ? "mb-1 py-0.5" : "text-sm mb-4 py-1"
               }`}
+              style={
+                compactType
+                  ? { fontSize: compactType.roundLabelFontSize }
+                  : undefined
+              }
             >
               {event.roundLabels[labelRoundIndex] ?? `Round ${labelRoundIndex + 1}`}
               <span
                 className={`block font-sans font-normal text-[var(--muted)] ${
-                  compact
-                    ? matchWidth > COMPACT_MATCH_WIDTH
-                      ? "text-[10px]"
-                      : "text-[9px]"
-                    : "text-xs"
+                  compact ? "" : "text-xs"
                 }`}
+                style={
+                  compactType
+                    ? { fontSize: compactType.roundMetaFontSize }
+                    : undefined
+                }
               >
                 {round.length} race{round.length !== 1 ? "s" : ""}
               </span>
