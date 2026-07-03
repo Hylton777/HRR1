@@ -144,20 +144,16 @@ export default function BracketTreeSplit({
         )}
       </div>
 
-      <div
-        className="relative z-10 shrink-0 -scale-x-100"
-        data-bracket-region="half-right"
-      >
-        <div className="-scale-x-100">
-          <BracketTreeCore
-            bracket={rightBracket}
-            compact
-            viewPreset={viewPreset}
-            dimUnfocused={dimUnfocused}
-            layout="columns"
-            embedded
-          />
-        </div>
+      <div className="relative z-10 shrink-0" data-bracket-region="half-right">
+        <BracketTreeCore
+          bracket={rightBracket}
+          compact
+          viewPreset={viewPreset}
+          dimUnfocused={dimUnfocused}
+          layout="columns"
+          columnFlow="rtl"
+          embedded
+        />
       </div>
     </div>
   );

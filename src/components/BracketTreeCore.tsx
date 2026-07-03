@@ -31,6 +31,8 @@ export interface BracketTreeCoreProps {
   layout?: "columns" | "rows";
   /** Omit root marker when nested inside a split bracket */
   embedded?: boolean;
+  /** ltr = rounds flow left-to-right; rtl = rounds flow right-to-left toward center */
+  columnFlow?: "ltr" | "rtl";
 }
 
 function ChampionCard({
@@ -71,6 +73,7 @@ export default function BracketTreeCore({
   columnClassName = "",
   layout = "columns",
   embedded = false,
+  columnFlow = "ltr",
 }: BracketTreeCoreProps) {
   const event = useEvent();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -88,7 +91,9 @@ export default function BracketTreeCore({
   const roundIndices =
     layout === "rows"
       ? [...bracket.rounds.keys()].reverse()
-      : [...bracket.rounds.keys()];
+      : columnFlow === "rtl"
+        ? [...bracket.rounds.keys()].reverse()
+        : [...bracket.rounds.keys()];
 
   const renderMatchCard = (
     match: (typeof allMatches)[number],
@@ -253,11 +258,13 @@ export default function BracketTreeCore({
         viewPreset={viewPreset}
         allMatches={allMatches}
         layout="columns"
+        columnFlow={columnFlow}
       />
       <div
         className={`relative z-10 flex ${compact ? "gap-3" : "gap-6"} min-w-max`}
       >
-      {bracket.rounds.map((round, roundIndex) => {
+      {roundIndices.map((roundIndex) => {
+        const round = bracket.rounds[roundIndex];
         const columnHeight = getColumnHeight(round, offsets, matchHeight, gap);
         const margins = compact
           ? null

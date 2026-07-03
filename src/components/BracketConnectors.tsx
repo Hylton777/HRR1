@@ -13,6 +13,7 @@ interface BracketConnectorsProps {
   dimUnfocused?: boolean;
   viewPreset?: BracketViewPreset;
   layout?: "columns" | "rows";
+  columnFlow?: "ltr" | "rtl";
 }
 
 interface MeasuredBox {
@@ -176,6 +177,71 @@ function buildConnectorPaths(
   return paths;
 }
 
+function buildConnectorPathsRtl(
+  rounds: BracketMatch[][],
+  root: HTMLElement,
+  measureMatch: (id: string) => MeasuredBox | null,
+  isDimmed: (match: BracketMatch, roundIndex: number) => boolean,
+): ConnectorPath[] {
+  const paths: ConnectorPath[] = [];
+
+  for (let ri = 1; ri < rounds.length; ri++) {
+    const round = rounds[ri];
+
+    for (const match of round) {
+      if (!match.feeders?.length) continue;
+
+      if (match.feeders.length === 1) {
+        const f0 = measureMatch(match.feeders[0]);
+        const child = measureMatch(match.id);
+        if (!f0 || !child) continue;
+
+        const anchor = inferFeederAnchor(match);
+        const targetY =
+          measureCrewAnchor(root, match.id, anchor) ?? child.centerY;
+        const midX = (f0.left + child.right) / 2;
+        const dimmed = isDimmed(match, ri);
+
+        paths.push({
+          d: `M ${f0.left} ${f0.centerY} H ${midX} V ${targetY} H ${child.right}`,
+          dimmed,
+        });
+        continue;
+      }
+
+      if (match.feeders.length !== 2) continue;
+
+      const [f0, f1] = match.feeders;
+      const p0 = measureMatch(f0);
+      const p1 = measureMatch(f1);
+      const child = measureMatch(match.id);
+      if (!p0 || !p1 || !child) continue;
+
+      const midX = (p0.left + child.right) / 2;
+      const y0 = p0.centerY;
+      const y1 = p1.centerY;
+      const childY = child.centerY;
+      const spineTop = Math.min(y0, y1);
+      const spineBottom = Math.max(y0, y1);
+      const dimmed = isDimmed(match, ri);
+
+      paths.push({ d: `M ${p0.left} ${y0} H ${midX}`, dimmed });
+      paths.push({ d: `M ${p1.left} ${y1} H ${midX}`, dimmed });
+      paths.push({ d: `M ${midX} ${spineTop} V ${spineBottom}`, dimmed });
+
+      if (childY < spineTop) {
+        paths.push({ d: `M ${midX} ${childY} V ${spineTop}`, dimmed });
+      } else if (childY > spineBottom) {
+        paths.push({ d: `M ${midX} ${spineBottom} V ${childY}`, dimmed });
+      }
+
+      paths.push({ d: `M ${midX} ${childY} H ${child.right}`, dimmed });
+    }
+  }
+
+  return paths;
+}
+
 function buildConnectorPathsRows(
   rounds: BracketMatch[][],
   root: HTMLElement,
@@ -249,6 +315,7 @@ export default function BracketConnectors({
   dimUnfocused = false,
   viewPreset = "full",
   layout: bracketLayout = "columns",
+  columnFlow = "ltr",
 }: BracketConnectorsProps) {
   const event = useEvent();
   const [layout, setLayout] = useState<ConnectorLayout | null>(null);
@@ -302,7 +369,10 @@ export default function BracketConnectors({
         return measureRelative(el, root);
       };
 
-      const paths = buildConnectorPaths(rounds, root, measureMatch, isDimmed);
+      const paths =
+        columnFlow === "rtl"
+          ? buildConnectorPathsRtl(rounds, root, measureMatch, isDimmed)
+          : buildConnectorPaths(rounds, root, measureMatch, isDimmed);
       setLayout({
         width: root.scrollWidth,
         height: root.scrollHeight,
@@ -324,7 +394,7 @@ export default function BracketConnectors({
       resizeObserver.disconnect();
       window.removeEventListener("resize", onWindowResize);
     };
-  }, [rootRef, rounds, allMatches, compact, dimUnfocused, viewPreset, event.raceDays, bracketLayout]);
+  }, [rootRef, rounds, allMatches, compact, dimUnfocused, viewPreset, event.raceDays, bracketLayout, columnFlow]);
 
   if (!layout || layout.paths.length === 0) return null;
 
