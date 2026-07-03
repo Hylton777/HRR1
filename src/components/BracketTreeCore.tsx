@@ -137,8 +137,23 @@ export default function BracketTreeCore({
   };
 
   if (layout === "rows") {
+    const ROW_LABEL_WIDTH = 72;
+    const maxRowWidth = Math.max(
+      ...bracket.rounds.map((round) =>
+        getRowWidth(round, offsets, matchWidth, gap),
+      ),
+      matchWidth,
+    );
+
+    const finalRound = bracket.rounds[bracket.rounds.length - 1];
+    const finalMatch = finalRound?.[0];
+    const championLeft =
+      bracket.champion && finalMatch
+        ? (offsets.get(finalMatch.id) ?? 0)
+        : 0;
+
     return (
-      <div ref={rootRef} className="relative min-w-max mx-auto" data-bracket-root>
+      <div ref={rootRef} className="relative min-w-max" data-bracket-root>
         <BracketConnectors
           rootRef={rootRef}
           rounds={bracket.rounds}
@@ -148,39 +163,58 @@ export default function BracketTreeCore({
           allMatches={allMatches}
           layout="rows"
         />
-        <div className="relative z-10 flex flex-col gap-4 items-center min-w-max">
+        <div className="relative z-10 flex flex-col gap-3 min-w-max">
           {bracket.champion && (
             <div
-              className="flex flex-col items-center shrink-0"
+              className="flex flex-row gap-3 items-center shrink-0"
               data-bracket-region="champion-column"
             >
-              <h3 className="font-display font-semibold text-[var(--hrr-navy)] text-center text-[10px] mb-1">
+              <h3
+                className="font-display font-semibold text-[var(--hrr-navy)] text-right text-[10px] shrink-0"
+                style={{ width: ROW_LABEL_WIDTH }}
+              >
                 Champion
               </h3>
-              <ChampionCard champion={bracket.champion} compact event={event} />
+              <div
+                className="relative shrink-0"
+                style={{ width: maxRowWidth, height: matchHeight }}
+              >
+                <div
+                  className="absolute top-1/2 -translate-y-1/2"
+                  style={{ left: championLeft, width: matchWidth }}
+                >
+                  <ChampionCard
+                    champion={bracket.champion}
+                    compact
+                    event={event}
+                  />
+                </div>
+              </div>
             </div>
           )}
 
           {roundIndices.map((roundIndex) => {
             const round = bracket.rounds[roundIndex];
-            const rowWidth = getRowWidth(round, offsets, matchWidth, gap);
 
             return (
               <div
                 key={roundIndex}
-                className="flex flex-col items-center shrink-0 w-full"
+                className="flex flex-row gap-3 items-center shrink-0"
                 data-bracket-region="round"
                 data-round-index={roundIndex}
               >
-                <h3 className="font-display font-semibold text-[var(--hrr-navy)] text-center text-[10px] mb-1 py-0.5">
+                <h3
+                  className="font-display font-semibold text-[var(--hrr-navy)] text-right text-[10px] py-0.5 shrink-0"
+                  style={{ width: ROW_LABEL_WIDTH }}
+                >
                   {event.roundLabels[roundIndex] ?? `Round ${roundIndex + 1}`}
                   <span className="block font-sans font-normal text-[var(--muted)] text-[9px]">
                     {round.length} race{round.length !== 1 ? "s" : ""}
                   </span>
                 </h3>
                 <div
-                  className="relative"
-                  style={{ width: rowWidth, height: matchHeight }}
+                  className="relative shrink-0"
+                  style={{ width: maxRowWidth, height: matchHeight }}
                 >
                   {round.map((match) => {
                     const left = offsets.get(match.id) ?? 0;

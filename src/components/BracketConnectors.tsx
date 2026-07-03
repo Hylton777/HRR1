@@ -198,7 +198,7 @@ function buildConnectorPathsRows(
         const anchor = inferFeederAnchor(match);
         const targetX =
           measureCrewAnchorX(root, match.id, anchor) ?? child.centerX;
-        const midY = (child.bottom + f0.top) / 2;
+        const midY = (f0.top + child.bottom) / 2;
         const dimmed = isDimmed(match, ri);
 
         paths.push({
@@ -216,7 +216,7 @@ function buildConnectorPathsRows(
       const child = measureMatch(match.id);
       if (!p0 || !p1 || !child) continue;
 
-      const midY = (child.bottom + Math.min(p0.top, p1.top)) / 2;
+      const midY = (p0.top + child.bottom) / 2;
       const x0 = p0.centerX;
       const x1 = p1.centerX;
       const childX = child.centerX;
