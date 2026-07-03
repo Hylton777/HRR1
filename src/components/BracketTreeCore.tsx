@@ -37,6 +37,8 @@ export interface BracketTreeCoreProps {
   matchOffsets?: Map<string, number>;
   /** Uniform column height for split halves (full-bracket tree height) */
   matchTreeHeight?: number;
+  /** Vertical shift for match areas in split layout (headers stay put) */
+  matchAreaOffsetY?: number;
 }
 
 function ChampionCard({
@@ -80,6 +82,7 @@ export default function BracketTreeCore({
   columnFlow = "ltr",
   matchOffsets,
   matchTreeHeight,
+  matchAreaOffsetY = 0,
 }: BracketTreeCoreProps) {
   const event = useEvent();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -307,7 +310,11 @@ export default function BracketTreeCore({
             {compact ? (
               <div
                 className="relative"
-                style={{ height: columnHeight, width: columnWidth }}
+                style={{
+                  height: columnHeight,
+                  width: columnWidth,
+                  marginTop: matchAreaOffsetY,
+                }}
               >
                 {round.map((match) => {
                   const focused = isMatchInView(

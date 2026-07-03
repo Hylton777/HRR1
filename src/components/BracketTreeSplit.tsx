@@ -94,6 +94,10 @@ export default function BracketTreeSplit({
     gap,
   );
   const finalTop = fullOffsets.get(final.id) ?? 0;
+  const leftSemiTop = fullOffsets.get(split.leftSemiId!) ?? 0;
+  const rightSemiTop = fullOffsets.get(split.rightSemiId!) ?? 0;
+  const leftMatchOffsetY = finalTop - leftSemiTop;
+  const rightMatchOffsetY = finalTop - rightSemiTop;
 
   return (
     <div
@@ -118,13 +122,8 @@ export default function BracketTreeSplit({
           embedded
           matchOffsets={fullOffsets}
           matchTreeHeight={treeHeight}
+          matchAreaOffsetY={leftMatchOffsetY}
         />
-      </div>
-
-      <div
-        className="relative z-10 flex flex-col shrink-0 gap-3 px-1"
-        data-bracket-region="center-final"
-      >
         <div
           className="flex flex-col items-center shrink-0 min-w-[128px]"
           style={{ width: 128 }}
@@ -191,6 +190,7 @@ export default function BracketTreeSplit({
           embedded
           matchOffsets={fullOffsets}
           matchTreeHeight={treeHeight}
+          matchAreaOffsetY={rightMatchOffsetY}
         />
       </div>
     </div>
