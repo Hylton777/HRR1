@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import type { BracketState } from "@/lib/types";
 import {
   COMPACT_MATCH_GAP,
@@ -9,8 +9,11 @@ import {
   DESKTOP_MATCH_GAP,
   DESKTOP_MATCH_HEIGHT,
   computeMatchOffsets,
+  computeRowMatchOffsets,
   getColumnHeight,
+  getCompactCardTypography,
   getMatchMarginTops,
+  getRowWidth,
 } from "@/lib/bracket-layout";
 import { isMatchInView, type BracketViewPreset } from "@/lib/regatta-days";
 import BracketConnectors from "./BracketConnectors";
@@ -25,6 +28,22 @@ export interface BracketTreeCoreProps {
   viewPreset?: BracketViewPreset;
   dimUnfocused?: boolean;
   columnClassName?: string;
+  /** columns = left-to-right rounds; rows = bottom-up rounds for laptop */
+  layout?: "columns" | "rows";
+  /** Omit root marker when nested inside a split bracket */
+  embedded?: boolean;
+  /** ltr = rounds flow left-to-right; rtl = rounds flow right-to-left toward center */
+  columnFlow?: "ltr" | "rtl";
+  /** Use offsets from the full bracket (split layout) */
+  matchOffsets?: Map<string, number>;
+  /** Uniform column height for split halves (full-bracket tree height) */
+  matchTreeHeight?: number;
+  /** Vertical shift for match areas in split layout (headers stay put) */
+  matchAreaOffsetY?: number;
+  /** Override compact match dimensions (laptop split) */
+  matchWidth?: number;
+  matchHeight?: number;
+  matchGap?: number;
 }
 
 function ChampionCard({
@@ -63,18 +82,198 @@ export default function BracketTreeCore({
   viewPreset = "full",
   dimUnfocused = false,
   columnClassName = "",
+  layout = "columns",
+  embedded = false,
+  columnFlow = "ltr",
+  matchOffsets,
+  matchTreeHeight,
+  matchAreaOffsetY = 0,
+  matchWidth: matchWidthProp,
+  matchHeight: matchHeightProp,
+  matchGap: matchGapProp,
 }: BracketTreeCoreProps) {
   const event = useEvent();
   const rootRef = useRef<HTMLDivElement>(null);
-  const matchHeight = compact ? COMPACT_MATCH_HEIGHT : DESKTOP_MATCH_HEIGHT;
-  const gap = compact ? COMPACT_MATCH_GAP : DESKTOP_MATCH_GAP;
-  const columnWidth = compact ? COMPACT_MATCH_WIDTH : 220;
-  const offsets = computeMatchOffsets(bracket.rounds, matchHeight, gap);
+  const matchHeight =
+    matchHeightProp ?? (compact ? COMPACT_MATCH_HEIGHT : DESKTOP_MATCH_HEIGHT);
+  const matchWidth = matchWidthProp ?? (compact ? COMPACT_MATCH_WIDTH : 220);
+  const gap = matchGapProp ?? (compact ? COMPACT_MATCH_GAP : DESKTOP_MATCH_GAP);
+  const columnWidth = matchWidth;
+  const compactType = compact
+    ? getCompactCardTypography(matchWidth, matchHeight)
+    : null;
+  const offsets =
+    matchOffsets ??
+    (layout === "rows"
+      ? computeRowMatchOffsets(bracket.rounds, matchWidth, gap)
+      : computeMatchOffsets(bracket.rounds, matchHeight, gap));
   const allMatches = bracket.rounds.flat();
   const matchById = new Map(allMatches.map((match) => [match.id, match]));
 
+  const roundIndices =
+    layout === "rows"
+      ? [...bracket.rounds.keys()].reverse()
+      : columnFlow === "rtl"
+        ? [...bracket.rounds.keys()].reverse()
+        : [...bracket.rounds.keys()];
+
+  const renderMatchCard = (
+    match: (typeof allMatches)[number],
+    roundIndex: number,
+    options?: { style?: CSSProperties; className?: string },
+  ) => {
+    const focused = isMatchInView(
+      match,
+      viewPreset,
+      event.raceDays,
+      allMatches,
+    );
+
+    return (
+      <div
+        key={match.id}
+        data-bracket-region="match"
+        data-match-id={match.id}
+        data-round-index={roundIndex}
+        data-focused={focused ? "true" : "false"}
+        className={`transition-opacity duration-200 ${
+          dimUnfocused && !focused ? "opacity-25" : "opacity-100"
+        } ${options?.className ?? ""}`}
+        style={options?.style}
+      >
+        <MatchCard
+          matchId={match.id}
+          berks={match.berks}
+          bucks={match.bucks}
+          berksPlaceholder={feederPlaceholderLabel(match, "berks", matchById)}
+          bucksPlaceholder={feederPlaceholderLabel(match, "bucks", matchById)}
+          winner={match.winner}
+          loser={match.loser}
+          status={match.status}
+          verdict={match.verdict}
+          roundLabel={
+            event.roundLabels[roundIndex] ?? match.roundLabel
+          }
+          raceTime={match.raceTime}
+          raceNumber={match.raceNumber}
+          raceDay={match.raceDay}
+          splits={match.splits}
+          station={match.station}
+          showStations={layout === "columns" ? roundIndex === 0 : false}
+          compact={layout === "rows" ? true : compact}
+          compactWidth={compact ? matchWidth : undefined}
+          compactHeight={compact ? matchHeight : undefined}
+        />
+      </div>
+    );
+  };
+
+  if (layout === "rows") {
+    const ROW_LABEL_WIDTH = 72;
+    const maxRowWidth = Math.max(
+      ...bracket.rounds.map((round) =>
+        getRowWidth(round, offsets, matchWidth, gap),
+      ),
+      matchWidth,
+    );
+
+    const finalRound = bracket.rounds[bracket.rounds.length - 1];
+    const finalMatch = finalRound?.[0];
+    const championLeft =
+      bracket.champion && finalMatch
+        ? (offsets.get(finalMatch.id) ?? 0)
+        : 0;
+
+    return (
+      <div
+        ref={rootRef}
+        className="relative min-w-max"
+        {...(!embedded ? { "data-bracket-root": true } : {})}
+      >
+        <BracketConnectors
+          rootRef={rootRef}
+          rounds={bracket.rounds}
+          compact
+          dimUnfocused={dimUnfocused}
+          viewPreset={viewPreset}
+          allMatches={allMatches}
+          layout="rows"
+        />
+        <div className="relative z-10 flex flex-col gap-3 min-w-max">
+          {bracket.champion && (
+            <div
+              className="flex flex-row gap-3 items-center shrink-0"
+              data-bracket-region="champion-column"
+            >
+              <h3
+                className="font-display font-semibold text-[var(--hrr-navy)] text-right text-[10px] shrink-0"
+                style={{ width: ROW_LABEL_WIDTH }}
+              >
+                Champion
+              </h3>
+              <div
+                className="relative shrink-0"
+                style={{ width: maxRowWidth, height: matchHeight }}
+              >
+                <div
+                  className="absolute top-1/2 -translate-y-1/2"
+                  style={{ left: championLeft, width: matchWidth }}
+                >
+                  <ChampionCard
+                    champion={bracket.champion}
+                    compact
+                    event={event}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {roundIndices.map((roundIndex) => {
+            const round = bracket.rounds[roundIndex];
+
+            return (
+              <div
+                key={roundIndex}
+                className="flex flex-row gap-3 items-center shrink-0"
+                data-bracket-region="round"
+                data-round-index={roundIndex}
+              >
+                <h3
+                  className="font-display font-semibold text-[var(--hrr-navy)] text-right text-[10px] py-0.5 shrink-0"
+                  style={{ width: ROW_LABEL_WIDTH }}
+                >
+                  {event.roundLabels[roundIndex] ?? `Round ${roundIndex + 1}`}
+                  <span className="block font-sans font-normal text-[var(--muted)] text-[9px]">
+                    {round.length} race{round.length !== 1 ? "s" : ""}
+                  </span>
+                </h3>
+                <div
+                  className="relative shrink-0"
+                  style={{ width: maxRowWidth, height: matchHeight }}
+                >
+                  {round.map((match) => {
+                    const left = offsets.get(match.id) ?? 0;
+                    return renderMatchCard(match, roundIndex, {
+                      className: "absolute top-0",
+                      style: { left, width: matchWidth },
+                    });
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div ref={rootRef} className="relative min-w-max" data-bracket-root>
+    <div
+      ref={rootRef}
+      className="relative min-w-max"
+      {...(!embedded ? { "data-bracket-root": true } : {})}
+    >
       <BracketConnectors
         rootRef={rootRef}
         rounds={bracket.rounds}
@@ -82,12 +281,24 @@ export default function BracketTreeCore({
         dimUnfocused={dimUnfocused}
         viewPreset={viewPreset}
         allMatches={allMatches}
+        layout="columns"
+        columnFlow={columnFlow}
       />
       <div
-        className={`relative z-10 flex ${compact ? "gap-3" : "gap-6"} min-w-max`}
+        className={`relative z-10 flex ${
+          compact
+            ? matchWidth > COMPACT_MATCH_WIDTH
+              ? "gap-4"
+              : "gap-3"
+            : "gap-6"
+        } min-w-max`}
       >
-      {bracket.rounds.map((round, roundIndex) => {
-        const columnHeight = getColumnHeight(round, offsets, matchHeight, gap);
+      {roundIndices.map((roundIndex) => {
+        const round = bracket.rounds[roundIndex];
+        const labelRoundIndex = round[0]?.roundIndex ?? roundIndex;
+        const columnHeight =
+          matchTreeHeight ??
+          getColumnHeight(round, offsets, matchHeight, gap);
         const margins = compact
           ? null
           : getMatchMarginTops(round, offsets, matchHeight);
@@ -102,16 +313,24 @@ export default function BracketTreeCore({
           >
             <h3
               className={`font-display font-semibold text-[var(--hrr-navy)] text-center sticky top-0 bg-[var(--background)] z-10 ${
-                compact
-                  ? "text-[10px] mb-1 py-0.5"
-                  : "text-sm mb-4 py-1"
+                compact ? "mb-1 py-0.5" : "text-sm mb-4 py-1"
               }`}
+              style={
+                compactType
+                  ? { fontSize: compactType.roundLabelFontSize }
+                  : undefined
+              }
             >
-              {event.roundLabels[roundIndex] ?? `Round ${roundIndex + 1}`}
+              {event.roundLabels[labelRoundIndex] ?? `Round ${labelRoundIndex + 1}`}
               <span
                 className={`block font-sans font-normal text-[var(--muted)] ${
-                  compact ? "text-[9px]" : "text-xs"
+                  compact ? "" : "text-xs"
                 }`}
+                style={
+                  compactType
+                    ? { fontSize: compactType.roundMetaFontSize }
+                    : undefined
+                }
               >
                 {round.length} race{round.length !== 1 ? "s" : ""}
               </span>
@@ -119,7 +338,11 @@ export default function BracketTreeCore({
             {compact ? (
               <div
                 className="relative"
-                style={{ height: columnHeight, width: columnWidth }}
+                style={{
+                  height: columnHeight,
+                  width: columnWidth,
+                  marginTop: matchAreaOffsetY,
+                }}
               >
                 {round.map((match) => {
                   const focused = isMatchInView(
@@ -159,6 +382,8 @@ export default function BracketTreeCore({
                         splits={match.splits}
                         station={match.station}
                         compact
+                        compactWidth={matchWidth}
+                        compactHeight={matchHeight}
                       />
                     </div>
                   );

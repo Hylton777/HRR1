@@ -68,20 +68,22 @@ export default function Dashboard({ eventId }: DashboardProps) {
   return (
     <EventProvider event={event}>
       <ClientErrorBoundary>
-        <div className="space-y-6 sm:space-y-8">
-          <LiveIndicator
-            lastUpdated={data.lastUpdated}
-            resultCount={data.resultCount ?? 0}
-            isValidating={isValidating}
-            onRefresh={() => mutate()}
-          />
+        <div className="space-y-6 sm:space-y-8 md:space-y-0">
+          <div className="md:fixed md:top-[4.25rem] md:right-4 md:z-50 md:max-w-md">
+            <LiveIndicator
+              lastUpdated={data.lastUpdated}
+              resultCount={data.resultCount ?? 0}
+              isValidating={isValidating}
+              onRefresh={() => mutate()}
+            />
+          </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-[1fr_280px] gap-6 sm:gap-8">
-            <section className="min-w-0">
-              <h2 className="font-display text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-[var(--hrr-navy)]">
+          <div className="space-y-6 sm:space-y-8 md:space-y-0">
+            <section className="min-w-0 w-full">
+              <h2 className="font-display text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-[var(--hrr-navy)] md:sr-only">
                 Knockout Bracket
               </h2>
-              <div className="xl:hidden mb-4">
+              <div className="md:hidden mb-4">
                 <NextRacesPanel
                   races={nextRaces}
                   timetableDay={data.timetableDay}
@@ -89,7 +91,7 @@ export default function Dashboard({ eventId }: DashboardProps) {
                 />
               </div>
               <Bracket bracket={data.bracket} />
-              <div className="xl:hidden mt-6">
+              <div className="md:hidden mt-6">
                 <RecentResultsPanel
                   results={data.results ?? []}
                   rounds={data.bracket.rounds}
@@ -97,9 +99,9 @@ export default function Dashboard({ eventId }: DashboardProps) {
               </div>
             </section>
 
-            <aside className="hidden xl:block xl:sticky xl:top-4 xl:self-start space-y-6 sm:space-y-8 min-w-0">
-              <div>
-                <h2 className="font-display text-lg font-semibold mb-1 text-[var(--hrr-navy)]">
+            <section className="hidden md:grid md:grid-cols-2 gap-6 lg:gap-8 min-w-0">
+              <div className="min-w-0">
+                <h2 className="font-display text-lg font-semibold mb-3 text-[var(--hrr-navy)]">
                   Next Races
                 </h2>
                 <NextRacesPanel
@@ -107,11 +109,13 @@ export default function Dashboard({ eventId }: DashboardProps) {
                   timetableDay={data.timetableDay}
                 />
               </div>
-              <RecentResultsPanel
-                results={data.results ?? []}
-                rounds={data.bracket.rounds}
-              />
-            </aside>
+              <div className="min-w-0">
+                <RecentResultsPanel
+                  results={data.results ?? []}
+                  rounds={data.bracket.rounds}
+                />
+              </div>
+            </section>
           </div>
 
           <ResultAuditBanner audit={data.resultAudit} />

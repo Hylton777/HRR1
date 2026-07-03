@@ -14,6 +14,8 @@ export interface ViewportSize {
 
 export const MIN_SCALE = 0.12;
 export const MAX_SCALE = 1.4;
+/** No cap — auto-fit scales until the bracket fills the viewport */
+export const MAX_FIT_SCALE = Number.POSITIVE_INFINITY;
 export const DEFAULT_SCALE = 0.38;
 export const MIN_VISIBLE_PX = 48;
 
@@ -83,23 +85,92 @@ export function getFocusBounds(
   return new DOMRect(minX, minY, maxX - minX, maxY - minY);
 }
 
+const TIGHT_BOUNDS_SELECTORS = [
+  '[data-bracket-region="match"]',
+  '[data-bracket-region="round"] > h3',
+  '[data-bracket-region="center-final"] h3',
+  '[data-bracket-region="champion-column"]',
+].join(", ");
+
+/** Bounding box of visible bracket content in unscaled layout coordinates. */
+export function getTightContentBounds(
+  contentEl: HTMLElement,
+): DOMRect | null {
+  const root = contentEl.querySelector(
+    "[data-bracket-root]",
+  ) as HTMLElement | null;
+  if (!root) return null;
+
+  const rootRect = root.getBoundingClientRect();
+  const scaleX =
+    root.offsetWidth > 0 ? rootRect.width / root.offsetWidth : 1;
+  const scaleY =
+    root.offsetHeight > 0 ? rootRect.height / root.offsetHeight : 1;
+
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+
+  root.querySelectorAll(TIGHT_BOUNDS_SELECTORS).forEach((node) => {
+    const el = node as HTMLElement;
+    const rect = el.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
+
+    const left = (rect.left - rootRect.left) / scaleX;
+    const top = (rect.top - rootRect.top) / scaleY;
+    const width = rect.width / scaleX;
+    const height = rect.height / scaleY;
+
+    minX = Math.min(minX, left);
+    minY = Math.min(minY, top);
+    maxX = Math.max(maxX, left + width);
+    maxY = Math.max(maxY, top + height);
+  });
+
+  if (!Number.isFinite(minX) || maxX <= minX || maxY <= minY) return null;
+
+  return new DOMRect(minX, minY, maxX - minX, maxY - minY);
+}
+
+export function computeSplitFitTransform(
+  viewport: ViewportSize,
+  content: ViewportSize,
+  padding = 0,
+): ViewportTransform {
+  const width = Math.max(content.width, 1);
+  const height = Math.max(content.height, 1);
+  const scale = Math.min(
+    (viewport.width - padding * 2) / width,
+    (viewport.height - padding * 2) / height,
+  );
+  const scaledW = width * scale;
+  const scaledH = height * scale;
+  return {
+    scale: Math.max(MIN_SCALE, scale),
+    x: (viewport.width - scaledW) / 2,
+    y: (viewport.height - scaledH) / 2,
+  };
+}
+
 export function computeFitTransform(
   viewport: ViewportSize,
   content: ViewportSize,
   target: DOMRect | null,
   padding = 12,
+  maxScale = MAX_SCALE,
 ): ViewportTransform {
   const focus = target ?? new DOMRect(0, 0, content.width, content.height);
   const focusWidth = Math.max(focus.width, 1);
   const focusHeight = Math.max(focus.height, 1);
-  const scale = clamp(
-    Math.min(
-      (viewport.width - padding * 2) / focusWidth,
-      (viewport.height - padding * 2) / focusHeight,
-    ),
-    MIN_SCALE,
-    MAX_SCALE,
+  const rawScale = Math.min(
+    (viewport.width - padding * 2) / focusWidth,
+    (viewport.height - padding * 2) / focusHeight,
   );
+  const scale =
+    Number.isFinite(maxScale)
+      ? clamp(rawScale, MIN_SCALE, maxScale)
+      : Math.max(MIN_SCALE, rawScale);
 
   const x = (viewport.width - focusWidth * scale) / 2 - focus.x * scale;
   const y = (viewport.height - focusHeight * scale) / 2 - focus.y * scale;

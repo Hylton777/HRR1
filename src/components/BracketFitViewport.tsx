@@ -16,15 +16,19 @@ import {
   clamp,
   clampTransform,
   computeFitTransform,
+  computeSplitFitTransform,
   DEFAULT_SCALE,
   formatTransform,
   getFocusBounds,
+  MAX_FIT_SCALE,
   MAX_SCALE,
   MIN_SCALE,
+  MIN_VISIBLE_PX,
   type ViewportTransform,
 } from "@/lib/bracket-viewport";
 import type { BracketViewPreset } from "@/lib/regatta-days";
 import BracketTreeCore from "./BracketTreeCore";
+import BracketTreeSplit from "./BracketTreeSplit";
 
 function distance(a: { x: number; y: number }, b: { x: number; y: number }) {
   return Math.hypot(a.x - b.x, a.y - b.y);
@@ -39,9 +43,15 @@ export interface BracketFitViewportProps {
   viewPreset?: BracketViewPreset;
   dimUnfocused?: boolean;
   compact?: boolean;
+  layout?: "columns" | "rows" | "split";
   viewportClassName?: string;
   showZoomControls?: boolean;
   zoomControlsClassName?: string;
+  /** Padding used when auto-fitting content to the viewport */
+  fitPadding?: number;
+  /** Max scale when auto-fitting (split layout uses a higher cap) */
+  maxFitScale?: number;
+  contentPaddingClassName?: string;
 }
 
 const BracketFitViewport = forwardRef<BracketFitViewportHandle, BracketFitViewportProps>(
@@ -50,12 +60,19 @@ function BracketFitViewport({
   viewPreset = "full",
   dimUnfocused = false,
   compact = true,
+  layout = "columns",
   viewportClassName = "h-[min(72dvh,calc(100dvh-13rem))] min-h-[360px]",
   showZoomControls = true,
   zoomControlsClassName = "flex justify-end gap-1 mb-2",
+  fitPadding,
+  maxFitScale,
+  contentPaddingClassName = "p-2",
 }: BracketFitViewportProps, ref) {
+  const resolvedFitPadding = fitPadding ?? (layout === "split" ? 0 : viewPreset === "full" ? 8 : 16);
+  const resolvedMaxFitScale = maxFitScale ?? (layout === "split" ? MAX_FIT_SCALE : MAX_SCALE);
   const viewportRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [fitViewport, setFitViewport] = useState({ width: 0, height: 0 });
   const [transform, setTransform] = useState<ViewportTransform>({
     scale: DEFAULT_SCALE,
     x: 8,
@@ -118,10 +135,15 @@ function BracketFitViewport({
     if (!content) return contentSizeRef.current;
 
     const inner = content.querySelector("[data-bracket-root]") as HTMLElement;
-    const size = {
-      width: inner?.offsetWidth ?? content.offsetWidth,
-      height: inner?.offsetHeight ?? content.offsetHeight,
-    };
+    const size = inner
+      ? {
+          width: inner.offsetWidth,
+          height: inner.offsetHeight,
+        }
+      : {
+          width: content.offsetWidth,
+          height: content.offsetHeight,
+        };
     contentSizeRef.current = size;
     return size;
   }, []);
@@ -133,17 +155,34 @@ function BracketFitViewport({
       if (!viewport || !content) return;
 
       const runFit = () => {
+        applyTransformToDom({ scale: 1, x: 0, y: 0 });
         requestAnimationFrame(() => {
-          const viewportRect = viewport.getBoundingClientRect();
-          const contentSize = measureContentSize();
-          const focus = getFocusBounds(content, nextPreset);
-          const next = computeFitTransform(
-            viewportRect,
-            contentSize,
-            focus,
-            nextPreset === "full" ? 8 : 16,
-          );
-          commitTransform(next);
+          requestAnimationFrame(() => {
+            const viewportRect = viewport.getBoundingClientRect();
+            const contentSize = measureContentSize();
+            const next =
+              layout === "split"
+                ? computeSplitFitTransform(
+                    viewportRect,
+                    contentSize,
+                    resolvedFitPadding,
+                  )
+                : computeFitTransform(
+                    viewportRect,
+                    contentSize,
+                    getFocusBounds(content, nextPreset),
+                    resolvedFitPadding,
+                    resolvedMaxFitScale,
+                  );
+            const clamped = clampTransform(
+              viewportRect,
+              contentSize,
+              next,
+              layout === "split" ? 0 : MIN_VISIBLE_PX,
+            );
+            applyTransformToDom(clamped);
+            setTransform(clamped);
+          });
         });
       };
 
@@ -158,11 +197,26 @@ function BracketFitViewport({
 
       runFit();
     },
-    [commitTransform, measureContentSize],
+    [applyTransformToDom, layout, measureContentSize, resolvedFitPadding, resolvedMaxFitScale],
   );
 
   const prevPresetRef = useRef(viewPreset);
   const prevFingerprintRef = useRef(fingerprint);
+
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      setFitViewport({ width: rect.width, height: rect.height });
+    };
+
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const presetChanged = prevPresetRef.current !== viewPreset;
@@ -189,6 +243,11 @@ function BracketFitViewport({
   }, [viewPreset, fingerprint, applyFit, measureContentSize, commitTransform]);
 
   useEffect(() => {
+    if (fitViewport.width < 1 || userInteractedRef.current) return;
+    applyFit(viewPreset, false);
+  }, [fitViewport, viewPreset, applyFit]);
+
+  useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
 
@@ -212,11 +271,17 @@ function BracketFitViewport({
     });
 
     observer.observe(viewport);
+
+    const bracketRoot = contentRef.current?.querySelector(
+      "[data-bracket-root]",
+    ) as HTMLElement | null;
+    if (bracketRoot) observer.observe(bracketRoot);
+
     return () => {
       observer.disconnect();
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
-  }, [viewPreset, applyFit, commitTransform]);
+  }, [viewPreset, applyFit, commitTransform, fingerprint, layout]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {
@@ -368,7 +433,7 @@ function BracketFitViewport({
   useImperativeHandle(ref, () => ({ zoomBy }), [zoomBy]);
 
   return (
-    <div>
+    <div className="h-full flex flex-col min-h-0">
       {showZoomControls && (
         <div className={zoomControlsClassName}>
           <button
@@ -391,7 +456,7 @@ function BracketFitViewport({
       )}
       <div
         ref={viewportRef}
-        className={`bracket-viewport relative rounded-sm border border-[var(--card-border)] bg-[var(--card)] shadow-sm overflow-hidden touch-none ${viewportClassName}`}
+        className={`bracket-viewport relative flex-1 min-h-0 rounded-sm border border-[var(--card-border)] bg-[var(--card)] shadow-sm overflow-hidden touch-none ${viewportClassName}`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -404,13 +469,23 @@ function BracketFitViewport({
             transform: formatTransform(transform),
           }}
         >
-          <div className="p-2">
-            <BracketTreeCore
-              bracket={bracket}
-              compact={compact}
-              viewPreset={viewPreset}
-              dimUnfocused={dimUnfocused}
-            />
+          <div className={contentPaddingClassName}>
+            {layout === "split" ? (
+              <BracketTreeSplit
+                bracket={bracket}
+                viewPreset={viewPreset}
+                dimUnfocused={dimUnfocused}
+                fitViewport={fitViewport}
+              />
+            ) : (
+              <BracketTreeCore
+                bracket={bracket}
+                compact={compact}
+                viewPreset={viewPreset}
+                dimUnfocused={dimUnfocused}
+                layout={layout}
+              />
+            )}
           </div>
         </div>
       </div>
