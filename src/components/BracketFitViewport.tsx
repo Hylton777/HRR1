@@ -39,6 +39,7 @@ export interface BracketFitViewportProps {
   viewPreset?: BracketViewPreset;
   dimUnfocused?: boolean;
   compact?: boolean;
+  layout?: "columns" | "rows";
   viewportClassName?: string;
   showZoomControls?: boolean;
   zoomControlsClassName?: string;
@@ -50,6 +51,7 @@ function BracketFitViewport({
   viewPreset = "full",
   dimUnfocused = false,
   compact = true,
+  layout = "columns",
   viewportClassName = "h-[min(72dvh,calc(100dvh-13rem))] min-h-[360px]",
   showZoomControls = true,
   zoomControlsClassName = "flex justify-end gap-1 mb-2",
@@ -368,7 +370,7 @@ function BracketFitViewport({
   useImperativeHandle(ref, () => ({ zoomBy }), [zoomBy]);
 
   return (
-    <div>
+    <div className="h-full flex flex-col min-h-0">
       {showZoomControls && (
         <div className={zoomControlsClassName}>
           <button
@@ -391,7 +393,7 @@ function BracketFitViewport({
       )}
       <div
         ref={viewportRef}
-        className={`bracket-viewport relative rounded-sm border border-[var(--card-border)] bg-[var(--card)] shadow-sm overflow-hidden touch-none ${viewportClassName}`}
+        className={`bracket-viewport relative flex-1 min-h-0 rounded-sm border border-[var(--card-border)] bg-[var(--card)] shadow-sm overflow-hidden touch-none ${viewportClassName}`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -410,6 +412,7 @@ function BracketFitViewport({
               compact={compact}
               viewPreset={viewPreset}
               dimUnfocused={dimUnfocused}
+              layout={layout}
             />
           </div>
         </div>

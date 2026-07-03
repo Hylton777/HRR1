@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import type { BracketState } from "@/lib/types";
 import {
   COMPACT_MATCH_GAP,
@@ -9,8 +9,10 @@ import {
   DESKTOP_MATCH_GAP,
   DESKTOP_MATCH_HEIGHT,
   computeMatchOffsets,
+  computeRowMatchOffsets,
   getColumnHeight,
   getMatchMarginTops,
+  getRowWidth,
 } from "@/lib/bracket-layout";
 import { isMatchInView, type BracketViewPreset } from "@/lib/regatta-days";
 import BracketConnectors from "./BracketConnectors";
@@ -25,6 +27,8 @@ export interface BracketTreeCoreProps {
   viewPreset?: BracketViewPreset;
   dimUnfocused?: boolean;
   columnClassName?: string;
+  /** columns = left-to-right rounds; rows = bottom-up rounds for laptop */
+  layout?: "columns" | "rows";
 }
 
 function ChampionCard({
@@ -63,15 +67,136 @@ export default function BracketTreeCore({
   viewPreset = "full",
   dimUnfocused = false,
   columnClassName = "",
+  layout = "columns",
 }: BracketTreeCoreProps) {
   const event = useEvent();
   const rootRef = useRef<HTMLDivElement>(null);
   const matchHeight = compact ? COMPACT_MATCH_HEIGHT : DESKTOP_MATCH_HEIGHT;
+  const matchWidth = compact ? COMPACT_MATCH_WIDTH : 220;
   const gap = compact ? COMPACT_MATCH_GAP : DESKTOP_MATCH_GAP;
-  const columnWidth = compact ? COMPACT_MATCH_WIDTH : 220;
-  const offsets = computeMatchOffsets(bracket.rounds, matchHeight, gap);
+  const columnWidth = matchWidth;
+  const offsets =
+    layout === "rows"
+      ? computeRowMatchOffsets(bracket.rounds, matchWidth, gap)
+      : computeMatchOffsets(bracket.rounds, matchHeight, gap);
   const allMatches = bracket.rounds.flat();
   const matchById = new Map(allMatches.map((match) => [match.id, match]));
+
+  const roundIndices =
+    layout === "rows"
+      ? [...bracket.rounds.keys()].reverse()
+      : [...bracket.rounds.keys()];
+
+  const renderMatchCard = (
+    match: (typeof allMatches)[number],
+    roundIndex: number,
+    options?: { style?: CSSProperties; className?: string },
+  ) => {
+    const focused = isMatchInView(
+      match,
+      viewPreset,
+      event.raceDays,
+      allMatches,
+    );
+
+    return (
+      <div
+        key={match.id}
+        data-bracket-region="match"
+        data-match-id={match.id}
+        data-round-index={roundIndex}
+        data-focused={focused ? "true" : "false"}
+        className={`transition-opacity duration-200 ${
+          dimUnfocused && !focused ? "opacity-25" : "opacity-100"
+        } ${options?.className ?? ""}`}
+        style={options?.style}
+      >
+        <MatchCard
+          matchId={match.id}
+          berks={match.berks}
+          bucks={match.bucks}
+          berksPlaceholder={feederPlaceholderLabel(match, "berks", matchById)}
+          bucksPlaceholder={feederPlaceholderLabel(match, "bucks", matchById)}
+          winner={match.winner}
+          loser={match.loser}
+          status={match.status}
+          verdict={match.verdict}
+          roundLabel={
+            event.roundLabels[roundIndex] ?? match.roundLabel
+          }
+          raceTime={match.raceTime}
+          raceNumber={match.raceNumber}
+          raceDay={match.raceDay}
+          splits={match.splits}
+          station={match.station}
+          showStations={layout === "columns" ? roundIndex === 0 : false}
+          compact={layout === "rows" ? true : compact}
+        />
+      </div>
+    );
+  };
+
+  if (layout === "rows") {
+    return (
+      <div ref={rootRef} className="relative min-w-max mx-auto" data-bracket-root>
+        <BracketConnectors
+          rootRef={rootRef}
+          rounds={bracket.rounds}
+          compact
+          dimUnfocused={dimUnfocused}
+          viewPreset={viewPreset}
+          allMatches={allMatches}
+          layout="rows"
+        />
+        <div className="relative z-10 flex flex-col gap-4 items-center min-w-max">
+          {bracket.champion && (
+            <div
+              className="flex flex-col items-center shrink-0"
+              data-bracket-region="champion-column"
+            >
+              <h3 className="font-display font-semibold text-[var(--hrr-navy)] text-center text-[10px] mb-1">
+                Champion
+              </h3>
+              <ChampionCard champion={bracket.champion} compact event={event} />
+            </div>
+          )}
+
+          {roundIndices.map((roundIndex) => {
+            const round = bracket.rounds[roundIndex];
+            const rowWidth = getRowWidth(round, offsets, matchWidth, gap);
+
+            return (
+              <div
+                key={roundIndex}
+                className="flex flex-col items-center shrink-0 w-full"
+                data-bracket-region="round"
+                data-round-index={roundIndex}
+              >
+                <h3 className="font-display font-semibold text-[var(--hrr-navy)] text-center text-[10px] mb-1 py-0.5">
+                  {event.roundLabels[roundIndex] ?? `Round ${roundIndex + 1}`}
+                  <span className="block font-sans font-normal text-[var(--muted)] text-[9px]">
+                    {round.length} race{round.length !== 1 ? "s" : ""}
+                  </span>
+                </h3>
+                <div
+                  className="relative"
+                  style={{ width: rowWidth, height: matchHeight }}
+                >
+                  {round.map((match) => {
+                    const left = offsets.get(match.id) ?? 0;
+                    return renderMatchCard(match, roundIndex, {
+                      className: "absolute top-0",
+                      style: { left, width: matchWidth },
+                    });
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={rootRef} className="relative min-w-max" data-bracket-root>
@@ -82,6 +207,7 @@ export default function BracketTreeCore({
         dimUnfocused={dimUnfocused}
         viewPreset={viewPreset}
         allMatches={allMatches}
+        layout="columns"
       />
       <div
         className={`relative z-10 flex ${compact ? "gap-3" : "gap-6"} min-w-max`}

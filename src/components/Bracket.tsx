@@ -14,10 +14,11 @@ export default function Bracket({ bracket }: BracketProps) {
       <div className="md:hidden">
         <BracketMobileZoom bracket={bracket} />
       </div>
-      <div className="hidden md:block">
+      <div className="hidden md:block md:sticky md:top-0 md:z-20 md:h-[calc(100dvh-3.5rem)]">
         <BracketFitViewport
           bracket={bracket}
-          viewportClassName="h-[min(80dvh,calc(100dvh-9rem))] min-h-[400px]"
+          layout="rows"
+          viewportClassName="h-full min-h-0"
         />
       </div>
     </>

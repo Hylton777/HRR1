@@ -12,12 +12,21 @@ interface BracketConnectorsProps {
   compact?: boolean;
   dimUnfocused?: boolean;
   viewPreset?: BracketViewPreset;
+  layout?: "columns" | "rows";
 }
 
 interface MeasuredBox {
   left: number;
   right: number;
   centerY: number;
+}
+
+interface MeasuredBoxRows {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+  centerX: number;
 }
 
 interface ConnectorPath {
@@ -51,6 +60,28 @@ function measureRelative(el: HTMLElement, root: HTMLElement): MeasuredBox {
   };
 }
 
+function measureRelativeRows(el: HTMLElement, root: HTMLElement): MeasuredBoxRows {
+  const rootRect = root.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+  const scaleX =
+    root.offsetWidth > 0 ? rootRect.width / root.offsetWidth : 1;
+  const scaleY =
+    root.offsetHeight > 0 ? rootRect.height / root.offsetHeight : 1;
+
+  const left = (elRect.left - rootRect.left) / scaleX;
+  const top = (elRect.top - rootRect.top) / scaleY;
+  const width = elRect.width / scaleX;
+  const height = elRect.height / scaleY;
+
+  return {
+    left,
+    right: left + width,
+    top,
+    bottom: top + height,
+    centerX: left + width / 2,
+  };
+}
+
 function measureCrewAnchor(
   root: HTMLElement,
   matchId: string,
@@ -61,6 +92,18 @@ function measureCrewAnchor(
   ) as HTMLElement | null;
   if (!el) return null;
   return measureRelative(el, root).centerY;
+}
+
+function measureCrewAnchorX(
+  root: HTMLElement,
+  matchId: string,
+  anchor: "berks" | "bucks",
+): number | null {
+  const el = root.querySelector(
+    `[data-match-id="${matchId}"] [data-connector-anchor="${anchor}"]`,
+  ) as HTMLElement | null;
+  if (!el) return null;
+  return measureRelativeRows(el, root).centerX;
 }
 
 function inferFeederAnchor(match: BracketMatch): "berks" | "bucks" {
@@ -133,6 +176,71 @@ function buildConnectorPaths(
   return paths;
 }
 
+function buildConnectorPathsRows(
+  rounds: BracketMatch[][],
+  root: HTMLElement,
+  measureMatch: (id: string) => MeasuredBoxRows | null,
+  isDimmed: (match: BracketMatch, roundIndex: number) => boolean,
+): ConnectorPath[] {
+  const paths: ConnectorPath[] = [];
+
+  for (let ri = 1; ri < rounds.length; ri++) {
+    const round = rounds[ri];
+
+    for (const match of round) {
+      if (!match.feeders?.length) continue;
+
+      if (match.feeders.length === 1) {
+        const f0 = measureMatch(match.feeders[0]);
+        const child = measureMatch(match.id);
+        if (!f0 || !child) continue;
+
+        const anchor = inferFeederAnchor(match);
+        const targetX =
+          measureCrewAnchorX(root, match.id, anchor) ?? child.centerX;
+        const midY = (child.bottom + f0.top) / 2;
+        const dimmed = isDimmed(match, ri);
+
+        paths.push({
+          d: `M ${f0.centerX} ${f0.top} V ${midY} H ${targetX} V ${child.bottom}`,
+          dimmed,
+        });
+        continue;
+      }
+
+      if (match.feeders.length !== 2) continue;
+
+      const [f0, f1] = match.feeders;
+      const p0 = measureMatch(f0);
+      const p1 = measureMatch(f1);
+      const child = measureMatch(match.id);
+      if (!p0 || !p1 || !child) continue;
+
+      const midY = (child.bottom + Math.min(p0.top, p1.top)) / 2;
+      const x0 = p0.centerX;
+      const x1 = p1.centerX;
+      const childX = child.centerX;
+      const spineLeft = Math.min(x0, x1);
+      const spineRight = Math.max(x0, x1);
+      const dimmed = isDimmed(match, ri);
+
+      paths.push({ d: `M ${x0} ${p0.top} V ${midY}`, dimmed });
+      paths.push({ d: `M ${x1} ${p1.top} V ${midY}`, dimmed });
+      paths.push({ d: `M ${spineLeft} ${midY} H ${spineRight}`, dimmed });
+
+      if (childX < spineLeft) {
+        paths.push({ d: `M ${childX} ${midY} H ${spineLeft}`, dimmed });
+      } else if (childX > spineRight) {
+        paths.push({ d: `M ${spineRight} ${midY} H ${childX}`, dimmed });
+      }
+
+      paths.push({ d: `M ${childX} ${midY} V ${child.bottom}`, dimmed });
+    }
+  }
+
+  return paths;
+}
+
 export default function BracketConnectors({
   rootRef,
   rounds,
@@ -140,6 +248,7 @@ export default function BracketConnectors({
   compact = false,
   dimUnfocused = false,
   viewPreset = "full",
+  layout: bracketLayout = "columns",
 }: BracketConnectorsProps) {
   const event = useEvent();
   const [layout, setLayout] = useState<ConnectorLayout | null>(null);
@@ -149,14 +258,6 @@ export default function BracketConnectors({
     if (!root) return;
 
     const measure = () => {
-      const measureMatch = (id: string): MeasuredBox | null => {
-        const el = root.querySelector(
-          `[data-match-id="${id}"]`,
-        ) as HTMLElement | null;
-        if (!el) return null;
-        return measureRelative(el, root);
-      };
-
       const isDimmed = (match: BracketMatch, roundIndex: number) => {
         if (!dimUnfocused) return false;
         if (isMatchInView(match, viewPreset, event.raceDays, allMatches))
@@ -168,6 +269,37 @@ export default function BracketConnectors({
             isMatchInView(feeder, viewPreset, event.raceDays, allMatches)
           );
         });
+      };
+
+      if (bracketLayout === "rows") {
+        const measureMatch = (id: string): MeasuredBoxRows | null => {
+          const el = root.querySelector(
+            `[data-match-id="${id}"]`,
+          ) as HTMLElement | null;
+          if (!el) return null;
+          return measureRelativeRows(el, root);
+        };
+
+        const paths = buildConnectorPathsRows(
+          rounds,
+          root,
+          measureMatch,
+          isDimmed,
+        );
+        setLayout({
+          width: root.scrollWidth,
+          height: root.scrollHeight,
+          paths,
+        });
+        return;
+      }
+
+      const measureMatch = (id: string): MeasuredBox | null => {
+        const el = root.querySelector(
+          `[data-match-id="${id}"]`,
+        ) as HTMLElement | null;
+        if (!el) return null;
+        return measureRelative(el, root);
       };
 
       const paths = buildConnectorPaths(rounds, root, measureMatch, isDimmed);
@@ -192,7 +324,7 @@ export default function BracketConnectors({
       resizeObserver.disconnect();
       window.removeEventListener("resize", onWindowResize);
     };
-  }, [rootRef, rounds, allMatches, compact, dimUnfocused, viewPreset, event.raceDays]);
+  }, [rootRef, rounds, allMatches, compact, dimUnfocused, viewPreset, event.raceDays, bracketLayout]);
 
   if (!layout || layout.paths.length === 0) return null;
 

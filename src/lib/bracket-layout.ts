@@ -15,6 +15,10 @@ export const EXPECTED_ROUND_SIZES = [16, 8, 4, 2, 1] as const;
 export const BUCKS_SLOT_CENTER_RATIO = 0.72;
 /** Vertical centre of the berks crew row within a match card (layout coords). */
 export const BERKS_SLOT_CENTER_RATIO = 0.28;
+/** Horizontal centre of the bucks crew column within a match card (layout coords). */
+export const BUCKS_SLOT_CENTER_X_RATIO = 0.72;
+/** Horizontal centre of the berks crew column within a match card (layout coords). */
+export const BERKS_SLOT_CENTER_X_RATIO = 0.28;
 
 function inferFeederAnchor(match: BracketMatch): "berks" | "bucks" {
   if (match.berks && !match.bucks) return "bucks";
@@ -191,6 +195,179 @@ export function getMatchMarginTops(
     const top = offsets.get(match.id) ?? prevBottom;
     margins.push(Math.max(0, top - prevBottom));
     prevBottom = top + matchHeight;
+  }
+
+  const orderMap = new Map(sorted.map((m, i) => [m.id, i]));
+  return round.map((m) => margins[orderMap.get(m.id) ?? 0] ?? 0);
+}
+
+function matchCenterX(left: number, matchWidth: number): number {
+  return left + matchWidth / 2;
+}
+
+function leftFromCenter(centerX: number, matchWidth: number): number {
+  return centerX - matchWidth / 2;
+}
+
+function anchorXOnMatch(
+  left: number,
+  match: BracketMatch,
+  matchWidth: number,
+): number {
+  const anchor = inferFeederAnchor(match);
+  const ratio =
+    anchor === "bucks" ? BUCKS_SLOT_CENTER_X_RATIO : BERKS_SLOT_CENTER_X_RATIO;
+  return left + matchWidth * ratio;
+}
+
+function idealOffsetXForMatch(
+  match: BracketMatch,
+  offsets: Map<string, number>,
+  matchWidth: number,
+  cell: number,
+  roundIndex: number,
+): number {
+  if (match.feeders?.length === 2) {
+    const x0 = offsets.get(match.feeders[0]);
+    const x1 = offsets.get(match.feeders[1]);
+    if (x0 !== undefined && x1 !== undefined) {
+      const center =
+        (matchCenterX(x0, matchWidth) + matchCenterX(x1, matchWidth)) / 2;
+      return leftFromCenter(center, matchWidth);
+    }
+  }
+
+  return match.matchIndex * cell * Math.pow(2, roundIndex);
+}
+
+function backAlignFeederRoundHorizontal(
+  rounds: BracketMatch[][],
+  offsets: Map<string, number>,
+  matchWidth: number,
+): void {
+  const round0 = rounds[0];
+  if (!round0?.length) return;
+
+  const childByFeeder = new Map<string, BracketMatch>();
+
+  for (let ri = 1; ri < rounds.length; ri++) {
+    for (const match of rounds[ri]) {
+      if (match.feeders?.length === 1) {
+        childByFeeder.set(match.feeders[0], match);
+      }
+    }
+  }
+
+  for (const feeder of round0) {
+    const child = childByFeeder.get(feeder.id);
+    if (!child) continue;
+
+    const childLeft = offsets.get(child.id);
+    if (childLeft === undefined) continue;
+
+    const anchorX = anchorXOnMatch(childLeft, child, matchWidth);
+    offsets.set(feeder.id, leftFromCenter(anchorX, matchWidth));
+  }
+}
+
+function resolveCollisionsInRow(
+  round: BracketMatch[],
+  idealOffsets: Map<string, number>,
+  matchWidth: number,
+  gap: number,
+): void {
+  const sorted = [...round].sort((a, b) => {
+    const da = idealOffsets.get(a.id) ?? 0;
+    const db = idealOffsets.get(b.id) ?? 0;
+    if (da !== db) return da - db;
+    return (a.drawRace ?? a.matchIndex) - (b.drawRace ?? b.matchIndex);
+  });
+
+  let prevRight = -Infinity;
+
+  for (const match of sorted) {
+    const ideal = idealOffsets.get(match.id) ?? 0;
+    const minLeft = prevRight === -Infinity ? ideal : prevRight + gap;
+    if (ideal < minLeft) {
+      idealOffsets.set(match.id, minLeft);
+    }
+    prevRight = (idealOffsets.get(match.id) ?? ideal) + matchWidth;
+  }
+}
+
+/**
+ * Compute horizontal offset (px) for each match so later-round races sit
+ * halfway between their two feeder races in the row below.
+ */
+export function computeRowMatchOffsets(
+  rounds: BracketMatch[][],
+  matchWidth: number,
+  gap: number,
+): Map<string, number> {
+  const cell = matchWidth + gap;
+  const offsets = new Map<string, number>();
+
+  const round0 = rounds[0];
+  if (!round0) return offsets;
+
+  for (let i = 0; i < round0.length; i++) {
+    offsets.set(round0[i].id, i * cell);
+  }
+
+  for (let ri = 1; ri < rounds.length; ri++) {
+    const round = rounds[ri];
+    const roundIdeals = new Map<string, number>();
+
+    for (const match of round) {
+      roundIdeals.set(
+        match.id,
+        idealOffsetXForMatch(match, offsets, matchWidth, cell, ri),
+      );
+    }
+
+    resolveCollisionsInRow(round, roundIdeals, matchWidth, gap);
+
+    for (const [id, left] of roundIdeals) {
+      offsets.set(id, left);
+    }
+  }
+
+  backAlignFeederRoundHorizontal(rounds, offsets, matchWidth);
+
+  return offsets;
+}
+
+export function getRowWidth(
+  round: BracketMatch[],
+  offsets: Map<string, number>,
+  matchWidth: number,
+  gap: number,
+): number {
+  if (round.length === 0) return 0;
+  let maxRight = 0;
+  for (const match of round) {
+    const left = offsets.get(match.id) ?? 0;
+    maxRight = Math.max(maxRight, left + matchWidth);
+  }
+  return maxRight + gap;
+}
+
+export function getMatchMarginLefts(
+  round: BracketMatch[],
+  offsets: Map<string, number>,
+  matchWidth: number,
+): number[] {
+  const sorted = [...round].sort(
+    (a, b) => (offsets.get(a.id) ?? 0) - (offsets.get(b.id) ?? 0),
+  );
+
+  const margins: number[] = [];
+  let prevRight = 0;
+
+  for (const match of sorted) {
+    const left = offsets.get(match.id) ?? prevRight;
+    margins.push(Math.max(0, left - prevRight));
+    prevRight = left + matchWidth;
   }
 
   const orderMap = new Map(sorted.map((m, i) => [m.id, i]));
