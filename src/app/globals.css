@@ -35,6 +35,7 @@ body {
 .bracket-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--card-border) transparent;
+  overscroll-behavior-x: contain;
 }
 
 .bracket-viewport {

@@ -3,11 +3,24 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import type { BracketState } from "@/lib/types";
+import {
+  bracketFingerprint,
+  clamp,
+  clampTransform,
+  computeFitTransform,
+  DEFAULT_SCALE,
+  formatTransform,
+  getFocusBounds,
+  MAX_SCALE,
+  MIN_SCALE,
+  type ViewportTransform,
+} from "@/lib/bracket-viewport";
 import {
   getRoundPresetLabels,
   groupMatchesByDay,
@@ -23,83 +36,8 @@ interface BracketMobileZoomProps {
 
 type LayoutMode = "bracket" | "day-stack";
 
-interface Transform {
-  scale: number;
-  x: number;
-  y: number;
-}
-
-const MIN_SCALE = 0.12;
-const MAX_SCALE = 1.4;
-const DEFAULT_SCALE = 0.38;
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
-}
-
 function distance(a: { x: number; y: number }, b: { x: number; y: number }) {
   return Math.hypot(a.x - b.x, a.y - b.y);
-}
-
-function getFocusBounds(
-  contentEl: HTMLElement,
-  preset: BracketViewPreset,
-): DOMRect | null {
-  if (preset === "full") return null;
-
-  const focused = contentEl.querySelectorAll('[data-focused="true"]');
-  if (focused.length === 0) return null;
-
-  let minX = Infinity;
-  let minY = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-
-  focused.forEach((node) => {
-    const el = node as HTMLElement;
-    let x = 0;
-    let y = 0;
-    let current: HTMLElement | null = el;
-    while (current && current !== contentEl) {
-      x += current.offsetLeft;
-      y += current.offsetTop;
-      current = current.offsetParent as HTMLElement | null;
-    }
-    minX = Math.min(minX, x);
-    minY = Math.min(minY, y);
-    maxX = Math.max(maxX, x + el.offsetWidth);
-    maxY = Math.max(maxY, y + el.offsetHeight);
-  });
-
-  if (minX === Infinity || maxX <= minX || maxY <= minY) return null;
-
-  return new DOMRect(minX, minY, maxX - minX, maxY - minY);
-}
-
-function computeFitTransform(
-  viewport: DOMRect,
-  content: DOMRect,
-  target: DOMRect | null,
-  padding = 12,
-): Transform {
-  const focus = target ?? new DOMRect(0, 0, content.width, content.height);
-  const focusWidth = Math.max(focus.width, 1);
-  const focusHeight = Math.max(focus.height, 1);
-  const scale = clamp(
-    Math.min(
-      (viewport.width - padding * 2) / focusWidth,
-      (viewport.height - padding * 2) / focusHeight,
-    ),
-    MIN_SCALE,
-    MAX_SCALE,
-  );
-
-  const x =
-    (viewport.width - focusWidth * scale) / 2 - focus.x * scale;
-  const y =
-    (viewport.height - focusHeight * scale) / 2 - focus.y * scale;
-
-  return { scale, x, y };
 }
 
 function DayStackView({ bracket }: { bracket: BracketState }) {
@@ -161,13 +99,19 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
   const event = useEvent();
   const viewportRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [transform, setTransform] = useState<Transform>({
+  const [transform, setTransform] = useState<ViewportTransform>({
     scale: DEFAULT_SCALE,
     x: 8,
     y: 8,
   });
   const [preset, setPreset] = useState<BracketViewPreset>("two-day");
   const [layout, setLayout] = useState<LayoutMode>("bracket");
+
+  const transformRef = useRef(transform);
+  const contentSizeRef = useRef({ width: 0, height: 0 });
+  const userInteractedRef = useRef(false);
+  const pendingFrameRef = useRef<number | null>(null);
+
   const pointersRef = useRef<Map<number, { x: number; y: number }>>(new Map());
   const panStartRef = useRef<{ x: number; y: number; tx: number; ty: number } | null>(
     null,
@@ -175,68 +119,205 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
   const pinchStartRef = useRef<{
     distance: number;
     scale: number;
-    midX: number;
-    midY: number;
     tx: number;
     ty: number;
   } | null>(null);
 
+  const fingerprint = useMemo(() => bracketFingerprint(bracket), [bracket]);
+
+  transformRef.current = transform;
+
+  const applyTransformToDom = useCallback((next: ViewportTransform) => {
+    if (contentRef.current) {
+      contentRef.current.style.transform = formatTransform(next);
+    }
+    transformRef.current = next;
+  }, []);
+
+  const commitTransform = useCallback((next: ViewportTransform) => {
+    const viewport = viewportRef.current?.getBoundingClientRect();
+    const contentSize = contentSizeRef.current;
+    const clamped =
+      viewport && contentSize.width > 0
+        ? clampTransform(viewport, contentSize, next)
+        : next;
+    applyTransformToDom(clamped);
+    setTransform(clamped);
+  }, [applyTransformToDom]);
+
+  const updateGestureTransform = useCallback(
+    (next: ViewportTransform) => {
+      const viewport = viewportRef.current?.getBoundingClientRect();
+      const contentSize = contentSizeRef.current;
+      const clamped =
+        viewport && contentSize.width > 0
+          ? clampTransform(viewport, contentSize, next)
+          : next;
+      applyTransformToDom(clamped);
+    },
+    [applyTransformToDom],
+  );
+
+  const measureContentSize = useCallback(() => {
+    const content = contentRef.current;
+    if (!content) return contentSizeRef.current;
+
+    const inner = content.querySelector("[data-bracket-root]") as HTMLElement;
+    const size = {
+      width: inner?.offsetWidth ?? content.offsetWidth,
+      height: inner?.offsetHeight ?? content.offsetHeight,
+    };
+    contentSizeRef.current = size;
+    return size;
+  }, []);
+
   const applyFit = useCallback(
-    (nextPreset: BracketViewPreset) => {
+    (nextPreset: BracketViewPreset, deferForPreset = false) => {
       const viewport = viewportRef.current;
       const content = contentRef.current;
       if (!viewport || !content) return;
 
-      requestAnimationFrame(() => {
-        const viewportRect = viewport.getBoundingClientRect();
-        const inner = content.querySelector("[data-bracket-root]") as HTMLElement;
-        const unscaledWidth = inner?.offsetWidth ?? content.offsetWidth;
-        const unscaledHeight = inner?.offsetHeight ?? content.offsetHeight;
-        const focus = getFocusBounds(content, nextPreset);
+      const runFit = () => {
+        requestAnimationFrame(() => {
+          const viewportRect = viewport.getBoundingClientRect();
+          const contentSize = measureContentSize();
+          const focus = getFocusBounds(content, nextPreset);
+          const next = computeFitTransform(
+            viewportRect,
+            contentSize,
+            focus,
+            nextPreset === "full" ? 8 : 16,
+          );
+          commitTransform(next);
+        });
+      };
 
-        const next = computeFitTransform(
-          viewportRect,
-          new DOMRect(0, 0, unscaledWidth, unscaledHeight),
-          focus,
-          nextPreset === "full" ? 8 : 16,
-        );
-        setTransform(next);
-      });
+      if (deferForPreset && nextPreset !== "full") {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            window.setTimeout(runFit, 220);
+          });
+        });
+        return;
+      }
+
+      runFit();
     },
-    [],
+    [commitTransform, measureContentSize],
   );
 
+  const prevPresetRef = useRef(preset);
+  const prevLayoutRef = useRef(layout);
+  const prevFingerprintRef = useRef(fingerprint);
+
   useEffect(() => {
-    if (layout === "bracket") {
-      applyFit(preset);
+    if (layout !== "bracket") return;
+
+    const presetChanged = prevPresetRef.current !== preset;
+    const layoutChanged = prevLayoutRef.current !== layout;
+    const fingerprintChanged = prevFingerprintRef.current !== fingerprint;
+
+    prevPresetRef.current = preset;
+    prevLayoutRef.current = layout;
+    prevFingerprintRef.current = fingerprint;
+
+    if (presetChanged || layoutChanged) {
+      userInteractedRef.current = false;
+      applyFit(preset, presetChanged);
+      return;
     }
-  }, [preset, layout, bracket, applyFit]);
+
+    if (fingerprintChanged && !userInteractedRef.current) {
+      applyFit(preset, false);
+      return;
+    }
+
+    if (fingerprintChanged) {
+      measureContentSize();
+      commitTransform(transformRef.current);
+    }
+  }, [preset, layout, fingerprint, applyFit, measureContentSize, commitTransform]);
+
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport || layout !== "bracket") return;
+
+    let rafId: number | null = null;
+    const observer = new ResizeObserver(() => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        if (userInteractedRef.current) {
+          const viewportRect = viewport.getBoundingClientRect();
+          const clamped = clampTransform(
+            viewportRect,
+            contentSizeRef.current,
+            transformRef.current,
+          );
+          commitTransform(clamped);
+        } else {
+          applyFit(preset, false);
+        }
+      });
+    });
+
+    observer.observe(viewport);
+    return () => {
+      observer.disconnect();
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, [layout, preset, applyFit, commitTransform]);
+
+  const markUserInteracted = () => {
+    userInteractedRef.current = true;
+  };
+
+  const scheduleGestureUpdate = (compute: () => ViewportTransform) => {
+    if (pendingFrameRef.current !== null) return;
+    pendingFrameRef.current = requestAnimationFrame(() => {
+      pendingFrameRef.current = null;
+      updateGestureTransform(compute());
+    });
+  };
+
+  const beginPanFromRemainingPointer = () => {
+    const remaining = [...pointersRef.current.entries()][0];
+    if (!remaining) return;
+
+    const [, pos] = remaining;
+    const current = transformRef.current;
+    panStartRef.current = {
+      x: pos.x,
+      y: pos.y,
+      tx: current.x,
+      ty: current.y,
+    };
+  };
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (layout !== "bracket") return;
+
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
     (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+
+    const current = transformRef.current;
 
     if (pointersRef.current.size === 1) {
       panStartRef.current = {
         x: event.clientX,
         y: event.clientY,
-        tx: transform.x,
-        ty: transform.y,
+        tx: current.x,
+        ty: current.y,
       };
     }
 
     if (pointersRef.current.size === 2) {
       const pts = [...pointersRef.current.values()];
-      const midX = (pts[0].x + pts[1].x) / 2;
-      const midY = (pts[0].y + pts[1].y) / 2;
       pinchStartRef.current = {
         distance: distance(pts[0], pts[1]),
-        scale: transform.scale,
-        midX,
-        midY,
-        tx: transform.x,
-        ty: transform.y,
+        scale: current.scale,
+        tx: current.x,
+        ty: current.y,
       };
       panStartRef.current = null;
     }
@@ -247,6 +328,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
     if (!pointersRef.current.has(event.pointerId)) return;
 
     pointersRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    markUserInteracted();
 
     if (pointersRef.current.size === 2) {
       const pinchStart = pinchStartRef.current;
@@ -255,11 +337,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
       const pts = [...pointersRef.current.values()];
       const dist = distance(pts[0], pts[1]);
       const ratio = dist / pinchStart.distance;
-      const nextScale = clamp(
-        pinchStart.scale * ratio,
-        MIN_SCALE,
-        MAX_SCALE,
-      );
+      const nextScale = clamp(pinchStart.scale * ratio, MIN_SCALE, MAX_SCALE);
       const midX = (pts[0].x + pts[1].x) / 2;
       const midY = (pts[0].y + pts[1].y) / 2;
       const viewport = viewportRef.current?.getBoundingClientRect();
@@ -269,11 +347,11 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
       const originY = midY - viewport.top;
       const scaleRatio = nextScale / pinchStart.scale;
 
-      setTransform({
+      scheduleGestureUpdate(() => ({
         scale: nextScale,
         x: originX - (originX - pinchStart.tx) * scaleRatio,
         y: originY - (originY - pinchStart.ty) * scaleRatio,
-      });
+      }));
       return;
     }
 
@@ -283,8 +361,8 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
 
       const dx = event.clientX - panStart.x;
       const dy = event.clientY - panStart.y;
-      setTransform((t) => ({
-        ...t,
+      scheduleGestureUpdate(() => ({
+        ...transformRef.current,
         x: panStart.tx + dx,
         y: panStart.ty + dy,
       }));
@@ -292,24 +370,42 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
   };
 
   const onPointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const wasPinching = pointersRef.current.size === 2;
     pointersRef.current.delete(event.pointerId);
-    if (pointersRef.current.size < 2) pinchStartRef.current = null;
-    if (pointersRef.current.size === 0) panStartRef.current = null;
+
+    if (pointersRef.current.size < 2) {
+      pinchStartRef.current = null;
+    }
+
+    if (wasPinching && pointersRef.current.size === 1) {
+      beginPanFromRemainingPointer();
+    }
+
+    if (pointersRef.current.size === 0) {
+      panStartRef.current = null;
+      if (pendingFrameRef.current !== null) {
+        cancelAnimationFrame(pendingFrameRef.current);
+        pendingFrameRef.current = null;
+      }
+      commitTransform(transformRef.current);
+    }
   };
 
   const zoomBy = (delta: number) => {
+    markUserInteracted();
     const viewport = viewportRef.current?.getBoundingClientRect();
     if (!viewport) return;
+
     const cx = viewport.width / 2;
     const cy = viewport.height / 2;
-    setTransform((t) => {
-      const nextScale = clamp(t.scale + delta, MIN_SCALE, MAX_SCALE);
-      const ratio = nextScale / t.scale;
-      return {
-        scale: nextScale,
-        x: cx - (cx - t.x) * ratio,
-        y: cy - (cy - t.y) * ratio,
-      };
+    const current = transformRef.current;
+    const nextScale = clamp(current.scale + delta, MIN_SCALE, MAX_SCALE);
+    const ratio = nextScale / current.scale;
+
+    commitTransform({
+      scale: nextScale,
+      x: cx - (cx - current.x) * ratio,
+      y: cy - (cy - current.y) * ratio,
     });
   };
 
@@ -451,7 +547,7 @@ export default function BracketMobileZoom({ bracket }: BracketMobileZoomProps) {
             ref={contentRef}
             className="absolute left-0 top-0 origin-top-left will-change-transform"
             style={{
-              transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.scale})`,
+              transform: formatTransform(transform),
             }}
           >
             <div className="p-2">

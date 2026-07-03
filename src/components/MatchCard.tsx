@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, type PointerEvent as ReactPointerEvent, type MouseEvent as ReactMouseEvent } from "react";
 import { formatRaceSchedule } from "@/lib/schedule-label";
 import { crewsEquivalentForDisplay } from "@/lib/display-consistency";
 import { isSeededCrew } from "@/lib/crew-seeds";
@@ -157,12 +157,44 @@ function CompactBracketBox({
   };
 
   const interactive = status === "complete" && !!onOpenDetail;
+  const pointerStartRef = useRef<{ x: number; y: number } | null>(null);
+  const draggedRef = useRef(false);
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    pointerStartRef.current = { x: event.clientX, y: event.clientY };
+    draggedRef.current = false;
+  };
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const start = pointerStartRef.current;
+    if (!start) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (Math.hypot(dx, dy) > 5) {
+      draggedRef.current = true;
+    }
+  };
+
+  const handlePointerUp = () => {
+    pointerStartRef.current = null;
+  };
+
+  const handleClick = (event: ReactMouseEvent<HTMLDivElement>) => {
+    if (!interactive) return;
+    if (draggedRef.current) {
+      event.preventDefault();
+      event.stopPropagation();
+      draggedRef.current = false;
+      return;
+    }
+    onOpenDetail?.();
+  };
 
   return (
     <div
       role={interactive ? "button" : undefined}
       tabIndex={interactive ? 0 : undefined}
-      onClick={interactive ? onOpenDetail : undefined}
+      onClick={handleClick}
       onKeyDown={
         interactive
           ? (event) => {
@@ -173,13 +205,10 @@ function CompactBracketBox({
             }
           : undefined
       }
-      onPointerDown={
-        interactive
-          ? (event) => {
-              event.stopPropagation();
-            }
-          : undefined
-      }
+      onPointerDown={interactive ? handlePointerDown : undefined}
+      onPointerMove={interactive ? handlePointerMove : undefined}
+      onPointerUp={interactive ? handlePointerUp : undefined}
+      onPointerCancel={interactive ? handlePointerUp : undefined}
       className={`bg-[var(--card)] border rounded-sm overflow-hidden shadow-sm flex flex-col ${
         status === "complete"
           ? "border-emerald-200"
