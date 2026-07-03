@@ -17,7 +17,7 @@ export default function Bracket({ bracket }: BracketProps) {
       <div className="hidden md:block">
         <BracketFitViewport
           bracket={bracket}
-          viewportClassName="h-[min(68dvh,calc(100dvh-14rem))] min-h-[320px] xl:h-[min(72dvh,calc(100dvh-13rem))] xl:min-h-[360px]"
+          viewportClassName="h-[min(80dvh,calc(100dvh-9rem))] min-h-[400px]"
         />
       </div>
     </>
