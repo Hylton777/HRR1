@@ -14,7 +14,7 @@ export default function Bracket({ bracket }: BracketProps) {
       <div className="md:hidden">
         <BracketMobileZoom bracket={bracket} />
       </div>
-      <div className="hidden md:block md:sticky md:top-0 md:z-20 md:h-[100dvh]">
+      <div className="hidden md:block md:sticky md:top-0 md:z-20 md:h-[100dvh] md:w-screen md:relative md:left-1/2 md:-translate-x-1/2">
         <BracketFitViewport
           bracket={bracket}
           layout="split"

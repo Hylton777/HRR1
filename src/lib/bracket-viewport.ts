@@ -92,7 +92,7 @@ const TIGHT_BOUNDS_SELECTORS = [
   '[data-bracket-region="champion-column"]',
 ].join(", ");
 
-/** Bounding box of visible bracket content, excluding empty layout padding. */
+/** Bounding box of visible bracket content in unscaled layout coordinates. */
 export function getTightContentBounds(
   contentEl: HTMLElement,
 ): DOMRect | null {
@@ -102,6 +102,11 @@ export function getTightContentBounds(
   if (!root) return null;
 
   const rootRect = root.getBoundingClientRect();
+  const scaleX =
+    root.offsetWidth > 0 ? rootRect.width / root.offsetWidth : 1;
+  const scaleY =
+    root.offsetHeight > 0 ? rootRect.height / root.offsetHeight : 1;
+
   let minX = Infinity;
   let minY = Infinity;
   let maxX = -Infinity;
@@ -112,10 +117,15 @@ export function getTightContentBounds(
     const rect = el.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return;
 
-    minX = Math.min(minX, rect.left - rootRect.left);
-    minY = Math.min(minY, rect.top - rootRect.top);
-    maxX = Math.max(maxX, rect.right - rootRect.left);
-    maxY = Math.max(maxY, rect.bottom - rootRect.top);
+    const left = (rect.left - rootRect.left) / scaleX;
+    const top = (rect.top - rootRect.top) / scaleY;
+    const width = rect.width / scaleX;
+    const height = rect.height / scaleY;
+
+    minX = Math.min(minX, left);
+    minY = Math.min(minY, top);
+    maxX = Math.max(maxX, left + width);
+    maxY = Math.max(maxY, top + height);
   });
 
   if (!Number.isFinite(minX) || maxX <= minX || maxY <= minY) return null;

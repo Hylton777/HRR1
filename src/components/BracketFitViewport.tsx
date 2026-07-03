@@ -71,6 +71,7 @@ function BracketFitViewport({
   const resolvedMaxFitScale = maxFitScale ?? (layout === "split" ? MAX_FIT_SCALE : MAX_SCALE);
   const viewportRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const [fitViewport, setFitViewport] = useState({ width: 0, height: 0 });
   const [transform, setTransform] = useState<ViewportTransform>({
     scale: DEFAULT_SCALE,
     x: 8,
@@ -153,6 +154,7 @@ function BracketFitViewport({
       if (!viewport || !content) return;
 
       const runFit = () => {
+        applyTransformToDom({ scale: 1, x: 0, y: 0 });
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             const viewportRect = viewport.getBoundingClientRect();
@@ -192,6 +194,21 @@ function BracketFitViewport({
   const prevFingerprintRef = useRef(fingerprint);
 
   useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      setFitViewport({ width: rect.width, height: rect.height });
+    };
+
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     const presetChanged = prevPresetRef.current !== viewPreset;
     const fingerprintChanged = prevFingerprintRef.current !== fingerprint;
 
@@ -214,6 +231,11 @@ function BracketFitViewport({
       commitTransform(transformRef.current);
     }
   }, [viewPreset, fingerprint, applyFit, measureContentSize, commitTransform]);
+
+  useEffect(() => {
+    if (fitViewport.width < 1 || userInteractedRef.current) return;
+    applyFit(viewPreset, false);
+  }, [fitViewport, viewPreset, applyFit]);
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -443,6 +465,7 @@ function BracketFitViewport({
                 bracket={bracket}
                 viewPreset={viewPreset}
                 dimUnfocused={dimUnfocused}
+                fitViewport={fitViewport}
               />
             ) : (
               <BracketTreeCore

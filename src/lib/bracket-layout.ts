@@ -5,10 +5,66 @@ export const COMPACT_MATCH_HEIGHT = 58;
 export const COMPACT_MATCH_GAP = 8;
 export const COMPACT_MATCH_WIDTH = 128;
 
-/** Laptop split bracket — larger cards that scale to fill the viewport */
+/** Laptop split bracket — fallback when viewport not measured yet */
 export const SPLIT_MATCH_HEIGHT = 86;
 export const SPLIT_MATCH_GAP = 12;
 export const SPLIT_MATCH_WIDTH = 192;
+
+export interface ViewportSplitDimensions {
+  matchWidth: number;
+  matchHeight: number;
+  gap: number;
+}
+
+/** Size match cards from the laptop viewport so the bracket fills the window at ~1:1 scale. */
+export function computeViewportSplitDimensions(
+  viewportWidth: number,
+  viewportHeight: number,
+  leftColumnCount: number,
+  rightColumnCount: number,
+  maxFirstRoundMatches: number,
+  hasChampion: boolean,
+): ViewportSplitDimensions {
+  if (viewportWidth < 200 || viewportHeight < 200) {
+    return {
+      matchWidth: SPLIT_MATCH_WIDTH,
+      matchHeight: SPLIT_MATCH_HEIGHT,
+      gap: SPLIT_MATCH_GAP,
+    };
+  }
+
+  const interColumnGap = 18;
+  const centerLaneGap = 28;
+  const totalColumns =
+    rightColumnCount > 0
+      ? leftColumnCount + rightColumnCount + 1
+      : leftColumnCount + (hasChampion ? 1 : 0);
+  const horizontalGaps =
+    rightColumnCount > 0
+      ? Math.max(0, leftColumnCount - 1) * interColumnGap +
+        Math.max(0, rightColumnCount - 1) * interColumnGap +
+        centerLaneGap * 2
+      : Math.max(0, leftColumnCount - 1) * interColumnGap;
+  const matchWidth = Math.floor(
+    (viewportWidth * 0.99 - horizontalGaps) / totalColumns,
+  );
+
+  const headerHeight = 34;
+  const championBlock = hasChampion ? 84 : 0;
+  const centerStackGap = hasChampion ? 16 : 0;
+  const verticalBudget =
+    (viewportHeight - headerHeight - championBlock - centerStackGap) * 0.99;
+  const roundsInColumn = Math.max(1, maxFirstRoundMatches);
+  const cell = verticalBudget / roundsInColumn;
+  const matchHeight = Math.floor(cell * 0.86);
+  const gap = Math.max(8, Math.floor(cell * 0.14));
+
+  return {
+    matchWidth: Math.min(560, Math.max(220, matchWidth)),
+    matchHeight: Math.min(300, Math.max(90, matchHeight)),
+    gap,
+  };
+}
 
 export const DESKTOP_MATCH_HEIGHT = 96;
 export const DESKTOP_MATCH_GAP = 8;

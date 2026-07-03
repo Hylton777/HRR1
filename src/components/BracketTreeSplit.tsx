@@ -1,13 +1,11 @@
 "use client";
 
 import { useRef } from "react";
-import type { BracketState } from "@/lib/types";
+import type { BracketState, BracketMatch } from "@/lib/types";
 import {
-  SPLIT_MATCH_GAP,
-  SPLIT_MATCH_HEIGHT,
-  SPLIT_MATCH_WIDTH,
   computeMatchOffsets,
   computeSplitLayoutMetrics,
+  computeViewportSplitDimensions,
 } from "@/lib/bracket-layout";
 import {
   canSplitBracket,
@@ -25,6 +23,7 @@ export interface BracketTreeSplitProps {
   bracket: BracketState;
   viewPreset?: import("@/lib/regatta-days").BracketViewPreset;
   dimUnfocused?: boolean;
+  fitViewport?: { width: number; height: number };
 }
 
 function ChampionCard({
@@ -51,19 +50,48 @@ function ChampionCard({
   );
 }
 
+function maxRoundSize(rounds: BracketMatch[][]): number {
+  return Math.max(1, ...rounds.map((round) => round.length));
+}
+
 export default function BracketTreeSplit({
   bracket,
   viewPreset = "full",
   dimUnfocused = false,
+  fitViewport = { width: 0, height: 0 },
 }: BracketTreeSplitProps) {
   const event = useEvent();
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const matchHeight = SPLIT_MATCH_HEIGHT;
-  const matchWidth = SPLIT_MATCH_WIDTH;
-  const gap = SPLIT_MATCH_GAP;
+  const split = canSplitBracket(bracket.rounds)
+    ? splitBracketHalves(bracket.rounds)
+    : null;
+  const leftRounds = split
+    ? split.leftRounds.filter((r) => r.length > 0)
+    : [];
+  const rightRounds = split
+    ? split.rightRounds.filter((r) => r.length > 0)
+    : [];
 
-  if (!canSplitBracket(bracket.rounds)) {
+  const { matchWidth, matchHeight, gap } = split
+    ? computeViewportSplitDimensions(
+        fitViewport.width,
+        fitViewport.height,
+        leftRounds.length,
+        rightRounds.length,
+        Math.max(maxRoundSize(leftRounds), maxRoundSize(rightRounds)),
+        !!bracket.champion,
+      )
+    : computeViewportSplitDimensions(
+        fitViewport.width,
+        fitViewport.height,
+        bracket.rounds.length,
+        0,
+        maxRoundSize(bracket.rounds),
+        !!bracket.champion,
+      );
+
+  if (!split) {
     return (
       <BracketTreeCore
         bracket={bracket}
@@ -78,9 +106,6 @@ export default function BracketTreeSplit({
     );
   }
 
-  const split = splitBracketHalves(bracket.rounds);
-  const leftRounds = split.leftRounds.filter((r) => r.length > 0);
-  const rightRounds = split.rightRounds.filter((r) => r.length > 0);
   const leftBracket = halfBracketState(bracket, leftRounds);
   const rightBracket = halfBracketState(bracket, rightRounds);
   const final = split.final!;
@@ -112,7 +137,7 @@ export default function BracketTreeSplit({
   return (
     <div
       ref={rootRef}
-      className="relative flex flex-row items-start gap-6 min-w-max"
+      className="relative flex flex-row items-start gap-7 min-w-max overflow-hidden"
       data-bracket-root
     >
       <BracketCenterConnectors

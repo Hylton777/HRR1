@@ -81,7 +81,7 @@ export default function BracketCenterConnectors({
       ];
 
       setPaths(nextPaths);
-      setSize({ width: root.scrollWidth, height: root.scrollHeight });
+      setSize({ width: root.offsetWidth, height: root.offsetHeight });
     };
 
     measure();
