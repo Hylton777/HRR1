@@ -68,15 +68,17 @@ export default function Dashboard({ eventId }: DashboardProps) {
   return (
     <EventProvider event={event}>
       <ClientErrorBoundary>
-        <div className="space-y-6 sm:space-y-8">
-          <LiveIndicator
-            lastUpdated={data.lastUpdated}
-            resultCount={data.resultCount ?? 0}
-            isValidating={isValidating}
-            onRefresh={() => mutate()}
-          />
+        <div className="space-y-6 sm:space-y-8 md:space-y-0">
+          <div className="md:fixed md:top-[4.25rem] md:right-4 md:z-50 md:max-w-md">
+            <LiveIndicator
+              lastUpdated={data.lastUpdated}
+              resultCount={data.resultCount ?? 0}
+              isValidating={isValidating}
+              onRefresh={() => mutate()}
+            />
+          </div>
 
-          <div className="space-y-6 sm:space-y-8">
+          <div className="space-y-6 sm:space-y-8 md:space-y-0">
             <section className="min-w-0 md:-mx-4 lg:-mx-6">
               <h2 className="font-display text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-[var(--hrr-navy)] md:sr-only">
                 Knockout Bracket

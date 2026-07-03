@@ -67,7 +67,7 @@ export default function HomeView() {
         </div>
       </div>
 
-      <main className="max-w-[1600px] mx-auto px-3 sm:px-4 py-4 sm:py-8">
+      <main className="max-w-[1600px] mx-auto px-3 sm:px-4 py-4 sm:py-8 md:py-0">
         <Dashboard eventId={eventId} />
       </main>
     </>

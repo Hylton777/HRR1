@@ -85,6 +85,44 @@ export function getFocusBounds(
   return new DOMRect(minX, minY, maxX - minX, maxY - minY);
 }
 
+const TIGHT_BOUNDS_SELECTORS = [
+  '[data-bracket-region="match"]',
+  '[data-bracket-region="round"] > h3',
+  '[data-bracket-region="center-final"] h3',
+  '[data-bracket-region="champion-column"]',
+].join(", ");
+
+/** Bounding box of visible bracket content, excluding empty layout padding. */
+export function getTightContentBounds(
+  contentEl: HTMLElement,
+): DOMRect | null {
+  const root = contentEl.querySelector(
+    "[data-bracket-root]",
+  ) as HTMLElement | null;
+  if (!root) return null;
+
+  const rootRect = root.getBoundingClientRect();
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+
+  root.querySelectorAll(TIGHT_BOUNDS_SELECTORS).forEach((node) => {
+    const el = node as HTMLElement;
+    const rect = el.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
+
+    minX = Math.min(minX, rect.left - rootRect.left);
+    minY = Math.min(minY, rect.top - rootRect.top);
+    maxX = Math.max(maxX, rect.right - rootRect.left);
+    maxY = Math.max(maxY, rect.bottom - rootRect.top);
+  });
+
+  if (!Number.isFinite(minX) || maxX <= minX || maxY <= minY) return null;
+
+  return new DOMRect(minX, minY, maxX - minX, maxY - minY);
+}
+
 export function computeFitTransform(
   viewport: ViewportSize,
   content: ViewportSize,

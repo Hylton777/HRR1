@@ -6,9 +6,9 @@ export const COMPACT_MATCH_GAP = 8;
 export const COMPACT_MATCH_WIDTH = 128;
 
 /** Laptop split bracket — larger cards that scale to fill the viewport */
-export const SPLIT_MATCH_HEIGHT = 76;
+export const SPLIT_MATCH_HEIGHT = 86;
 export const SPLIT_MATCH_GAP = 12;
-export const SPLIT_MATCH_WIDTH = 168;
+export const SPLIT_MATCH_WIDTH = 192;
 
 export const DESKTOP_MATCH_HEIGHT = 96;
 export const DESKTOP_MATCH_GAP = 8;
@@ -197,6 +197,49 @@ export function getBracketTreeHeight(
       getColumnHeight(round, offsets, matchHeight, gap),
     ),
   );
+}
+
+export interface SplitLayoutMetrics {
+  matchAreaHeight: number;
+  leftAreaOffsetY: number;
+  rightAreaOffsetY: number;
+  finalTop: number;
+}
+
+/** Tight vertical bounds for split layout — drops empty tree padding above/below halves. */
+export function computeSplitLayoutMetrics(
+  leftRounds: BracketMatch[][],
+  rightRounds: BracketMatch[][],
+  offsets: Map<string, number>,
+  matchHeight: number,
+  gap: number,
+  leftAreaOffsetY: number,
+  rightAreaOffsetY: number,
+  finalTop: number,
+): SplitLayoutMetrics {
+  let minY = finalTop;
+  let maxY = finalTop + matchHeight;
+
+  const scanRounds = (rounds: BracketMatch[][], areaOffsetY: number) => {
+    for (const round of rounds) {
+      for (const match of round) {
+        const top = areaOffsetY + (offsets.get(match.id) ?? 0);
+        minY = Math.min(minY, top);
+        maxY = Math.max(maxY, top + matchHeight);
+      }
+    }
+  };
+
+  scanRounds(leftRounds, leftAreaOffsetY);
+  scanRounds(rightRounds, rightAreaOffsetY);
+
+  const shift = minY;
+  return {
+    matchAreaHeight: maxY - minY + gap,
+    leftAreaOffsetY: leftAreaOffsetY - shift,
+    rightAreaOffsetY: rightAreaOffsetY - shift,
+    finalTop: finalTop - shift,
+  };
 }
 
 export function getMatchMarginTops(

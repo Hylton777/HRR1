@@ -19,6 +19,7 @@ import {
   DEFAULT_SCALE,
   formatTransform,
   getFocusBounds,
+  getTightContentBounds,
   MAX_FIT_SCALE,
   MAX_SCALE,
   MIN_SCALE,
@@ -156,7 +157,10 @@ function BracketFitViewport({
           requestAnimationFrame(() => {
             const viewportRect = viewport.getBoundingClientRect();
             const contentSize = measureContentSize();
-            const focus = getFocusBounds(content, nextPreset);
+            const tight =
+              layout === "split" ? getTightContentBounds(content) : null;
+            const focus =
+              tight ?? getFocusBounds(content, nextPreset);
             const next = computeFitTransform(
               viewportRect,
               contentSize,
@@ -181,7 +185,7 @@ function BracketFitViewport({
 
       runFit();
     },
-    [applyTransformToDom, measureContentSize, resolvedFitPadding, resolvedMaxFitScale],
+    [applyTransformToDom, layout, measureContentSize, resolvedFitPadding, resolvedMaxFitScale],
   );
 
   const prevPresetRef = useRef(viewPreset);
@@ -235,11 +239,17 @@ function BracketFitViewport({
     });
 
     observer.observe(viewport);
+
+    const bracketRoot = contentRef.current?.querySelector(
+      "[data-bracket-root]",
+    ) as HTMLElement | null;
+    if (bracketRoot) observer.observe(bracketRoot);
+
     return () => {
       observer.disconnect();
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
-  }, [viewPreset, applyFit, commitTransform]);
+  }, [viewPreset, applyFit, commitTransform, fingerprint, layout]);
 
   useEffect(() => {
     const id = requestAnimationFrame(() => {

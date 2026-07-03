@@ -7,7 +7,7 @@ import {
   SPLIT_MATCH_HEIGHT,
   SPLIT_MATCH_WIDTH,
   computeMatchOffsets,
-  getBracketTreeHeight,
+  computeSplitLayoutMetrics,
 } from "@/lib/bracket-layout";
 import {
   canSplitBracket,
@@ -93,22 +93,26 @@ export default function BracketTreeSplit({
     matchHeight,
     gap,
   );
-  const treeHeight = getBracketTreeHeight(
-    bracket.rounds,
-    fullOffsets,
-    matchHeight,
-    gap,
-  );
   const finalTop = fullOffsets.get(final.id) ?? 0;
   const leftSemiTop = fullOffsets.get(split.leftSemiId!) ?? 0;
   const rightSemiTop = fullOffsets.get(split.rightSemiId!) ?? 0;
-  const leftMatchOffsetY = finalTop - leftSemiTop;
-  const rightMatchOffsetY = finalTop - rightSemiTop;
+  const rawLeftAreaOffsetY = finalTop - leftSemiTop;
+  const rawRightAreaOffsetY = finalTop - rightSemiTop;
+  const splitMetrics = computeSplitLayoutMetrics(
+    leftRounds,
+    rightRounds,
+    fullOffsets,
+    matchHeight,
+    gap,
+    rawLeftAreaOffsetY,
+    rawRightAreaOffsetY,
+    finalTop,
+  );
 
   return (
     <div
       ref={rootRef}
-      className="relative flex flex-row items-start gap-6 min-w-max mx-auto"
+      className="relative flex flex-row items-start gap-6 min-w-max"
       data-bracket-root
     >
       <BracketCenterConnectors
@@ -127,8 +131,8 @@ export default function BracketTreeSplit({
           layout="columns"
           embedded
           matchOffsets={fullOffsets}
-          matchTreeHeight={treeHeight}
-          matchAreaOffsetY={leftMatchOffsetY}
+          matchTreeHeight={splitMetrics.matchAreaHeight}
+          matchAreaOffsetY={splitMetrics.leftAreaOffsetY}
           matchWidth={matchWidth}
           matchHeight={matchHeight}
           matchGap={gap}
@@ -151,11 +155,11 @@ export default function BracketTreeSplit({
           </h3>
           <div
             className="relative w-full"
-            style={{ height: treeHeight }}
+            style={{ height: splitMetrics.matchAreaHeight }}
           >
             <div
               className="absolute left-0 w-full"
-              style={{ top: finalTop }}
+              style={{ top: splitMetrics.finalTop }}
               data-bracket-region="match"
               data-match-id={final.id}
             >
@@ -207,8 +211,8 @@ export default function BracketTreeSplit({
           columnFlow="rtl"
           embedded
           matchOffsets={fullOffsets}
-          matchTreeHeight={treeHeight}
-          matchAreaOffsetY={rightMatchOffsetY}
+          matchTreeHeight={splitMetrics.matchAreaHeight}
+          matchAreaOffsetY={splitMetrics.rightAreaOffsetY}
           matchWidth={matchWidth}
           matchHeight={matchHeight}
           matchGap={gap}
