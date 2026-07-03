@@ -179,6 +179,21 @@ export function getColumnHeight(
   return maxBottom + gap;
 }
 
+/** Tallest column in a bracket tree — shared height for split-half alignment. */
+export function getBracketTreeHeight(
+  rounds: BracketMatch[][],
+  offsets: Map<string, number>,
+  matchHeight: number,
+  gap: number,
+): number {
+  if (rounds.length === 0) return 0;
+  return Math.max(
+    ...rounds.map((round) =>
+      getColumnHeight(round, offsets, matchHeight, gap),
+    ),
+  );
+}
+
 export function getMatchMarginTops(
   round: BracketMatch[],
   offsets: Map<string, number>,

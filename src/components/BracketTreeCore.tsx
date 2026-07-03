@@ -33,6 +33,10 @@ export interface BracketTreeCoreProps {
   embedded?: boolean;
   /** ltr = rounds flow left-to-right; rtl = rounds flow right-to-left toward center */
   columnFlow?: "ltr" | "rtl";
+  /** Use offsets from the full bracket (split layout) */
+  matchOffsets?: Map<string, number>;
+  /** Uniform column height for split halves (full-bracket tree height) */
+  matchTreeHeight?: number;
 }
 
 function ChampionCard({
@@ -74,6 +78,8 @@ export default function BracketTreeCore({
   layout = "columns",
   embedded = false,
   columnFlow = "ltr",
+  matchOffsets,
+  matchTreeHeight,
 }: BracketTreeCoreProps) {
   const event = useEvent();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -82,9 +88,10 @@ export default function BracketTreeCore({
   const gap = compact ? COMPACT_MATCH_GAP : DESKTOP_MATCH_GAP;
   const columnWidth = matchWidth;
   const offsets =
-    layout === "rows"
+    matchOffsets ??
+    (layout === "rows"
       ? computeRowMatchOffsets(bracket.rounds, matchWidth, gap)
-      : computeMatchOffsets(bracket.rounds, matchHeight, gap);
+      : computeMatchOffsets(bracket.rounds, matchHeight, gap));
   const allMatches = bracket.rounds.flat();
   const matchById = new Map(allMatches.map((match) => [match.id, match]));
 
@@ -265,7 +272,10 @@ export default function BracketTreeCore({
       >
       {roundIndices.map((roundIndex) => {
         const round = bracket.rounds[roundIndex];
-        const columnHeight = getColumnHeight(round, offsets, matchHeight, gap);
+        const labelRoundIndex = round[0]?.roundIndex ?? roundIndex;
+        const columnHeight =
+          matchTreeHeight ??
+          getColumnHeight(round, offsets, matchHeight, gap);
         const margins = compact
           ? null
           : getMatchMarginTops(round, offsets, matchHeight);
@@ -285,7 +295,7 @@ export default function BracketTreeCore({
                   : "text-sm mb-4 py-1"
               }`}
             >
-              {event.roundLabels[roundIndex] ?? `Round ${roundIndex + 1}`}
+              {event.roundLabels[labelRoundIndex] ?? `Round ${labelRoundIndex + 1}`}
               <span
                 className={`block font-sans font-normal text-[var(--muted)] ${
                   compact ? "text-[9px]" : "text-xs"
