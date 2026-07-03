@@ -19,6 +19,7 @@ import {
   DEFAULT_SCALE,
   formatTransform,
   getFocusBounds,
+  MAX_FIT_SCALE,
   MAX_SCALE,
   MIN_SCALE,
   type ViewportTransform,
@@ -44,6 +45,11 @@ export interface BracketFitViewportProps {
   viewportClassName?: string;
   showZoomControls?: boolean;
   zoomControlsClassName?: string;
+  /** Padding used when auto-fitting content to the viewport */
+  fitPadding?: number;
+  /** Max scale when auto-fitting (split layout uses a higher cap) */
+  maxFitScale?: number;
+  contentPaddingClassName?: string;
 }
 
 const BracketFitViewport = forwardRef<BracketFitViewportHandle, BracketFitViewportProps>(
@@ -56,7 +62,12 @@ function BracketFitViewport({
   viewportClassName = "h-[min(72dvh,calc(100dvh-13rem))] min-h-[360px]",
   showZoomControls = true,
   zoomControlsClassName = "flex justify-end gap-1 mb-2",
+  fitPadding,
+  maxFitScale,
+  contentPaddingClassName = "p-2",
 }: BracketFitViewportProps, ref) {
+  const resolvedFitPadding = fitPadding ?? (layout === "split" ? 4 : viewPreset === "full" ? 8 : 16);
+  const resolvedMaxFitScale = maxFitScale ?? (layout === "split" ? MAX_FIT_SCALE : MAX_SCALE);
   const viewportRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState<ViewportTransform>({
@@ -144,7 +155,8 @@ function BracketFitViewport({
             viewportRect,
             contentSize,
             focus,
-            nextPreset === "full" ? 8 : 16,
+            resolvedFitPadding,
+            resolvedMaxFitScale,
           );
           commitTransform(next);
         });
@@ -161,7 +173,7 @@ function BracketFitViewport({
 
       runFit();
     },
-    [commitTransform, measureContentSize],
+    [commitTransform, measureContentSize, resolvedFitPadding, resolvedMaxFitScale],
   );
 
   const prevPresetRef = useRef(viewPreset);
@@ -407,7 +419,7 @@ function BracketFitViewport({
             transform: formatTransform(transform),
           }}
         >
-          <div className="p-2">
+          <div className={`${contentPaddingClassName}${layout === "split" ? " w-full" : ""}`}>
             {layout === "split" ? (
               <BracketTreeSplit
                 bracket={bracket}

@@ -18,7 +18,9 @@ export default function Bracket({ bracket }: BracketProps) {
         <BracketFitViewport
           bracket={bracket}
           layout="split"
-          viewportClassName="h-full min-h-0"
+          viewportClassName="h-full min-h-0 border-0 shadow-none rounded-none"
+          showZoomControls={false}
+          contentPaddingClassName="p-1"
         />
       </div>
     </>

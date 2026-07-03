@@ -14,6 +14,8 @@ export interface ViewportSize {
 
 export const MIN_SCALE = 0.12;
 export const MAX_SCALE = 1.4;
+/** Upper bound when auto-fitting the laptop split bracket to the viewport */
+export const MAX_FIT_SCALE = 4;
 export const DEFAULT_SCALE = 0.38;
 export const MIN_VISIBLE_PX = 48;
 
@@ -88,6 +90,7 @@ export function computeFitTransform(
   content: ViewportSize,
   target: DOMRect | null,
   padding = 12,
+  maxScale = MAX_SCALE,
 ): ViewportTransform {
   const focus = target ?? new DOMRect(0, 0, content.width, content.height);
   const focusWidth = Math.max(focus.width, 1);
@@ -98,7 +101,7 @@ export function computeFitTransform(
       (viewport.height - padding * 2) / focusHeight,
     ),
     MIN_SCALE,
-    MAX_SCALE,
+    maxScale,
   );
 
   const x = (viewport.width - focusWidth * scale) / 2 - focus.x * scale;

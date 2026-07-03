@@ -39,6 +39,10 @@ export interface BracketTreeCoreProps {
   matchTreeHeight?: number;
   /** Vertical shift for match areas in split layout (headers stay put) */
   matchAreaOffsetY?: number;
+  /** Override compact match dimensions (laptop split) */
+  matchWidth?: number;
+  matchHeight?: number;
+  matchGap?: number;
 }
 
 function ChampionCard({
@@ -83,12 +87,16 @@ export default function BracketTreeCore({
   matchOffsets,
   matchTreeHeight,
   matchAreaOffsetY = 0,
+  matchWidth: matchWidthProp,
+  matchHeight: matchHeightProp,
+  matchGap: matchGapProp,
 }: BracketTreeCoreProps) {
   const event = useEvent();
   const rootRef = useRef<HTMLDivElement>(null);
-  const matchHeight = compact ? COMPACT_MATCH_HEIGHT : DESKTOP_MATCH_HEIGHT;
-  const matchWidth = compact ? COMPACT_MATCH_WIDTH : 220;
-  const gap = compact ? COMPACT_MATCH_GAP : DESKTOP_MATCH_GAP;
+  const matchHeight =
+    matchHeightProp ?? (compact ? COMPACT_MATCH_HEIGHT : DESKTOP_MATCH_HEIGHT);
+  const matchWidth = matchWidthProp ?? (compact ? COMPACT_MATCH_WIDTH : 220);
+  const gap = matchGapProp ?? (compact ? COMPACT_MATCH_GAP : DESKTOP_MATCH_GAP);
   const columnWidth = matchWidth;
   const offsets =
     matchOffsets ??
@@ -149,6 +157,8 @@ export default function BracketTreeCore({
           station={match.station}
           showStations={layout === "columns" ? roundIndex === 0 : false}
           compact={layout === "rows" ? true : compact}
+          compactWidth={compact ? matchWidth : undefined}
+          compactHeight={compact ? matchHeight : undefined}
         />
       </div>
     );
@@ -271,7 +281,13 @@ export default function BracketTreeCore({
         columnFlow={columnFlow}
       />
       <div
-        className={`relative z-10 flex ${compact ? "gap-3" : "gap-6"} min-w-max`}
+        className={`relative z-10 flex ${
+          compact
+            ? matchWidth > COMPACT_MATCH_WIDTH
+              ? "gap-4"
+              : "gap-3"
+            : "gap-6"
+        } min-w-max`}
       >
       {roundIndices.map((roundIndex) => {
         const round = bracket.rounds[roundIndex];
@@ -294,14 +310,20 @@ export default function BracketTreeCore({
             <h3
               className={`font-display font-semibold text-[var(--hrr-navy)] text-center sticky top-0 bg-[var(--background)] z-10 ${
                 compact
-                  ? "text-[10px] mb-1 py-0.5"
+                  ? matchWidth > COMPACT_MATCH_WIDTH
+                    ? "text-xs mb-1 py-0.5"
+                    : "text-[10px] mb-1 py-0.5"
                   : "text-sm mb-4 py-1"
               }`}
             >
               {event.roundLabels[labelRoundIndex] ?? `Round ${labelRoundIndex + 1}`}
               <span
                 className={`block font-sans font-normal text-[var(--muted)] ${
-                  compact ? "text-[9px]" : "text-xs"
+                  compact
+                    ? matchWidth > COMPACT_MATCH_WIDTH
+                      ? "text-[10px]"
+                      : "text-[9px]"
+                    : "text-xs"
                 }`}
               >
                 {round.length} race{round.length !== 1 ? "s" : ""}
@@ -354,6 +376,8 @@ export default function BracketTreeCore({
                         splits={match.splits}
                         station={match.station}
                         compact
+                        compactWidth={matchWidth}
+                        compactHeight={matchHeight}
                       />
                     </div>
                   );

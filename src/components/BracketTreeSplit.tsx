@@ -3,8 +3,9 @@
 import { useRef } from "react";
 import type { BracketState } from "@/lib/types";
 import {
-  COMPACT_MATCH_GAP,
-  COMPACT_MATCH_HEIGHT,
+  SPLIT_MATCH_GAP,
+  SPLIT_MATCH_HEIGHT,
+  SPLIT_MATCH_WIDTH,
   computeMatchOffsets,
   getBracketTreeHeight,
 } from "@/lib/bracket-layout";
@@ -35,14 +36,14 @@ function ChampionCard({
 }) {
   return (
     <div
-      className="bg-gradient-to-br from-[var(--hrr-navy)] to-[var(--hrr-blue)] rounded-sm text-center text-white p-2"
+      className="bg-gradient-to-br from-[var(--hrr-navy)] to-[var(--hrr-blue)] rounded-sm text-center text-white p-2.5"
       data-bracket-region="champion"
     >
-      <div className="uppercase tracking-wider opacity-80 mb-0.5 text-[9px]">
+      <div className="uppercase tracking-wider opacity-80 mb-0.5 text-[10px]">
         2026 Winner
       </div>
       <div
-        className={`text-xs ${isSeededCrew(champion, event) ? "font-extrabold" : "font-bold"}`}
+        className={`text-sm ${isSeededCrew(champion, event) ? "font-extrabold" : "font-bold"}`}
       >
         {champion.shortName || champion.name}
       </div>
@@ -58,6 +59,10 @@ export default function BracketTreeSplit({
   const event = useEvent();
   const rootRef = useRef<HTMLDivElement>(null);
 
+  const matchHeight = SPLIT_MATCH_HEIGHT;
+  const matchWidth = SPLIT_MATCH_WIDTH;
+  const gap = SPLIT_MATCH_GAP;
+
   if (!canSplitBracket(bracket.rounds)) {
     return (
       <BracketTreeCore
@@ -66,6 +71,9 @@ export default function BracketTreeSplit({
         viewPreset={viewPreset}
         dimUnfocused={dimUnfocused}
         layout="columns"
+        matchWidth={matchWidth}
+        matchHeight={matchHeight}
+        matchGap={gap}
       />
     );
   }
@@ -80,8 +88,6 @@ export default function BracketTreeSplit({
   const matchById = new Map(allMatches.map((m) => [m.id, m]));
   const finalRoundIndex = bracket.rounds.length - 1;
 
-  const matchHeight = COMPACT_MATCH_HEIGHT;
-  const gap = COMPACT_MATCH_GAP;
   const fullOffsets = computeMatchOffsets(
     bracket.rounds,
     matchHeight,
@@ -102,7 +108,7 @@ export default function BracketTreeSplit({
   return (
     <div
       ref={rootRef}
-      className="relative flex flex-row items-start gap-3 min-w-max"
+      className="relative flex flex-row items-start justify-between gap-6 w-full min-w-max"
       data-bracket-root
     >
       <BracketCenterConnectors
@@ -123,14 +129,23 @@ export default function BracketTreeSplit({
           matchOffsets={fullOffsets}
           matchTreeHeight={treeHeight}
           matchAreaOffsetY={leftMatchOffsetY}
+          matchWidth={matchWidth}
+          matchHeight={matchHeight}
+          matchGap={gap}
         />
+      </div>
+
+      <div
+        className="relative z-10 flex flex-col shrink-0 items-center gap-4"
+        data-bracket-region="center-final"
+      >
         <div
-          className="flex flex-col items-center shrink-0 min-w-[128px]"
-          style={{ width: 128 }}
+          className="flex flex-col items-center shrink-0"
+          style={{ width: matchWidth }}
         >
-          <h3 className="font-display font-semibold text-[var(--hrr-navy)] text-center text-[10px] mb-1 py-0.5">
+          <h3 className="font-display font-semibold text-[var(--hrr-navy)] text-center text-xs mb-1 py-0.5">
             {event.roundLabels[finalRoundIndex] ?? final.roundLabel}
-            <span className="block font-sans font-normal text-[var(--muted)] text-[9px]">
+            <span className="block font-sans font-normal text-[var(--muted)] text-[10px]">
               1 race
             </span>
           </h3>
@@ -161,6 +176,8 @@ export default function BracketTreeSplit({
                 splits={final.splits}
                 station={final.station}
                 compact
+                compactWidth={matchWidth}
+                compactHeight={matchHeight}
               />
             </div>
           </div>
@@ -168,10 +185,11 @@ export default function BracketTreeSplit({
 
         {bracket.champion && (
           <div
-            className="flex flex-col items-center shrink-0 min-w-[72px]"
+            className="flex flex-col items-center shrink-0"
+            style={{ width: matchWidth }}
             data-bracket-region="champion-column"
           >
-            <h3 className="font-display font-semibold text-[var(--hrr-navy)] text-center text-[10px] mb-1">
+            <h3 className="font-display font-semibold text-[var(--hrr-navy)] text-center text-xs mb-1">
               Champion
             </h3>
             <ChampionCard champion={bracket.champion} event={event} />
@@ -191,6 +209,9 @@ export default function BracketTreeSplit({
           matchOffsets={fullOffsets}
           matchTreeHeight={treeHeight}
           matchAreaOffsetY={rightMatchOffsetY}
+          matchWidth={matchWidth}
+          matchHeight={matchHeight}
+          matchGap={gap}
         />
       </div>
     </div>

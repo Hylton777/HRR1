@@ -5,6 +5,11 @@ export const COMPACT_MATCH_HEIGHT = 58;
 export const COMPACT_MATCH_GAP = 8;
 export const COMPACT_MATCH_WIDTH = 128;
 
+/** Laptop split bracket — larger cards that scale to fill the viewport */
+export const SPLIT_MATCH_HEIGHT = 76;
+export const SPLIT_MATCH_GAP = 12;
+export const SPLIT_MATCH_WIDTH = 168;
+
 export const DESKTOP_MATCH_HEIGHT = 96;
 export const DESKTOP_MATCH_GAP = 8;
 
