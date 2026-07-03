@@ -16,13 +16,14 @@ import {
   clamp,
   clampTransform,
   computeFitTransform,
+  computeSplitFitTransform,
   DEFAULT_SCALE,
   formatTransform,
   getFocusBounds,
-  getTightContentBounds,
   MAX_FIT_SCALE,
   MAX_SCALE,
   MIN_SCALE,
+  MIN_VISIBLE_PX,
   type ViewportTransform,
 } from "@/lib/bracket-viewport";
 import type { BracketViewPreset } from "@/lib/regatta-days";
@@ -136,12 +137,12 @@ function BracketFitViewport({
     const inner = content.querySelector("[data-bracket-root]") as HTMLElement;
     const size = inner
       ? {
-          width: Math.max(inner.scrollWidth, inner.offsetWidth),
-          height: Math.max(inner.scrollHeight, inner.offsetHeight),
+          width: inner.offsetWidth,
+          height: inner.offsetHeight,
         }
       : {
-          width: content.scrollWidth,
-          height: content.scrollHeight,
+          width: content.offsetWidth,
+          height: content.offsetHeight,
         };
     contentSizeRef.current = size;
     return size;
@@ -159,19 +160,28 @@ function BracketFitViewport({
           requestAnimationFrame(() => {
             const viewportRect = viewport.getBoundingClientRect();
             const contentSize = measureContentSize();
-            const tight =
-              layout === "split" ? getTightContentBounds(content) : null;
-            const focus =
-              tight ?? getFocusBounds(content, nextPreset);
-            const next = computeFitTransform(
+            const next =
+              layout === "split"
+                ? computeSplitFitTransform(
+                    viewportRect,
+                    contentSize,
+                    resolvedFitPadding,
+                  )
+                : computeFitTransform(
+                    viewportRect,
+                    contentSize,
+                    getFocusBounds(content, nextPreset),
+                    resolvedFitPadding,
+                    resolvedMaxFitScale,
+                  );
+            const clamped = clampTransform(
               viewportRect,
               contentSize,
-              focus,
-              resolvedFitPadding,
-              resolvedMaxFitScale,
+              next,
+              layout === "split" ? 0 : MIN_VISIBLE_PX,
             );
-            applyTransformToDom(next);
-            setTransform(next);
+            applyTransformToDom(clamped);
+            setTransform(clamped);
           });
         });
       };

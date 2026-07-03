@@ -133,6 +133,26 @@ export function getTightContentBounds(
   return new DOMRect(minX, minY, maxX - minX, maxY - minY);
 }
 
+export function computeSplitFitTransform(
+  viewport: ViewportSize,
+  content: ViewportSize,
+  padding = 0,
+): ViewportTransform {
+  const width = Math.max(content.width, 1);
+  const height = Math.max(content.height, 1);
+  const scale = Math.min(
+    (viewport.width - padding * 2) / width,
+    (viewport.height - padding * 2) / height,
+  );
+  const scaledW = width * scale;
+  const scaledH = height * scale;
+  return {
+    scale: Math.max(MIN_SCALE, scale),
+    x: (viewport.width - scaledW) / 2,
+    y: (viewport.height - scaledH) / 2,
+  };
+}
+
 export function computeFitTransform(
   viewport: ViewportSize,
   content: ViewportSize,

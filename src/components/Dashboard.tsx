@@ -79,7 +79,7 @@ export default function Dashboard({ eventId }: DashboardProps) {
           </div>
 
           <div className="space-y-6 sm:space-y-8 md:space-y-0">
-            <section className="min-w-0 md:w-screen md:relative md:left-1/2 md:-translate-x-1/2">
+            <section className="min-w-0 w-full">
               <h2 className="font-display text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-[var(--hrr-navy)] md:sr-only">
                 Knockout Bracket
               </h2>
