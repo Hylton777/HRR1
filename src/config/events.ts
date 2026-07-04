@@ -3,7 +3,6 @@ import type { RegattaDay } from "@/lib/regatta-days";
 import {
   FRI_SUN_3ROUND_DAYS,
   SUNDAY_FINAL_DAYS,
-  STEWARDS_RACE_DAYS,
   THU_FRI_SAT_SUN_4ROUND_DAYS,
   THU_SUN_4ROUND_DAYS,
   TUE_THU_FRI_SAT_SUN_5ROUND_DAYS,
@@ -273,12 +272,13 @@ export const EVENTS: Record<EventId, EventConfig> = {
     headerSubtitle: "Live knockout bracket \u00b7 3 crews \u00b7 Premier men's coxless fours",
     crewCount: 3,
     draw: stewardsDraw as DrawData,
-    raceDays: STEWARDS_RACE_DAYS,
-    roundSizes: [1, 1],
-    roundLabels: ["Semi-Final", "Final"],
+    raceDays: SUNDAY_FINAL_DAYS,
+    roundSizes: [1],
+    roundLabels: ["Final"],
     seededCrewNumbers: [],
     seededCrewNames: [],
-    noRacingNote: "Races Sat\u2013Sun only (semi-final & final) \u2014 times publish around 9pm BST the evening before.",
+    noRacingNote:
+      "2026 one-off: Leander Club & Oxford Brookes University withdrew from the semi-final \u2014 Nautilus Rowing Club advance to Sunday\u2019s final vs Leander Club.",
     category: "premier-mens-coxless-fours",
   },
   "town": {
