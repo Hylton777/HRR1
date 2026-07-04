@@ -24,13 +24,11 @@
       {
         "id": "sf-0",
         "drawRace": 1,
-        "feeders": [
-          "r1-0"
-        ],
+        "feeders": ["r1-0"],
         "berks": {
-          "name": "Associação Desportiva Naval Remo, Portugal and Skibbereen Rowing Club, Ireland",
-          "shortName": "Naval Remo, POR & Skibbereen, IRL",
-          "number": 427
+          "name": "Team Italia, Italy",
+          "shortName": "Team Italia, ITA",
+          "number": 431
         },
         "bucks": null
       },
@@ -38,14 +36,14 @@
         "id": "sf-1",
         "drawRace": 2,
         "berks": {
+          "name": "Associação Desportiva Naval Remo, Portugal and Skibbereen Rowing Club, Ireland",
+          "shortName": "Naval Remo, POR & Skibbereen, IRL",
+          "number": 427
+        },
+        "bucks": {
           "name": "Leander Club and Twickenham Rowing Club",
           "shortName": "Leander Club & Twickenham R.C.",
           "number": 429
-        },
-        "bucks": {
-          "name": "Team Italia, Italy",
-          "shortName": "Team Italia, ITA",
-          "number": 431
         }
       }
     ],
@@ -53,10 +51,7 @@
       {
         "id": "final-0",
         "drawRace": 1,
-        "feeders": [
-          "sf-0",
-          "sf-1"
-        ],
+        "feeders": ["sf-0", "sf-1"],
         "berks": null,
         "bucks": null
       }

@@ -6,7 +6,7 @@
   "rounds": [
     [
       {
-        "id": "qf-0",
+        "id": "r1-0",
         "drawRace": 1,
         "berks": {
           "name": "J.A. Cracknell & H.J. Aitchison (Itchen Imperial Rowing Club)",
@@ -20,7 +20,7 @@
         }
       },
       {
-        "id": "qf-1",
+        "id": "r1-1",
         "drawRace": 2,
         "berks": {
           "name": "N.R. Mohr & A.J. Biddle (Peterhouse, Cambridge)",
@@ -34,7 +34,7 @@
         }
       },
       {
-        "id": "qf-2",
+        "id": "r1-2",
         "drawRace": 3,
         "berks": {
           "name": "M.Q. Oddershede & J.R. Poulsen (Bagsværd Roklub, Denmark)",
@@ -48,7 +48,7 @@
         }
       },
       {
-        "id": "qf-3",
+        "id": "r1-3",
         "drawRace": 4,
         "berks": {
           "name": "J.M. Cartwright & J.O. Gare (Leander Club)",
@@ -64,22 +64,62 @@
     ],
     [
       {
+        "id": "qf-0",
+        "drawRace": 1,
+        "feeders": ["r1-0"],
+        "berks": {
+          "name": "M. Mackovic & N. Pimenov (Veslački Klub Danubius 1885, Serbia)",
+          "shortName": "Mackovic & Pimenov, SRB",
+          "number": 783
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-1",
+        "drawRace": 2,
+        "feeders": ["r1-1"],
+        "berks": {
+          "name": "F. McCarthy & J. McCarthy (Skibbereen Rowing Club, Ireland)",
+          "shortName": "McCarthy & McCarthy, IRL",
+          "number": 784
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-2",
+        "drawRace": 3,
+        "feeders": ["r1-2"],
+        "berks": {
+          "name": "M.E.C. Haywood & J.J. Knight (Nottingham Rowing Club and Minerva Bath Rowing Club)",
+          "shortName": "Haywood & Knight",
+          "number": 781
+        },
+        "bucks": null
+      },
+      {
+        "id": "qf-3",
+        "drawRace": 4,
+        "feeders": ["r1-3"],
+        "berks": {
+          "name": "P.L.V. Rodrigues & T.A. Neves (Associação Desportiva Naval Remo, Portugal)",
+          "shortName": "Rodrigues & Neves, POR",
+          "number": 790
+        },
+        "bucks": null
+      }
+    ],
+    [
+      {
         "id": "sf-0",
         "drawRace": 1,
-        "feeders": [
-          "qf-0",
-          "qf-1"
-        ],
+        "feeders": ["qf-2", "qf-3"],
         "berks": null,
         "bucks": null
       },
       {
         "id": "sf-1",
         "drawRace": 2,
-        "feeders": [
-          "qf-2",
-          "qf-3"
-        ],
+        "feeders": ["qf-0", "qf-1"],
         "berks": null,
         "bucks": null
       }
@@ -88,10 +128,7 @@
       {
         "id": "final-0",
         "drawRace": 1,
-        "feeders": [
-          "sf-0",
-          "sf-1"
-        ],
+        "feeders": ["sf-0", "sf-1"],
         "berks": null,
         "bucks": null
       }
