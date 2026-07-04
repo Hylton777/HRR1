@@ -5,6 +5,7 @@ import { fetchEventResults, fetchEventTimetable } from "@/lib/hrr-api";
 import { validateRoundCounts } from "@/lib/bracket-layout";
 import { auditDisplayConsistency } from "@/lib/display-consistency";
 import { auditResultCompleteness } from "@/lib/result-audit";
+import { BRACKET_API_CACHE_CONTROL } from "@/lib/api-cache";
 import type { BracketApiResponse } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -60,7 +61,7 @@ export async function GET() {
 
     return NextResponse.json(response, {
       headers: {
-        "Cache-Control": "no-store, max-age=0",
+        "Cache-Control": BRACKET_API_CACHE_CONTROL,
       },
     });
   } catch (error) {

@@ -1,5 +1,11 @@
 import * as cheerio from "cheerio";
 import type { EventConfig } from "@/config/events";
+import {
+  cachedFetch,
+  HRR_FETCH_TIMEOUT_MS,
+  RESULTS_TTL_MS,
+  TIMETABLE_TTL_MS,
+} from "./hrr-cache";
 import { crewResultMatchesDraw, crewsMatch } from "./crew-match";
 import type {
   Crew,
@@ -14,7 +20,24 @@ const TIMETABLE_URL = "https://www.hrr.co.uk/compete/race-timetable/";
 
 export { crewsMatch, normalizeCrewName } from "./crew-match";
 
-export async function fetchEventResults(
+type ParsedTimetableRace = TimetableRace & { trophy: string };
+
+type ParsedTimetable = {
+  raceDay: string | null;
+  races: ParsedTimetableRace[];
+};
+
+async function fetchWithTimeout(
+  url: string,
+  init: RequestInit = {},
+): Promise<Response> {
+  return fetch(url, {
+    ...init,
+    signal: AbortSignal.timeout(HRR_FETCH_TIMEOUT_MS),
+  });
+}
+
+async function fetchEventResultsUncached(
   event: Pick<EventConfig, "trophySlug" | "year">,
 ): Promise<{
   results: HrrResult[];
@@ -33,10 +56,12 @@ export async function fetchEventResults(
       "result-page": String(resultPage),
     });
 
-    const response = await fetch(`${HRR_API_BASE}/results?${params}`, {
-      cache: "no-store",
-      headers: { Accept: "application/json" },
-    });
+    const response = await fetchWithTimeout(
+      `${HRR_API_BASE}/results?${params}`,
+      {
+        headers: { Accept: "application/json" },
+      },
+    );
 
     if (!response.ok) {
       throw new Error(`HRR API error: ${response.status}`);
@@ -73,43 +98,84 @@ function parseTimetableRaceDay(html: string): string | null {
   return match?.[0]?.trim() ?? null;
 }
 
+function parseTimetableHtml(html: string): ParsedTimetable {
+  const $ = cheerio.load(html);
+  const races: ParsedTimetableRace[] = [];
+
+  $("tr.timetable-row-r").each((_, row) => {
+    const trophy = $(row).find(".timetable-field-trophy").text().trim();
+    const time = $(row).find(".timetable-field-time").text().trim();
+    if (!trophy || !time) return;
+
+    races.push({
+      trophy,
+      raceNumber: $(row).find(".timetable-field-race").text().trim(),
+      time,
+      berks: $(row).find(".timetable-field-berks").text().trim(),
+      bucks: $(row).find(".timetable-field-bucks").text().trim(),
+    });
+  });
+
+  return {
+    raceDay: parseTimetableRaceDay(html),
+    races,
+  };
+}
+
+async function fetchTimetableUncached(): Promise<ParsedTimetable> {
+  const response = await fetchWithTimeout(TIMETABLE_URL, {
+    headers: { Accept: "text/html" },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HRR timetable error: ${response.status}`);
+  }
+
+  const html = await response.text();
+  return parseTimetableHtml(html);
+}
+
+function filterTimetableForEvent(
+  parsed: ParsedTimetable,
+  timetableCodes: string[],
+): TimetableData {
+  const codes = new Set(timetableCodes);
+  return {
+    raceDay: parsed.raceDay,
+    races: parsed.races
+      .filter((race) => codes.has(race.trophy))
+      .map((race) => ({
+        raceNumber: race.raceNumber,
+        time: race.time,
+        berks: race.berks,
+        bucks: race.bucks,
+      })),
+  };
+}
+
+export async function fetchEventResults(
+  event: Pick<EventConfig, "trophySlug" | "year">,
+): Promise<{
+  results: HrrResult[];
+  generated: string | null;
+}> {
+  return cachedFetch(
+    `results:${event.trophySlug}:${event.year}`,
+    RESULTS_TTL_MS,
+    () => fetchEventResultsUncached(event),
+  );
+}
+
 export async function fetchEventTimetable(
   event: Pick<EventConfig, "timetableCodes">,
 ): Promise<TimetableData> {
   const empty: TimetableData = { raceDay: null, races: [] };
-  const codes = new Set(event.timetableCodes);
 
   try {
-    const response = await fetch(TIMETABLE_URL, {
-      cache: "no-store",
-      headers: { Accept: "text/html" },
-    });
-
-    if (!response.ok) return empty;
-
-    const html = await response.text();
-    const $ = cheerio.load(html);
-    const races: TimetableRace[] = [];
-
-    $("tr.timetable-row-r").each((_, row) => {
-      const trophy = $(row).find(".timetable-field-trophy").text().trim();
-      if (!codes.has(trophy)) return;
-
-      const time = $(row).find(".timetable-field-time").text().trim();
-      if (!time) return;
-
-      races.push({
-        raceNumber: $(row).find(".timetable-field-race").text().trim(),
-        time,
-        berks: $(row).find(".timetable-field-berks").text().trim(),
-        bucks: $(row).find(".timetable-field-bucks").text().trim(),
-      });
-    });
-
-    return {
-      raceDay: parseTimetableRaceDay(html),
-      races,
-    };
+    const parsed = await cachedFetch("timetable:global", TIMETABLE_TTL_MS, () =>
+      fetchTimetableUncached(),
+    );
+    return filterTimetableForEvent(parsed, event.timetableCodes);
   } catch {
     return empty;
   }
