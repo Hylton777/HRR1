@@ -136,6 +136,14 @@ export const THU_SAT_SUN_3ROUND_DAYS = programme(
   ["sun", 2],
 );
 
+/** Double sculls: Thursday heats, Friday QF, Saturday SF, Sunday final. */
+export const THU_FRI_SAT_SUN_4ROUND_DAYS = programme(
+  ["thu", 0],
+  ["fri", 1],
+  ["sat", 2],
+  ["sun", 3],
+);
+
 /** @deprecated Use TUE_WED_FRI_SUN_5ROUND_DAYS */
 export const PE_RACE_DAYS = TUE_WED_FRI_SUN_5ROUND_DAYS;
 

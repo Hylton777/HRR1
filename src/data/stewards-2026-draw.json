@@ -1,5 +1,5 @@
 {
-  "event": "The Stewards’ Challenge Cup",
+  "event": "The Stewards' Challenge Cup",
   "year": 2026,
   "source": "Henley Royal Regatta 2026 Draw (2 July 2026)",
   "sourceUrl": "https://dftgz7dbeqc0e.cloudfront.net/2026/07/Henley-Royal-Regatta-2026-07-02-120x170_Draw.pdf",
@@ -9,12 +9,13 @@
         "id": "sf-0",
         "drawRace": 1,
         "berks": {
-          "name": "Nautilus R .C",
-          "shortName": "Nautilus R .C"
+          "name": "Nautilus Rowing Club",
+          "shortName": "Nautilus R.C.",
+          "number": 342
         },
         "bucks": {
           "name": "Leander Club and Oxford Brookes University",
-          "shortName": "Leander Club & Oxford Brookes Univ",
+          "shortName": "Leander Club & Oxford Brookes Univ.",
           "number": 341
         }
       }
@@ -23,9 +24,7 @@
       {
         "id": "final-0",
         "drawRace": 1,
-        "feeders": [
-          "sf-0"
-        ],
+        "feeders": ["sf-0"],
         "berks": {
           "name": "Leander Club",
           "shortName": "Leander Club",
