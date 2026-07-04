@@ -2,6 +2,7 @@ import {
   crewResultMatchesDraw,
   crewsMatch,
   decodeHtmlEntities,
+  normalizeCrewName,
 } from "./crew-match";
 import type { EventConfig } from "@/config/events";
 import type { BracketMatch, Crew, DrawData, HrrResult } from "./types";
@@ -230,6 +231,20 @@ export function enrichCrew(
   return mergeDrawWithResult(entry, crew, event);
 }
 
+function slotMatchSpecificity(drawCrew: Crew, resultCrew: Crew): number {
+  if (
+    drawCrew.number != null &&
+    resultCrew.number != null &&
+    drawCrew.number === resultCrew.number
+  ) {
+    return 4;
+  }
+  if (normalizeCrewName(drawCrew.name) === normalizeCrewName(resultCrew.name)) {
+    return 3;
+  }
+  return crewResultMatchesDraw(drawCrew, resultCrew) ? 1 : 0;
+}
+
 /** Map HRR result winner/loser onto the correct draw slots. */
 export function resolveResultForMatch(
   match: Pick<BracketMatch, "berks" | "bucks">,
@@ -244,16 +259,50 @@ export function resolveResultForMatch(
   const loserOnBerks = crewResultMatchesDraw(berks, result.loser);
   const loserOnBucks = crewResultMatchesDraw(bucks, result.loser);
 
-  if (winnerOnBerks && loserOnBucks) {
+  const berksOrientation =
+    winnerOnBerks && loserOnBucks
+      ? {
+          winner: mergeDrawWithResult(berks, result.winner, event),
+          loser: mergeDrawWithResult(bucks, result.loser, event),
+          score:
+            slotMatchSpecificity(berks, result.winner) +
+            slotMatchSpecificity(bucks, result.loser),
+        }
+      : null;
+  const bucksOrientation =
+    winnerOnBucks && loserOnBerks
+      ? {
+          winner: mergeDrawWithResult(bucks, result.winner, event),
+          loser: mergeDrawWithResult(berks, result.loser, event),
+          score:
+            slotMatchSpecificity(bucks, result.winner) +
+            slotMatchSpecificity(berks, result.loser),
+        }
+      : null;
+
+  if (berksOrientation && bucksOrientation) {
+    if (bucksOrientation.score > berksOrientation.score) {
+      return {
+        winner: bucksOrientation.winner,
+        loser: bucksOrientation.loser,
+      };
+    }
     return {
-      winner: mergeDrawWithResult(berks, result.winner, event),
-      loser: mergeDrawWithResult(bucks, result.loser, event),
+      winner: berksOrientation.winner,
+      loser: berksOrientation.loser,
     };
   }
-  if (winnerOnBucks && loserOnBerks) {
+
+  if (berksOrientation) {
     return {
-      winner: mergeDrawWithResult(bucks, result.winner, event),
-      loser: mergeDrawWithResult(berks, result.loser, event),
+      winner: berksOrientation.winner,
+      loser: berksOrientation.loser,
+    };
+  }
+  if (bucksOrientation) {
+    return {
+      winner: bucksOrientation.winner,
+      loser: bucksOrientation.loser,
     };
   }
   return null;

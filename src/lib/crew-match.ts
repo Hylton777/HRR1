@@ -77,7 +77,10 @@ export function normalizeCrewName(name: string): string {
     .replace(/\bb\.?c\.?\b/g, "boat club")
     .replace(/\ba\.?r\.?c\.?\b/g, "amateur rowing club")
     .replace(/\br\.?c\.?\b/g, "rowing club")
-    .replace(/,\s*(aus|usa|ned|ger|irl|nzl|nz|esp|fra|ita|por|bel|den|can|germany|spain|australia|u\.s\.a\.?)\b/gi, "")
+    .replace(
+      /,\s*(aus|usa|ned|ger|irl|nzl|nz|esp|fra|ita|por|bel|den|can|germany|spain|australia|netherlands|france|italy|austria|sweden|norway|denmark|portugal|ireland|canada|zealand|u\.s\.a\.?)\b/gi,
+      "",
+    )
     .replace(/,\s*u\.s\.a\.?/gi, "")
     .replace(/,\s*australia/gi, "")
     .replace(/,\s*france/gi, "");
@@ -87,6 +90,7 @@ export function normalizeCrewName(name: string): string {
   s = s.replace(/\s+(rowing club|boat club)\.?$/gi, "");
   s = s.replace(/(?<!college)\s+school\.?$/gi, "");
   s = s.replace(/\s+college\.?$/gi, "");
+  s = s.replace(/,\s*$/g, "");
   s = s.replace(/\s+/g, " ").trim();
   return s;
 }
@@ -255,10 +259,19 @@ function safePrefixIncludes(shorter: string, longer: string): boolean {
   return true;
 }
 
+function isSquadOnlyToken(token: string): boolean {
+  return /^'?[a-d]'?,?$/i.test(token);
+}
+
 function distinctiveTokens(name: string): string[] {
   return normalizeCrewName(name)
     .split(" ")
-    .filter((token) => token.length >= 4 && !STOP_TOKENS.has(token));
+    .filter(
+      (token) =>
+        token.length >= 4 &&
+        !STOP_TOKENS.has(token) &&
+        !isSquadOnlyToken(token),
+    );
 }
 
 const GENERIC_CLUB_TOKENS = new Set([
